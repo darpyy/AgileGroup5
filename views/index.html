@@ -14,7 +14,18 @@
     <title>CommonThread | Welcome</title>
 </head>
 <body>
-    <h1>This is the Landing Page</h1> 
-    <a href="{{ url_for('homepage') }}" class="btn">Get Started</a>
+    <h1>Welcome to CommonThread</h1> 
+    <div class="content">
+        <p>Discover a world of knowledge and connection with CommonThread. Our platform is designed to bring people together through their common hobbies, interests and passions. Let us know what tags you are interested in and get right into the conversation!</p>
+    </div>
+
+    <div class ="buttons">
+        <a href="{{ url_for('login') }}" class="btn">Login</a>
+        <a href="{{ url_for('signup') }}" class="btn">Sign Up</a>
+    </div>
 </body>
+<footer>
+    <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
+</footer>
+
 </html>
