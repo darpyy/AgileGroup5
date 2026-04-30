@@ -25,8 +25,10 @@ html {
  */
 
 body {
+  font-family: 'Arial', sans-serif;
   margin: 0;
 }
+
 
 /**
  * Render the `main` element consistently in IE.
