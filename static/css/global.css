@@ -13,19 +13,154 @@ html {
   line-height: 1.15; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
 
-   background-color: #0fdfff;
+   background-color: var(--primary-color);
 
 }
 
 /* Sections
    ========================================================================== */
 
-/**
+
+/*** colours to use*/
+:root {
+  --primary-color: #0fdfff;
+  --secondary-color: #FFFFFF;
+  --dark-color: #000000;
+  --accent-color: #d29a0f;
+}
+
+/*** Logo styling
+ */
+.logo a{
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color); 
+    text-decoration: none;
+}
+
+.logo span {
+    color: var(--secondary-color);
+}
+
+/** * Navigation bar
+ */
+ nav {
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.4rem 1rem;
+    border: 1px solid var(--secondary-color);
+    background-color: var(--dark-color);
+    color: var(--primary-color);
+    border-radius: 4px 16px;
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 3rem;
+}
+
+nav ul a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  font-weight: heavy;
+  letter-spacing: 0.1rem;
+  text-transform: capitalize;
+}
+nav ul a.active {
+  color: var(--secondary-color);
+}
+
+nav ul a:hover, nav ul a.active {
+  color: var(--secondary-color);
+}
+
+
+   /**
  * Remove the margin in all browsers.
  */
 
 body {
+  font-family: 'Arial', sans-serif;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+
+}
+
+/**
+ * Buttons 
+ */
+
+ .buttons {
+    display: flex;
+    gap: 16px;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 40px;
+ }
+
+ .btn {
+    display: inline-block;
+    padding: 16px 48px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    border: 3px solid #000;
+    color: var(--secondary-color);
+    background-color: var(--dark-color);
+    border-radius: 6px;
+}
+
+.btn:hover {
+  background-color: var(--dark-color);
+  color: var(--accent-color);
+}       
+
+/**
+ * Slideshow images
+ */
+.slideshow {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+.slideshow img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.slides {
+  display: none;
+}
+
+
+.slide_caption{
+  color: var(--secondary-color);
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
 }
 
 /**
