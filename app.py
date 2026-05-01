@@ -1,4 +1,4 @@
-from flask import Flask, render_template,session,redirect
+from flask import Flask, render_template,session,redirect, request
 from forms import RegistrationForm, loginForm
 import json
 app = Flask(__name__, template_folder='views')
@@ -37,22 +37,27 @@ def register():
     return render_template('signup.html', title='Register', form=form)
 
 @app.route("/login", methods=['GET', 'POST'])
-def login():
+def login():    
     form = loginForm()
-    #if conditions for the form are met
-    if form.validate_on_submit():
-        with open('users.json', 'r') as db:
-            users = json.load(db)
+    if 'login' in request.form:
+        #if conditions for the form are met
+        if form.validate_on_submit():
+            with open('users.json', 'r') as db:
+                users = json.load(db)
 
-        for user in users:
-            if user['email'] == form.email.data and user['password'] == form.password.data:
-                session['user_id'] = user['id']
-                session['user_name'] = user['name']
-                print("success!")
-                return redirect('../dashboard')
-        
-        print("failure")
+            for user in users:
+                if user['email'] == form.email.data and user['password'] == form.password.data:
+                    session['user_id'] = user['id']
+                    session['user_name'] = user['name']
+                    print("success!")
+                    return redirect('../dashboard')
+            
+            print("failure")
 
+    elif 'logout' in request.form:
+        session['user_id'] = ""
+        session['user_name'] = ""
+        return redirect("/")
     return render_template('login.html', title='Login', form=form)
 
 if __name__ == '__main__':
