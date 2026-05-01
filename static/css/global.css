@@ -123,6 +123,45 @@ body {
   color: var(--accent-color);
 }       
 
+/**
+ * Slideshow images
+ */
+.slideshow {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+.slideshow img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.slides {
+  display: none;
+}
+
+
+.slide_caption{
+  color: var(--secondary-color);
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
 
 /**
  * Render the `main` element consistently in IE.
