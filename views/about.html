@@ -1,19 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/static/css/global.css">
-    <link rel="stylesheet" href="/static/css/tags.css">
+    <link rel="stylesheet" href="/static/css/global.css" />
+    <link rel="stylesheet" href="/static/css/homepage.css" />
 
-
-
-    <title>Document</title>
-</head>
-<body>
+    <title>CommonThread | About Us</title>
+  </head>
+  <body>
     <nav>  
         <div class="logo"> 
             <a href="{{ url_for('index') }}">
@@ -23,12 +20,15 @@
         <ul class="nav-links">
             <li><a href ="{{ url_for('dashboard') }}">Home</a></li>
             <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
-            <li><a href="{{ url_for('about') }}">About Us</a></li>
+            <li><a href="{{ url_for('about') }}" class = "active">About Us</a></li>
             <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
             <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
         </ul>
     </nav>
-    
-    <h1>This is the Tags page</h1> 
-</body>
+    <h1>About us</h1>
+  </body>
+
+  <footer>
+    <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
+  </footer>
 </html>

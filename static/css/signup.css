@@ -1,0 +1,99 @@
+/* ─── Sign Up Page Styles ─────────────────────────────────────────────────────── */
+
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #1f1f1f;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: "Source Code Pro", 'DM Sans', sans-serif;
+}
+
+.signup-container {
+  width: 400px;
+  padding: 48px 40px;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  color: white;
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.signup-header h1 {
+  margin-bottom: 16px;
+}
+
+.signup-header p {
+  margin: 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 13px 14px;
+  border-radius: 7px;
+  border: none;
+
+  font-size: 14px;
+}
+
+.signup-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 25px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: white;
+  color: #222;
+
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.signup-button:hover {
+  background: #e8e8e8;
+}
+
+.divider {
+  margin: 24px 0 18px;
+  text-align: center;
+  color: #ccc;
+}
+
+.login-text {
+  margin: 0;
+}
+
+.login-text a,
+.login-text a:visited,
+.login-text a:hover,
+.login-text a:active {
+  color: #ccc;
+  text-decoration: none;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}

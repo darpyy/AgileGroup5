@@ -9,9 +9,57 @@
     <link rel="stylesheet" href="/static/css/login.css">
 
 
-    <title>Document</title>
+    <title>CommonThread | Login </title>
 </head>
 <body>
-    <h1>This is the Login Page</h1> 
+    <nav>  
+        <div class="logo"> 
+            <a href="{{ url_for('index') }}">
+                Common<span>Thread</span>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href ="{{ url_for('dashboard') }}">Home</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+            <li><a href="{{ url_for('about') }}">About Us</a></li>
+            <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+            <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+        </ul>
+    </nav>
+    
+    <div class
+    ="login-container">
+    <div class="login-header">
+      <h1>Welcome back</h1>
+      <p>Please sign in to your account</p>
+    </div>
+
+    <form id="loginForm" method="POST" action="/login">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+      </div>
+
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox" name="remember">
+          Remember me
+        </label>
+        <a href="forgotpassword.html" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="login-button">Sign In</button>
+    </form>
+
+    <p class="login">
+      Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a>
+    </p>
+  </div>
+
 </body>
 </html>
