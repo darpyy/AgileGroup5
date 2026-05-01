@@ -11,6 +11,20 @@
     <title>CommonThread | Homepage</title>
   </head>
   <body>
+    <nav>  
+    <div class="logo"> 
+        <a href="{{ url_for('index') }}">
+            Common<span>Thread</span>
+        </a>
+    </div>
+    <ul class="nav-links">
+        <li><a href ="{{ url_for('homepage') }}" class = "active">Home</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        <li><a href="{{ url_for('about') }}">About Us</a></li>
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+        <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+    </ul>
+    </nav>
     <h1>Hello {{ username }}</h1>
   </body>
 

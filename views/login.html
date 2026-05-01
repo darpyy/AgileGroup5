@@ -12,7 +12,23 @@
     <title>CommonThread | Login </title>
 </head>
 <body>
-    <div class="login-container">
+    <nav>  
+        <div class="logo"> 
+            <a href="{{ url_for('index') }}">
+                Common<span>Thread</span>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href ="{{ url_for('homepage') }}">Home</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+            <li><a href="{{ url_for('about') }}">About Us</a></li>
+            <li><a href="{{ url_for('login') }}" class = "active">Login</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+        </ul>
+    </nav>
+    
+    <div class
+    ="login-container">
     <div class="login-header">
       <h1>Welcome back</h1>
       <p>Please sign in to your account</p>
