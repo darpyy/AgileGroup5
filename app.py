@@ -1,5 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,session,redirect
 from forms import RegistrationForm, loginForm
+import json
 app = Flask(__name__, template_folder='views')
 
 app.config ['SECRET_KEY'] = '8e465ada7653afdc91a1be93b5403c23'
@@ -33,12 +34,24 @@ def register():
     form = RegistrationForm()
     return render_template('signup.html', title='Register', form=form)
 
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     form = loginForm()
+    #if conditions for the form are met
+    if form.validate_on_submit():
+        with open('users.json', 'r') as db:
+            users = json.load(db)
+
+        for user in users:
+            if user['email'] == form.email.data and user['password'] == form.password.data:
+                session['user_id'] = user['id']
+                session['user_name'] = user['name']
+                print("success!")
+                return redirect('../dashboard')
+        
+        print("failure")
+
     return render_template('login.html', title='Login', form=form)
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
