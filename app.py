@@ -4,6 +4,8 @@ app = Flask(__name__, template_folder='views')
 
 app.config ['SECRET_KEY'] = '8e465ada7653afdc91a1be93b5403c23'
 
+PORT = 5000
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -41,4 +43,5 @@ def login():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    print(f"server should be running at http://localhost:{PORT}/")
+    app.run(debug=True, port=PORT)
