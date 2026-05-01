@@ -14,9 +14,9 @@ def login():
 def signup():
     return render_template('signup.html')
 
-@app.route('/homepage')
-def homepage():
-    return render_template('homepage.html')
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/about')
 def about():

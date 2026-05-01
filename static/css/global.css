@@ -13,8 +13,15 @@ html {
   line-height: 1.15; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
 
-   background-color: var(--primary-color);
+  background-color: var(--primary-color);
 
+  scroll-behavior: smooth;
+
+  font-family: "Source Code Pro", monospace;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  min-height: 100vh;
 }
 
 /* Sections
@@ -27,6 +34,7 @@ html {
   --secondary-color: #FFFFFF;
   --dark-color: #000000;
   --accent-color: #d29a0f;
+  --white-color: #ffffff;
 }
 
 /*** Logo styling
@@ -78,20 +86,27 @@ nav ul a.active {
 }
 
 nav ul a:hover, nav ul a.active {
-  color: var(--secondary-color);
+  color: var(--accent-color);
 }
 
+.bigItem {
+  background-color: var(--accent-color);
+  border-radius: 5px;
+  color: var(--dark-color);
+}
+.bigItem:hover {
+  color: var(--deep-color)
+}
 
    /**
  * Remove the margin in all browsers.
  */
 
 body {
-  font-family: 'Arial', sans-serif;
   margin: 0;
   display: flex;
   flex-direction: column;
-
+  min-height: 100vh; /* Fill the entire screen height */
 }
 
 /**
@@ -155,7 +170,7 @@ body {
 
 .fade {
   animation-name: fade;
-  animation-duration: 1.5s;
+  animation-duration: 3s;
 }
 
 @keyframes fade {
@@ -163,12 +178,85 @@ body {
   to {opacity: 1}
 }
 
+
+
+
+/* navigation footer for all web pages */
+footer {
+  background-color: var(--dark-color);
+  color: var(--secondary-color);
+  bottom: 0;
+}
+
+.navFooter { 
+  display: flex; 
+  justify-content: space-evenly;
+  text-align: left;
+  margin-top: 4rem;
+}
+
+
+.footArticle {
+  width: 350px;
+  margin-bottom: 2rem;
+}
+
+/* space between div articles */
+.contactFoot {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.contacter {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.footerCopy{
+  text-align: center;
+  padding: 1rem;
+}
+
+footer ul {
+  list-style: none;
+  display: flex;
+  gap: 3rem;
+}
+
+footer ul a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  font-weight: heavy;
+  letter-spacing: 0.1rem;
+  text-transform: capitalize;
+}
+
+footer ul a.active {
+  color: var(--secondary-color);
+}
+
+footer ul a:hover, nav ul a.active {
+  color: var(--accent-color);
+}
+
+.backToTop {
+  background-color: var(--primary-color);
+  color: var(--dark-color);
+  border-radius: 8px;
+  border-color: var(--primary-color);
+  
+}
+
+
 /**
  * Render the `main` element consistently in IE.
  */
 
 main {
   display: block;
+  flex: 1;
 }
 
 /**

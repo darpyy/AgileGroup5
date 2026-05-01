@@ -1,0 +1,14 @@
+.content {
+    margin: 20px;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 3px;
+}
+
+p {
+    max-width: 25rem;
+}
+
+.footer-links {
+    margin-top: 50px;
+}
