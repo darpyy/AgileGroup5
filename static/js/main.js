@@ -24,3 +24,8 @@ function scrollToTop() {
     behavior: 'smooth' 
   });
 }
+
+function signIn(){
+
+  
+}

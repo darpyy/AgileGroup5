@@ -23,7 +23,7 @@
         <li><a href="{{ url_for('about') }}">About Us</a></li>
     </ul>
     </nav>
-    <h1>Hello {{ username }}</h1>
+    <h1>Hello {{ session['user_name'] }}</h1>
   </body>
 
   <footer>
