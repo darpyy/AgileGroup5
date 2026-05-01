@@ -6,9 +6,9 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="/static/css/global.css" />
-    <link rel="stylesheet" href="/static/css/homepage.css" />
+    <link rel="stylesheet" href="/static/css/dashboard.css" />
 
-    <title>CommonThread | Homepage</title>
+    <title>CommonThread | Your dashboard</title>
   </head>
   <body>
     <nav>  
@@ -18,11 +18,9 @@
         </a>
     </div>
     <ul class="nav-links">
-        <li><a href ="{{ url_for('homepage') }}" class = "active">Home</a></li>
+        <li><a href ="{{ url_for('dashboard') }}" class = "active">Home</a></li>
         <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
         <li><a href="{{ url_for('about') }}">About Us</a></li>
-        <li><a href="{{ url_for('login') }}">Login</a></li>
-        <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
     </ul>
     </nav>
     <h1>Hello {{ username }}</h1>

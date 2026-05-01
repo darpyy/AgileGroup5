@@ -8,17 +8,13 @@ app.config ['SECRET_KEY'] = '8e465ada7653afdc91a1be93b5403c23'
 def index():
     return render_template('index.html')
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
 @app.route('/signup')
 def signup():
     return render_template('signup.html')
 
-@app.route('/homepage')
-def homepage():
-    return render_template('homepage.html')
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/about')
 def about():
