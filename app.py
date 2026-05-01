@@ -18,6 +18,14 @@ def signup():
 def homepage():
     return render_template('homepage.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html') 
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
 @app.route('/signup/tags')
 def tags():
     return render_template('tags.html')
