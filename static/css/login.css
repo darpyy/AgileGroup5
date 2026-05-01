@@ -59,7 +59,7 @@ body {
   margin-bottom: 14px;
 }
 
-button {
+.sign-btn {
   width: 100%;
   padding: 10px;
   border-radius: 5px;
