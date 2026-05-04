@@ -21,6 +21,7 @@ body {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  margin: 4rem;
 
   color: white;
 }
@@ -80,7 +81,7 @@ body {
   border: none;
   border-radius: 8px;
 
-  background: white;
+  background: #0fdfff;;
   color: #222;
 
   font-size: 15px;
@@ -96,15 +97,15 @@ body {
   padding: 6px 10px;
   border-radius: 6px;
 
-  background: rgba(255, 255, 255, 0.12);
-  color: #a855f7;
+  background: #d29a0f;
+  color: #000000;
 
   text-decoration: none;
   font-size: 14px;
 }
 
 .forgot-link:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--dark-color);
   text-decoration: underline;
 }
 
@@ -124,9 +125,23 @@ body {
 .forgot-link,
 .forgot-link:visited,
 .forgot-link:hover,
-.forgot-link:active {
-  color: #ddd;
+.forgot-link:active,
+.login-button,
+.login-button:hover {
+  color: #000000 !important;
   text-decoration: none;
+  font-size: 14px;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+.forgot-link:hover {
+  background: #edcd84; /* Darker gold */
+  text-decoration: none !important;
+}
+
+.login-button:hover {
+  background: #c6f6ff; /* Or whatever color you prefer for the button hover */
+  cursor: pointer;
 }
 
 .login a,
