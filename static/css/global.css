@@ -244,7 +244,11 @@ footer ul a:hover, nav ul a.active {
 footer ul a.active {
   color: var(--accent-color);
 }
-
+footer p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .backToTop {
   background-color: var(--primary-color);
   color: var(--dark-color);
