@@ -24,6 +24,7 @@ body {
   margin: 1.5rem;
 
   color: white;
+  margin: 1rem;
 }
 
 .signup-header {
@@ -65,7 +66,7 @@ body {
   border: none;
   border-radius: 8px;
 
-  background: #0fdfff;
+  background:  #0fdfff;
   color: #222;
 
   font-size: 15px;

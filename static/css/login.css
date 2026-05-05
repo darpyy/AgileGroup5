@@ -24,6 +24,7 @@ body {
   margin: 4rem;
 
   color: white;
+  margin: 4rem;
 }
 
 .login-header {
@@ -81,7 +82,7 @@ body {
   border: none;
   border-radius: 8px;
 
-  background: #0fdfff;;
+  background:  #0fdfff;
   color: #222;
 
   font-size: 15px;
