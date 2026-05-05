@@ -21,8 +21,10 @@ body {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  margin: 1.5rem;
 
   color: white;
+  margin: 1rem;
 }
 
 .signup-header {
@@ -64,7 +66,7 @@ body {
   border: none;
   border-radius: 8px;
 
-  background: white;
+  background:  #0fdfff;
   color: #222;
 
   font-size: 15px;
