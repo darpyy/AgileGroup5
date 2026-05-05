@@ -15,5 +15,17 @@ function showSlides() {
         slideIndex = 1
     }
     slides[slideIndex-1].style.display = "block";
-    setTimeout(showSlides, 2000); // 2 sec changes
+    setTimeout(showSlides, 5000); // 2 sec changes
+}
+
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth' 
+  });
+}
+
+function signIn(){
+
+  
 }

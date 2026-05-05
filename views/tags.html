@@ -14,6 +14,71 @@
     <title>Document</title>
 </head>
 <body>
+    <nav>  
+        <div class="logo"> 
+            <a href="{{ url_for('index') }}">
+                Common<span>Thread</span>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href ="{{ url_for('dashboard') }}">Home</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+            <li><a href="{{ url_for('about') }}">About Us</a></li>
+            <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+            <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+        </ul>
+    </nav>
+    
     <h1>This is the Tags page</h1> 
 </body>
+
+    <!-- Footer -->
+    <footer class="footerCopy">
+
+        <section class="navFooter">
+            <article class="footArticle">
+                <h3>About Us</h3>
+                <p> We are interested in bringing people closer together in your Community. We hope to help build meaningful friendships & keeping people active in the Greater Vancouver area!</p>
+                
+                <ul class="footer-links">
+                    <li> <a href="{{ url_for('about') }}">
+                    About Us
+                    </a>
+                    </li>
+                </ul>
+            </article>
+            <article class="footArticle">
+                <h3>Contact Info</h3>
+                <section  class="contactFoot">
+                    <h4 class="contacter">Call</h4>
+                    <p class="contacter">+1 123-456-6789</p>
+                </section>
+                <section  class="contactFoot">
+                    <h4 class="contacter">Email us</h4>
+                    <p class="contacter">contact@CommonThread.com</p>
+                </section>
+                <section  class="contactFoot">
+                    <h4 class="contacter">Find us</h4>
+                    <p class="contacter">Canada, Vancouver, Main 67A</p>
+                </section>
+                <section>
+                 <ul class="footer-links">
+                    <li> 
+                        <a href="{{ url_for('contact') }}">
+                            Contact Us
+                        </a>
+                    </li>
+                </ul>
+                </section>
+            </article>
+            <article class="footArticle">
+                <button onclick="scrollToTop()" class="backToTop">
+                    Back to Top
+                </button>
+            </article>
+        </section>
+        <p></p>
+        <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
+    </footer>
+<script src="/static/js/main.js"></script>
 </html>
