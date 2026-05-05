@@ -2,6 +2,7 @@ from flask import Flask, render_template, session, redirect, request, flash, url
 from forms import RegistrationForm, loginForm
 import json
 import os
+
 app = Flask(__name__, template_folder='views')
 
 app.config ['SECRET_KEY'] = '8e465ada7653afdc91a1be93b5403c23'
@@ -30,7 +31,7 @@ def signup():
         # Check if email exists already
         if any(user.get("email") == form.email.data for user in users):
             flash("This email already exists")
-            return redirect(url_for("signup"))
+            return redirect(url_for("login"))
         
         # Create new user
         newId = max([user.get('id', 0) for user in users], default=0) + 1
