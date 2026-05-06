@@ -2,15 +2,15 @@ from flask import Flask, render_template, session, redirect, request, flash, url
 from forms import RegistrationForm, loginForm
 import json
 import os
+import sqlite3,hashlib #for talking to relational database
+from sqlitedb import startServer
+
 app = Flask(__name__, template_folder='views')
 
 app.config ['SECRET_KEY'] = '8e465ada7653afdc91a1be93b5403c23'
 
+ADDRESS = "http://localhost"
 PORT = 5000
-
-@app.route('/')
-def index():
-    return render_template('index.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -52,6 +52,45 @@ def signup():
             flash("an error occurred")
     return render_template('signup.html', title='Register', form=form)
 
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    startServer()
+    form = loginForm()
+    connection = sqlite3.connect("users.db")
+    cursor = connection.cursor()
+
+    if 'login' in request.form:
+        if form.validate_on_submit():
+            
+            email = form.email.data
+            password = hashlib.sha256(form.password.data.encode('utf-8')).hexdigest()
+
+            query = "SELECT password FROM users WHERE email = ?"
+            cursor.execute(query, (email,))
+
+            dbuser = cursor.fetchone()
+            if dbuser: #if a user with that email exists:
+                if dbuser[0] == password:
+                    flash("login successful")
+                    connection.close()
+                    return redirect(url_for("dashboard"))
+                    
+            else:
+                connection.close()
+                flash("Invalid email/password")
+
+
+    elif 'logout' in request.form:
+        session.clear()
+        connection.close()
+        return redirect(url_for("index"))
+    connection.close()
+    return render_template('login.html', title='Login', form=form)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
@@ -71,8 +110,9 @@ def tags():
 @app.route("/register")
 def register():
     form = RegistrationForm()
-    return render_template('signup.html', title='Register', form=form)
+    return render_template('signup.html', title='Register', form=form)    
 
+'''
 @app.route("/login", methods=['GET', 'POST'])
 def login():    
     form = loginForm()
@@ -102,6 +142,7 @@ def login():
         session['user_name'] = ""
         return redirect(url_for("index"))
     return render_template('login.html', title='Login', form=form)
+'''
 
 if __name__ == '__main__':
     print(f"server should be running at http://localhost:{PORT}/")
