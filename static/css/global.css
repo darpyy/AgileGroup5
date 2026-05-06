@@ -37,6 +37,7 @@ html {
   --white-color: #ffffff;
 }
 
+
 /*** Logo styling
  */
 .logo a{
@@ -123,7 +124,7 @@ body {
  }
 
  .btn {
-    display: inline-block;
+    display: inlime-block;
     padding: 16px 48px;
     font-size: 1.2rem;
     font-weight: bold;
@@ -138,6 +139,14 @@ body {
   background-color: var(--dark-color);
   color: var(--accent-color);
 }       
+
+.ref-button {
+  width: 120px;
+  align-content: center;
+  padding: 10px 20px;
+  margin: 20px;
+  text-align: center;
+}
 
 /**
  * Slideshow images
@@ -246,6 +255,13 @@ footer ul a.active {
   color: var(--accent-color);
 }
 
+.centerFoot {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+
 .backToTop {
   background-color: var(--primary-color);
   color: var(--dark-color);
@@ -254,6 +270,30 @@ footer ul a.active {
   
 }
 
+
+/*
+Cool stuff to add before 
+*/
+/*
+Source - https://stackoverflow.com/a/20352949
+Posted by vsync, modified by community. See post 'Timeline' for change history
+Retrieved 2026-05-05, License - CC BY-SA 4.0
+*/
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header {
+  min-height: 50px;
+}
+
+footer {
+  min-height: 50px;
+}
 
 /**
  * Render the `main` element consistently in IE.

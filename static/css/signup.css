@@ -21,8 +21,10 @@ body {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  margin: 1.5rem;
 
   color: white;
+  margin: 1rem;
 }
 
 .signup-header {
@@ -64,16 +66,23 @@ body {
   border: none;
   border-radius: 8px;
 
-  background: white;
+  background: #0fdfff;
   color: #222;
 
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+
+  transition: all 0.2s ease; /* smooth animation */
 }
 
 .signup-button:hover {
-  background: #e8e8e8;
+  background: #0cc5e0;
+  transform: translateY(-1px); /* slight lift */
+}
+
+.signup-button:active {
+  transform: translateY(1px); /* pressed effect */
 }
 
 .divider {
