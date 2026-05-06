@@ -77,7 +77,7 @@ def signup():
             print("email exist")
             connection.commit()
             connection.close()
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("login"))
         
         else: # Create new user/write to database
             try:
