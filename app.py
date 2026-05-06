@@ -3,9 +3,13 @@ from forms import RegistrationForm, loginForm, PostForm
 import json
 import os
 <<<<<<< HEAD
+<<<<<<< HEAD
 from datetime import datetime
 =======
 import sqlite3,hashlib #for talking to relational database
+=======
+import sqlite3, hashlib #for talking to relational database
+>>>>>>> b7bb726 (moved signup from json to sqlite)
 from sqlitedb import startServer
 >>>>>>> ecba8a5 (added sqlite DB for users)
 
@@ -16,6 +20,10 @@ app.config ['SECRET_KEY'] = '8e465ada7653afdc91a1be93b5403c23'
 ADDRESS = "http://localhost"
 PORT = 5000
 
+startServer()
+
+
+''' Json version
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegistrationForm()
@@ -55,10 +63,49 @@ def signup():
         except Exception as e:
             flash("an error occurred")
     return render_template('signup.html', title='Register', form=form)
+'''
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = RegistrationForm()   
+
+    if True:#form.validate_on_submit():
+
+        # Check if email exists already
+        connection = sqlite3.connect("users.db")
+        cursor = connection.cursor()
+        email = form.email.data
+        query = "SELECT * FROM users WHERE email = ?"
+        cursor.execute(query, (email,))
+
+
+        if cursor.fetchone():
+            flash("This email already exists")
+            print("email exist")
+            connection.commit()
+            connection.close()
+            return redirect(url_for("dashboard"))
+        
+        else: # Create new user/write to database
+            try:
+                connection = sqlite3.connect("users.db")
+                cursor = connection.cursor()
+                newemail, newpassword, newusername = form.email.data, hashlib.sha256(form.password.data.encode()).hexdigest(), form.username.data
+                cursor.execute("INSERT OR IGNORE INTO users (email, password, username) VALUES (?, ?, ?)", (newemail, newpassword, newusername))
+                connection.commit()
+                connection.close()
+                return redirect(url_for("login"))
+            
+            except Exception as e:
+                print(e)
+                flash("an error occurred")
+                connection.commit()
+                connection.close()
+        print("<><><><><><><>")
+    return render_template('signup.html', title='Register', form=form)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    startServer()
     form = loginForm()
     connection = sqlite3.connect("users.db")
     cursor = connection.cursor()
@@ -69,13 +116,15 @@ def login():
             email = form.email.data
             password = hashlib.sha256(form.password.data.encode('utf-8')).hexdigest()
 
-            query = "SELECT password FROM users WHERE email = ?"
+            query = "SELECT * FROM users WHERE email = ?"
             cursor.execute(query, (email,))
 
             dbuser = cursor.fetchone()
             if dbuser: #if a user with that email exists:
-                if dbuser[0] == password:
+                if dbuser[2] == password:
                     flash("login successful")
+                    session['user_id'] = dbuser[0]
+                    session['user_name'] = dbuser[3]
                     connection.close()
                     return redirect(url_for("dashboard"))
                     
@@ -86,8 +135,10 @@ def login():
 
     elif 'logout' in request.form:
         session.clear()
+        connection.commit()
         connection.close()
         return redirect(url_for("index"))
+    connection.commit()
     connection.close()
     return render_template('login.html', title='Login', form=form)
 
@@ -134,8 +185,7 @@ def login():
         # Checking a users credentials
         for user in users:
             if user['email'] == form.email.data and user['password'] == form.password.data:
-                session['user_id'] = user['id']
-                session['user_name'] = user['name']
+                
                 print("success!")
                 return redirect(url_for("dashboard"))
             
