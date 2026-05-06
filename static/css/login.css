@@ -24,7 +24,6 @@ body {
   margin: 4rem;
 
   color: white;
-  margin: 4rem;
 }
 
 .login-header {
@@ -82,16 +81,23 @@ body {
   border: none;
   border-radius: 8px;
 
-  background:  #0fdfff;
+  background: #0fdfff;
   color: #222;
 
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+
+  transition: all 0.2s ease; /* smooth animation */
 }
 
 .login-button:hover {
-  background: #e8e8e8;
+  background: #0cc5e0;
+  transform: translateY(-1px);
+}
+
+.login-button:active {
+  transform: translateY(1px);
 }
 
 .forgot-link {
