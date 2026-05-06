@@ -24,18 +24,33 @@
     </ul>
     </nav>
     <h1>Hello {{ session['user_name'] }}</h1>
-    <br>
-    <br>
+    <h3 class = "form-header"> Got a forum we don't have? Make a request right here!</h3>
 
-    <br>
-    <br>
-    <br>
+    <form id="forumRequestForm" method="POST" action="/request_forum">
+      <div class="form-group">
+        <label for="forumName">Forum Name</label>
+        <input
+          type="text"
+          id="forumName"
+          name="forumName"
+          size="50"
+          placeholder="Enter the name of the forum you want to request"
+          required/>
+          <br>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+        <label for="forumDescription">Forum Description</label>
+        <textarea
+          id="forumDescription"
+          name="forumDescription"
+          rows="4"
+          cols="50"
+          placeholder="Enter a brief description of the forum you want to request and reason for the request"
+          required></textarea>
+      </div>
+
+      <button type="submit" class="btn form-button">Submit Request</button>
+    </form>
+
     <form action="/login" method="POST">
       <button type="submit" class="login-button" name="logout">Logout</button>
     </form>
@@ -86,8 +101,7 @@
                 </button>
             </article>
         </section>
-        <p></p>
-        <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
+        <p class="centerFoot">Copyright &copy; 2026 CommonThread. All rights reserved.</p>
     </footer>
 <script src="/static/js/main.js"></script>
 </html>

@@ -91,8 +91,9 @@ nav ul a:hover, nav ul a.active {
 
 .bigItem {
   background-color: var(--accent-color);
-  border-radius: 5px;
+  border-radius: 3px 3px;
   color: var(--dark-color);
+  padding: 3px;
 }
 .bigItem:hover {
   color: var(--deep-color)
@@ -160,7 +161,7 @@ body {
 
 .slide_caption{
   color: var(--secondary-color);
-  font-size: 12px;
+  font-size: 24px;
   padding: 8px 12px;
   position: absolute;
   bottom: 8px;
@@ -249,6 +250,14 @@ footer p {
   justify-content: center;
   align-items: center;
 }
+
+.centerFoot {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+
 .backToTop {
   background-color: var(--primary-color);
   color: var(--dark-color);
@@ -257,6 +266,30 @@ footer p {
   
 }
 
+
+/*
+Cool stuff to add before 
+*/
+/*
+Source - https://stackoverflow.com/a/20352949
+Posted by vsync, modified by community. See post 'Timeline' for change history
+Retrieved 2026-05-05, License - CC BY-SA 4.0
+*/
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header {
+  min-height: 50px;
+}
+
+footer {
+  min-height: 50px;
+}
 
 /**
  * Render the `main` element consistently in IE.
@@ -382,6 +415,63 @@ sup {
 
 img {
   border-style: none;
+}
+
+
+/**
+ *  Forms Styles
+ */
+
+ .form-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--dark-color);
+  margin: 20px;
+}
+
+.form-group{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 500px;
+  align-items: flex-start;
+  margin: 20px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.form-group input, .form-group textarea {
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+  background-color: var(--secondary-color);
+  color: var(--dark-color);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  resize: none;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+  border-color: var(--accent-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+.form-button {
+  display: block;
+  margin-top: 8px;
+  margin-left: 20px;
+  padding: 20px 24px;
+  background-color: var(--dark-color);
+  color: var(--secondary-color);
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 /* Forms
