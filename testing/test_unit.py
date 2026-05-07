@@ -35,3 +35,27 @@ def test_create_post(test_client):
     assert len(posts) == 2
     assert posts[-1]['title'] == 'Test Post'
     assert posts[-1]['content'] == 'This is a test post.'
+
+def test_route_posts(test_client):
+    response = test_client.get('/posts')
+    assert response.status_code == 404
+
+def test_route_home(test_client):
+    response = test_client.get('/')
+    assert response.status_code == 200
+
+def test_route_signup(test_client):
+    response = test_client.get('/signup')
+    assert response.status_code == 200
+
+def test_route_login(test_client): 
+    response = test_client.get('/login')
+    assert response.status_code == 200
+
+def test_route_logout(test_client):
+    response = test_client.get('/logout')
+    assert response.status_code == 302
+
+def test_route_dashboard(test_client):
+    response = test_client.get('/dashboard')
+    assert response.status_code == 302
