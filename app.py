@@ -84,7 +84,7 @@ def signup():
             print("email exist")
             connection.commit()
             connection.close()
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("login"))
         
         else: # Create new user/write to database
             try:
@@ -94,7 +94,7 @@ def signup():
                 cursor.execute("INSERT OR IGNORE INTO users (email, password, username) VALUES (?, ?, ?)", (newemail, newpassword, newusername))
                 connection.commit()
                 connection.close()
-                return redirect(url_for("login"))
+                return redirect(url_for("tags"))
             
             except Exception as e:
                 print(e)

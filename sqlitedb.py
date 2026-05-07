@@ -4,7 +4,7 @@ def startServer():
     connection = sqlite3.connect("users.db")
     cursor = connection.cursor()
 
-    cursor.execute(""" 
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY,
         email VARCHAR (255) UNIQUE NOT NULL,
