@@ -26,6 +26,32 @@
       </ul>
     </nav>
     <h1>Contact Us</h1>
+    
+    <h3 class = "form-header"> Got a forum we don't have? Make a request right here!</h3>
+    <form id="forumRequestForm" method="POST" action="/request_forum">
+      <div class="form-group">
+        <label for="forumName">Forum Name</label>
+        <input
+          type="text"
+          id="forumName"
+          name="forumName"
+          size="50"
+          placeholder="Enter the name of the forum you want to request"
+          required/>
+          <br>
+
+        <label for="forumDescription">Forum Description</label>
+        <textarea
+          id="forumDescription"
+          name="forumDescription"
+          rows="4"
+          cols="50"
+          placeholder="Enter a brief description of the forum you want to request and reason for the request"
+          required></textarea>
+      </div>
+
+      <button type="submit" class="btn form-button">Submit Request</button>
+    </form>
   </body>
 
 
