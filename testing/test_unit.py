@@ -34,6 +34,7 @@ def test_create_post(test_client):
         posts = json.load(f)
 
     assert response.status_code == 200
+    print(posts[2])
     assert len(posts) == 2
     assert posts[-1]['title'] == 'Test Post'
     assert posts[-1]['content'] == 'This is a test post.'
