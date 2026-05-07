@@ -151,6 +151,14 @@ def about():
 def contact():
     return render_template('contact.html')
 
+@app.route('/admin')
+def admin():
+    with sqlite3.connect("users.db") as connection:
+        cursor = connection.cursor()
+    requests = connection.execute('SELECT * FROM requests').fetchall()
+    connection.close()
+    return render_template('admin.html', requests=requests)
+
 @app.route('/signup/tags')
 def tags():
     return render_template('tags.html')
@@ -159,38 +167,6 @@ def tags():
 def register():
     form = RegistrationForm()
     return render_template('signup.html', title='Register', form=form)    
-
-'''
-@app.route("/login", methods=['GET', 'POST'])
-def login():    
-    form = loginForm()
-    if form.validate_on_submit():
-        users = []
-        try:
-        # try to open and read the json file
-            with open('users.json', 'r') as db:
-                users = json.load(db)
-
-        except FileNotFoundError:
-            flash("Error: Database not found")
-            return render_template("login.html", title="Login", form=form)
-        
-        # Checking a users credentials
-        for user in users:
-            if user['email'] == form.email.data and user['password'] == form.password.data:
-                
-                print("success!")
-                return redirect(url_for("dashboard"))
-            
-        flash("Invalid email/password")
-
-    elif 'logout' in request.form:
-        session['user_id'] = ""
-        session['user_name'] = ""
-        return redirect(url_for("index"))
-    return render_template('login.html', title='Login', form=form)
-'''
-
 
 @app.route("/posts/new", methods=['GET', 'POST'])
 def new_post():
