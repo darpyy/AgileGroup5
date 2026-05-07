@@ -144,7 +144,8 @@ def dashboard():
     return render_template('dashboard.html')
 
 @app.route('/about')
-def about():
+def about(): 
+    user = session.get('user')
     return render_template('about.html') 
 
 @app.route('/contact')
