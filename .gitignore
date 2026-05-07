@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-.pytest_cache 
-.venv
-__pychache____pycache__/
-=======
 __pycache__/
 *.pyc
 *.pyo
->>>>>>> 317578e70552a3571a01bd45437557862e05a44d

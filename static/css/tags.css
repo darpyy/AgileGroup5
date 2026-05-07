@@ -1,0 +1,102 @@
+/* ─── Tags Page Styles ─────────────────────────────────────────────────────── */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #1f1f1f;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-family: "Source Code Pro", 'DM Sans', sans-serif;
+  color: white;
+}
+
+.tags-container {
+  width: 600px;
+  max-width: 90%;
+  margin: 60px auto;
+  padding: 48px 40px;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  text-align: center;
+}
+
+.tags-container h1 {
+  margin-bottom: 8px;
+}
+
+.tags-container h3 {
+  margin-top: 32px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.tags-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* City dropdown */
+.tags-container label[for="city"] {
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.tags-container select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border-radius: 7px;
+  border: none;
+  background: white;
+  color: #222;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Tag buttons (checkbox-styled-as-button) */
+.tags-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tag-button {
+  padding: 10px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 24px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  color: rgb(0, 0, 0);
+  background: #d29a0f;;
+}
+.tag-button-submit {
+  width: 100%;
+  padding: 12px;
+  margin-top: 25px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #0fdfff;
+  color: #222;
+
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: all 0.2s ease
+
+}

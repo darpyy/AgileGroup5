@@ -11,98 +11,132 @@
     <title>CommonThread | Your dashboard</title>
   </head>
   <body>
-    <nav>  
-    <div class="logo"> 
-        <a href="{{ url_for('index') }}">
-            Common<span>Thread</span>
+    <nav>
+      <div class="logo">
+          Common<span>Thread</span>
         </a>
-    </div>
-    <ul class="nav-links">
-        <li><a href ="{{ url_for('dashboard') }}" class = "active">Home</a></li>
+      </div>
+      <ul class="nav-links">
+        <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
         <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
         <li><a href="{{ url_for('about') }}">About Us</a></li>
-    </ul>
+      </ul>
     </nav>
-    <h1>Hello {{ session['user_name'] }}</h1>
-    <h3 class = "form-header"> Got a forum we don't have? Make a request right here!</h3>
 
-    <form id="forumRequestForm" method="POST" action="/request_forum">
-      <div class="form-group">
-        <label for="forumName">Forum Name</label>
-        <input
-          type="text"
-          id="forumName"
-          name="forumName"
-          size="50"
-          placeholder="Enter the name of the forum you want to request"
-          required/>
-          <br>
+    <main class="dashboard-wrap">
+      <!-- LEFT: profile + logout card -->
+      <section class="profile-card">
+        <div class="profile-avatar" aria-hidden="true">
+          {{ session['user_name'][0]|upper if session['user_name'] else 'U' }}
+        </div>
+        <div class="profile-info">
+          <h1 class="profile-name">{{ session['user_name'] }}</h1>
+          <p class="profile-email">{{ session.get('user_email', '') }}</p>
+          <p class="profile-meta">Welcome back to CommonThread.</p>
 
-        <label for="forumDescription">Forum Description</label>
-        <textarea
-          id="forumDescription"
-          name="forumDescription"
-          rows="4"
-          cols="50"
-          placeholder="Enter a brief description of the forum you want to request and reason for the request"
-          required></textarea>
-      </div>
+          <form action="/login" method="POST" class="profile-logout">
+            <button type="submit" class="logout-button" name="logout">Logout</button>
+          </form>
+        </div>
+      </section>
 
-      <button type="submit" class="btn form-button">Submit Request</button>
-    </form>
+      <!-- RIGHT: sidebar listing available forums -->
+      <aside class="sidebar-card">
+        <h2 class="sidebar-title">Available Forums</h2>
+        <p class="sidebar-sub">Browse community forums you can join.</p>
 
-    <form action="/login" method="POST">
-      <button type="submit" class="login-button" name="logout">Logout</button>
-    </form>
-  </body>
+        <ul class="forum-list">
+          {% if forums %}
+            {% for forum in forums %}
+              <li class="forum-item">
+                <a href="{{ url_for('forum', forum_id=forum.id) }}">
+                  <span class="forum-name">{{ forum.name }}</span>
+                  {% if forum.member_count is defined %}
+                    <span class="forum-meta">{{ forum.member_count }} members</span>
+                  {% endif %}
+                </a>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="forum-item"><a href="#"><span class="forum-name">Hiking &amp; Outdoors</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Book Club</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Local Eats</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Board Games</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Volunteering</span></a></li>
+          {% endif %}
+        </ul>
+
+        <a href="#forumRequestForm" class="sidebar-cta">Request a new forum &rarr;</a>
+      </aside>
+    </main>
+
+    <!-- Forum request form kept below the two-column layout -->
+    <section class="request-section">
+      <h3 class="form-header">Got a forum we don't have? Make a request right here!</h3>
+
+      <form id="forumRequestForm" method="POST" action="/request_forum">
+        <div class="form-group">
+          <label for="forumName">Forum Name</label>
+          <input
+            type="text"
+            id="forumName"
+            name="forumName"
+            size="50"
+            placeholder="Enter the name of the forum you want to request"
+            required />
+
+          <label for="forumDescription">Forum Description</label>
+          <textarea
+            id="forumDescription"
+            name="forumDescription"
+            rows="4"
+            cols="50"
+            placeholder="Enter a brief description of the forum you want to request and reason for the request"
+            required></textarea>
+        </div>
+
+        <button type="submit" class="btn form-button">Submit Request</button>
+      </form>
+    </section>
 
     <!-- Footer -->
     <footer class="footerCopy">
-
-        <section class="navFooter">
-            <article class="footArticle">
-                <h3>About Us</h3>
-                <p> We are interested in bringing people closer together in your Community. We hope to help build meaningful friendships & keeping people active in the Greater Vancouver area!</p>
-                
-                <ul class="footer-links">
-                    <li> <a href="{{ url_for('about') }}">
-                    About Us
-                    </a>
-                    </li>
-                </ul>
-            </article>
-            <article class="footArticle">
-                <h3>Contact Info</h3>
-                <section  class="contactFoot">
-                    <h4 class="contacter">Call</h4>
-                    <p class="contacter">+1 123-456-6789</p>
-                </section>
-                <section  class="contactFoot">
-                    <h4 class="contacter">Email us</h4>
-                    <p class="contacter">contact@CommonThread.com</p>
-                </section>
-                <section  class="contactFoot">
-                    <h4 class="contacter">Find us</h4>
-                    <p class="contacter">Canada, Vancouver, Main 67A</p>
-                </section>
-                <section>
-                 <ul class="footer-links">
-                    <li> 
-                        <a href="{{ url_for('contact') }}">
-                            Contact Us
-                        </a>
-                    </li>
-                </ul>
-                </section>
-            </article>
-            <article class="footArticle">
-                <button onclick="scrollToTop()" class="backToTop">
-                    Back to Top
-                </button>
-            </article>
-        </section>
-        <p></p>
-        <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
+      <section class="navFooter">
+        <article class="footArticle">
+          <h3>About Us</h3>
+          <p>We are interested in bringing people closer together in your Community. We hope to help build meaningful friendships &amp; keeping people active in the Greater Vancouver area!</p>
+          <ul class="footer-links">
+            <li><a href="{{ url_for('about') }}">About Us</a></li>
+          </ul>
+        </article>
+        <article class="footArticle">
+          <h3>Contact Info</h3>
+          <section class="contactFoot">
+            <h4 class="contacter">Call</h4>
+            <p class="contacter">+1 123-456-6789</p>
+          </section>
+          <section class="contactFoot">
+            <h4 class="contacter">Email us</h4>
+            <p class="contacter">contact@CommonThread.com</p>
+          </section>
+          <section class="contactFoot">
+            <h4 class="contacter">Find us</h4>
+            <p class="contacter">Canada, Vancouver, Main 67A</p>
+          </section>
+          <section>
+            <ul class="footer-links">
+              <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+            </ul>
+          </section>
+        </article>
+        <article class="footArticle">
+          <button onclick="scrollToTop()" class="backToTop">Back to Top</button>
+        </article>
+      </section>
+      <p></p>
+      <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
     </footer>
-<script src="/static/js/main.js"></script>
+
+    <script src="/static/js/main.js"></script>
+  </body>
 </html>
