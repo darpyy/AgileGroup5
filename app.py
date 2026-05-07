@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, redirect, request, flash, url_for
-from forms import RegistrationForm, loginForm, PostForm
+from forms import RegistrationForm, loginForm, PostForm, ActivityForm
 import json
 import os
 import sqlite3, hashlib #for talking to relational database
@@ -151,13 +151,52 @@ def about():
 def contact():
     return render_template('contact.html')
 
-@app.route('/admin')
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
+    
+    # requested and existing activities
     with sqlite3.connect("users.db") as connection:
         cursor = connection.cursor()
-    requests = connection.execute('SELECT * FROM requests').fetchall()
-    connection.close()
-    return render_template('admin.html', requests=requests)
+        requests = connection.execute('SELECT * FROM requests').fetchall()
+        activities = connection.execute('SELECT * FROM activities').fetchall()
+    
+    #add a new activity
+
+    form = ActivityForm()
+
+    if form.validate_on_submit():
+        try:
+            # Check if email exists already
+            with sqlite3.connect("users.db") as connection:
+                cursor = connection.cursor()
+                title = form.title.data
+                query = "SELECT * FROM activities WHERE title = ?"
+                cursor.execute(query, (title,))
+
+                if cursor.fetchone():
+                    flash("This activity already exists")
+                    print("title exist")
+                    return redirect(url_for("admin"))
+                
+                else: # Create new user/write to database
+                    
+                    newtitle, newdescription = form.title.data, form.description.data
+                    cursor.execute("INSERT OR IGNORE INTO activities (title, description) VALUES (?, ?)", (newtitle, newdescription))
+                    connection.commit()
+                    flash("Activity created")
+                    return redirect(url_for("admin"))
+            
+        except sqlite3.Error as e:
+            flash("An error occured with the database")
+            print(f"database error: {e}")
+
+        except Exception as e:
+            flash("an error occured")
+            print(f"Error: {e}")
+
+    return render_template('admin.html', requests=requests, activities=activities, form =form)
+
+
 
 @app.route('/signup/tags')
 def tags():
