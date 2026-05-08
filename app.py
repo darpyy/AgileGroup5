@@ -153,6 +153,13 @@ def login():
 
     return render_template('login.html', title='Login', form=form)
 
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    flash("You have been logged out")
+    return redirect(url_for('index'))
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -214,8 +221,11 @@ def dashboard():
     except sqlite3.Error as e:
         print(f"DB error: {e}")
     
-    return render_template('dashboard.html', profile_pic=profile_pic)
-
+    return render_template(
+        'dashboard.html',
+        forums=forums,
+        profile_pic=profile_pic
+    )
 
 @app.route('/about')
 def about():
@@ -479,7 +489,7 @@ def new_post():
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 UPLOAD_FOLDER = 'static/uploads/avatars'
-app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024   # 2 MB cap
+app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024   # 2 MB cap
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -520,6 +530,8 @@ def upload_avatar():
         print(f"DB error: {e}")
 
     return redirect(url_for('dashboard'))
+
+
 
 # Error 404 handler
 @app.errorhandler(404)
