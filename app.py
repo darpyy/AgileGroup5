@@ -131,7 +131,9 @@ def login():
                         flash("login successful")
                         session['user_id'] = dbuser[0]
                         session['user_name'] = dbuser[3]
+                        print(f"Logged in user: {session['user_id']}")
                         return redirect(url_for("dashboard"))
+
                             
                     else:
                         flash("Invalid email/password")
