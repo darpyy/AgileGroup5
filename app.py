@@ -1,22 +1,10 @@
 from flask import Flask, render_template, session, redirect, request, flash, url_for
-from forms import RegistrationForm, loginForm, PostForm
+from forms import RegistrationForm, loginForm, PostForm, ActivityForm
 import json
 import os
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import sqlite3, hashlib #for talking to relational database
 from sqlitedb import startServer
->>>>>>> development
 from datetime import datetime
-=======
-import sqlite3,hashlib #for talking to relational database
-=======
-import sqlite3, hashlib #for talking to relational database
->>>>>>> b7bb726 (moved signup from json to sqlite)
-from sqlitedb import startServer
->>>>>>> ecba8a5 (added sqlite DB for users)
 
 app = Flask(__name__, template_folder='views')
 
@@ -74,77 +62,74 @@ def signup():
 def signup():
     form = RegistrationForm()   
 
-    if True:#form.validate_on_submit():
-
-        # Check if email exists already
-        connection = sqlite3.connect("users.db")
-        cursor = connection.cursor()
-        email = form.email.data
-        query = "SELECT * FROM users WHERE email = ?"
-        cursor.execute(query, (email,))
-
-
-        if cursor.fetchone():
-            flash("This email already exists")
-            print("email exist")
-            connection.commit()
-            connection.close()
-            return redirect(url_for("login"))
-        
-        else: # Create new user/write to database
-            try:
-                connection = sqlite3.connect("users.db")
+    if form.validate_on_submit():
+        try:
+            # Check if email exists already
+            with sqlite3.connect("users.db") as connection:
                 cursor = connection.cursor()
-                newemail, newpassword, newusername = form.email.data, hashlib.sha256(form.password.data.encode()).hexdigest(), form.username.data
-                cursor.execute("INSERT OR IGNORE INTO users (email, password, username) VALUES (?, ?, ?)", (newemail, newpassword, newusername))
-                connection.commit()
-                connection.close()
-                return redirect(url_for("tags"))
+                email = form.email.data
+                query = "SELECT * FROM users WHERE email = ?"
+                cursor.execute(query, (email,))
+
+
+                if cursor.fetchone():
+                    flash("This email already exists")
+                    print("email exist")
+                    return redirect(url_for("login"))
+                
+                else: # Create new user/write to database
+                    
+                    newemail, newpassword, newusername = form.email.data, hashlib.sha256(form.password.data.encode()).hexdigest(), form.username.data
+                    cursor.execute("INSERT OR IGNORE INTO users (email, password, username) VALUES (?, ?, ?)", (newemail, newpassword, newusername))
+                    connection.commit()
+                    flash("Account created")
+                    return redirect(url_for("login"))
             
-            except Exception as e:
-                print(e)
-                flash("an error occurred")
-                connection.commit()
-                connection.close()
-        print("<><><><><><><>")
+        except sqlite3.Error as e:
+            flash("An error occured with the database")
+            print(f"database error: {e}")
+
+        except Exception as e:
+            flash("an error occured")
+            print(f"Error: {e}")
+
     return render_template('signup.html', title='Register', form=form)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = loginForm()
-    connection = sqlite3.connect("users.db")
-    cursor = connection.cursor()
-
+    
     if 'login' in request.form:
         if form.validate_on_submit():
-            
-            email = form.email.data
-            password = hashlib.sha256(form.password.data.encode('utf-8')).hexdigest()
+            try:
+                with sqlite3.connect("users.db") as connection:
+                    cursor = connection.cursor()
+                    email = form.email.data
+                    password = hashlib.sha256(form.password.data.encode('utf-8')).hexdigest()
 
-            query = "SELECT * FROM users WHERE email = ?"
-            cursor.execute(query, (email,))
+                    query = "SELECT * FROM users WHERE email = ?"
+                    cursor.execute(query, (email,))
 
-            dbuser = cursor.fetchone()
-            if dbuser: #if a user with that email exists:
-                if dbuser[2] == password:
-                    flash("login successful")
-                    session['user_id'] = dbuser[0]
-                    session['user_name'] = dbuser[3]
-                    connection.close()
-                    return redirect(url_for("dashboard"))
-                    
-            else:
-                connection.close()
-                flash("Invalid email/password")
+                    dbuser = cursor.fetchone()
 
+                    if dbuser and dbuser[2] == password: #if a user with that email exists:
+                        flash("login successful")
+                        session['user_id'] = dbuser[0]
+                        session['user_name'] = dbuser[3]
+                        return redirect(url_for("dashboard"))
+                            
+                    else:
+                        flash("Invalid email/password")
+
+            except sqlite3.Error as e:
+                flash("A database error occurred")
+                print(f"Database error: {e}")
 
     elif 'logout' in request.form:
         session.clear()
-        connection.commit()
-        connection.close()
+        flash("You have been logged out")
         return redirect(url_for("index"))
-    connection.commit()
-    connection.close()
+
     return render_template('login.html', title='Login', form=form)
 
 @app.route('/')
@@ -153,6 +138,9 @@ def index():
 
 @app.route('/dashboard')
 def dashboard():
+    if not session.get("user_id"):
+        flash("please log in to view the dashboard")
+        return redirect(url_for('login'))
     return render_template('dashboard.html')
 
 @app.route('/about')
@@ -163,6 +151,53 @@ def about():
 def contact():
     return render_template('contact.html')
 
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    
+    # requested and existing activities
+    with sqlite3.connect("users.db") as connection:
+        cursor = connection.cursor()
+        requests = connection.execute('SELECT * FROM requests').fetchall()
+        activities = connection.execute('SELECT * FROM activities').fetchall()
+    
+    #add a new activity
+
+    form = ActivityForm()
+
+    if form.validate_on_submit():
+        try:
+            # Check if email exists already
+            with sqlite3.connect("users.db") as connection:
+                cursor = connection.cursor()
+                title = form.title.data
+                query = "SELECT * FROM activities WHERE title = ?"
+                cursor.execute(query, (title,))
+
+                if cursor.fetchone():
+                    flash("This activity already exists")
+                    print("title exist")
+                    return redirect(url_for("admin"))
+                
+                else: # Create new user/write to database
+                    
+                    newtitle, newdescription = form.title.data, form.description.data
+                    cursor.execute("INSERT OR IGNORE INTO activities (title, description) VALUES (?, ?)", (newtitle, newdescription))
+                    connection.commit()
+                    flash("Activity created")
+                    return redirect(url_for("admin"))
+            
+        except sqlite3.Error as e:
+            flash("An error occured with the database")
+            print(f"database error: {e}")
+
+        except Exception as e:
+            flash("an error occured")
+            print(f"Error: {e}")
+
+    return render_template('admin.html', requests=requests, activities=activities, form =form)
+
+
+
 @app.route('/signup/tags')
 def tags():
     return render_template('tags.html')
@@ -172,48 +207,24 @@ def register():
     form = RegistrationForm()
     return render_template('signup.html', title='Register', form=form)    
 
-'''
-@app.route("/login", methods=['GET', 'POST'])
-def login():    
-    form = loginForm()
-    if form.validate_on_submit():
-        users = []
-        try:
-        # try to open and read the json file
-            with open('users.json', 'r') as db:
-                users = json.load(db)
-
-        except FileNotFoundError:
-            flash("Error: Database not found")
-            return render_template("login.html", title="Login", form=form)
-        
-        # Checking a users credentials
-        for user in users:
-            if user['email'] == form.email.data and user['password'] == form.password.data:
-                
-                print("success!")
-                return redirect(url_for("dashboard"))
-            
-        flash("Invalid email/password")
-
-    elif 'logout' in request.form:
-        session['user_id'] = ""
-        session['user_name'] = ""
-        return redirect(url_for("index"))
-    return render_template('login.html', title='Login', form=form)
-'''
-
-
 @app.route("/posts/new", methods=['GET', 'POST'])
 def new_post():
     # must be logged in
     if not session.get('user_id'):
+        flash("You need to log in to create a post")
         return redirect('/login')
     
     form = PostForm()
     if form.validate_on_submit():
-        with open('posts.json', 'r') as db:
-            posts = json.load(db)
+        posts = []
+        if os.path.exists('posts.json'):
+            try:
+                with open('posts.json', 'r') as db:
+                    posts = json.load(db)
+
+            except Exception as e:
+                flash("Could not read the post database")
+                print(e)
 
         if posts:
             # collect all the ids into a list
@@ -238,13 +249,22 @@ def new_post():
             'created_at': datetime.utcnow().isoformat(),
         }
         posts.append(new)
+        try:
+            with open('posts.json', 'w') as db:
+                json.dump(posts, db, indent=2)
+            flash("Post created")
+            return redirect(url_for('dashboard'))
 
-        with open('posts.json', 'w') as db:
-            json.dump(posts, db, indent=2)
-
-        return redirect('/dashboard')
+        except Exception as e:
+            flash("an error occurred")
+            print(e)
 
     return render_template('new_post.html', form=form)
+
+# Error 404 handler
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
