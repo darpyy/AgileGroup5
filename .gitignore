@@ -1,4 +1,4 @@
 .pytest_cache 
 .venv
-__pychache____pycache__/
+__pycache__/
 users.db
