@@ -1,7 +1,7 @@
 .pytest_cache 
 .venv
-__pychache____pycache__/
-_pycache__/
+__pycache__/
 *.pyc
 .pyc
 settings.json
+users.db
