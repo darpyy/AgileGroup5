@@ -7,11 +7,14 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="/static/css/global.css">
-    <link rel="stylesheet" href="/static/css/tags.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 
 
-
-    <title>Document</title>
+    <title>CommonThread</title>
 </head>
 <body>
     <nav>  
@@ -24,51 +27,17 @@
             <li><a href ="{{ url_for('dashboard') }}">Home</a></li>
             <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
             <li><a href="{{ url_for('about') }}">About Us</a></li>
-            <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
-            <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
         </ul>
+
     </nav>
-    
-    <h1>Welcome {{ session['user_name'] }}!</h1>
-    <div class="tags-container">
-  <h1>Pick your city and up to 3 tags</h1>
 
-  <form method="POST" action="{{ url_for('tags') }}">
+    <div class="activity-row">
+    <div class="item"> {{ activity['title'] }}</div>
+    <div class="item">City:{{ activity['city'] }}</div>
+    <div class="item">This Activity:{{ activity['description'] }}</div>
 
-    <label for="city">City</label>
-    <select id="city" name="city" required>
-      <option value="" disabled selected>Choose your city</option>
-      {% for city in locations %}
-        <option value="{{ city.locid }}">{{ city.city }}</option>
-      {% endfor %}
-    </select>
-
-    <h3>Tags (pick up to 3)</h3>
-    <div class="tags-grid">
-        {% for tag in tags %}
-            <label class="tag-button">
-                <input type="checkbox" name="tags" value="{{ tag.tagid }}"> 
-                {{ tag.tagname }}
-            </label>
-        {% endfor %}
-    </div>
-
-    <button type="submit" class="tag-button-submit">Continue</button>
-  </form>
 </div>
-
-<script>
-  const tagBoxes = document.querySelectorAll('input[name="tags"]');
-  tagBoxes.forEach(cb => {
-    cb.addEventListener('change', () => {
-      const picked = document.querySelectorAll('input[name="tags"]:checked');
-      if (picked.length > 3) {
-        cb.checked = false;
-        alert('You can only pick 3 tags.');
-      }
-    });
-  });
-</script>
+    
 </body>
 
     <!-- Footer -->
