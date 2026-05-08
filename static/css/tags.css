@@ -1,40 +1,51 @@
-/* ─── Tags Page Styles ─────────────────────────────────────────────────────── */
+/* ─── Tags Page — matches index/login/signup theme ─────────── */
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: #1f1f1f;
+  background: linear-gradient(180deg, #e9f0ff 0%, #f5f8ff 100%);
+  font-family: "Source Code Pro", monospace;
+  color: var(--dark-color);
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
 
-  font-family: "Source Code Pro", 'DM Sans', sans-serif;
-  color: white;
+/* welcome heading above the card */
+body > h1 {
+  text-align: center;
+  margin: 40px 20px 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--dark-color);
 }
 
 .tags-container {
-  width: 600px;
-  max-width: 90%;
-  margin: 60px auto;
+  width: 100%;
+  max-width: 600px;
+  margin: 30px auto 60px;
   padding: 48px 40px;
-  border-radius: 14px;
+  border-radius: 16px;
 
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(58, 73, 89, 0.12);
 
   text-align: center;
+  color: var(--dark-color);
 }
 
 .tags-container h1 {
-  margin-bottom: 8px;
+  margin: 0 0 24px 0;
+  font-size: 1.6rem;
+  color: var(--dark-color);
 }
 
 .tags-container h3 {
   margin-top: 32px;
   margin-bottom: 16px;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--dark-color);
 }
 
 .tags-container form {
@@ -43,27 +54,37 @@ body {
   align-items: stretch;
 }
 
-/* City dropdown */
+/* city dropdown */
 .tags-container label[for="city"] {
   text-align: left;
   font-weight: 600;
+  font-size: 0.9rem;
   margin-bottom: 8px;
+  color: var(--dark-color);
 }
 
 .tags-container select {
   width: 100%;
   box-sizing: border-box;
-  padding: 13px 14px;
-  border-radius: 7px;
-  border: none;
-  background: white;
-  color: #222;
-  font-size: 14px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #d8e0ee;
+  background: #f7f9ff;
+  color: var(--dark-color);
+  font-size: 15px;
   font-family: inherit;
   cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* Tag buttons (checkbox-styled-as-button) */
+.tags-container select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(89, 148, 243, 0.18);
+  background: #fff;
+}
+
+/* tag pills */
 .tags-grid {
   display: flex;
   flex-wrap: wrap;
@@ -73,30 +94,53 @@ body {
 }
 
 .tag-button {
-  padding: 10px 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 24px;
+  padding: 10px 22px;
+  border: 2px solid #d8e0ee;
+  border-radius: 999px;
   cursor: pointer;
   user-select: none;
   font-size: 14px;
-  color: rgb(0, 0, 0);
-  background: #d29a0f;;
+  font-weight: 500;
+  color: var(--dark-color);
+  background: #f7f9ff;
+  transition: all 0.2s;
 }
+
+.tag-button input[type="checkbox"] {
+  display: none;
+}
+
+.tag-button:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* selected state — modern :has() selector */
+.tag-button:has(input:checked) {
+  background: var(--accent-color);
+  color: #fff;
+  border-color: var(--accent-color);
+}
+
+/* primary submit */
 .tag-button-submit {
   width: 100%;
-  padding: 12px;
-  margin-top: 25px;
-
+  padding: 14px;
+  margin-top: 20px;
   border: none;
-  border-radius: 8px;
-
-  background: #0fdfff;
-  color: #222;
-
-  font-size: 15px;
+  border-radius: 999px;
+  background: var(--accent-color);
+  color: #fff;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
 
-  transition: all 0.2s ease
+.tag-button-submit:hover {
+  background: #4a85e6;
+}
 
+.tag-button-submit:active {
+  transform: translateY(1px);
 }
