@@ -218,7 +218,7 @@ def contact():
                 cursor = connection.cursor()
 
                 newreqauth, newtitle, newdescription, newlocation = session.get('user_id'), form.reqtitle.data, form.reqdescription.data, session.get('user_city')
-                cursor.execute("INSERT OR IGNORE INTO requests (reqauthv, reqtitle, reqdescription, locid) VALUES (?, ?, ?, ?)", (newreqauth, newtitle, newdescription, newlocation))
+                cursor.execute("INSERT OR IGNORE INTO requests (reqauth, reqtitle, reqdescription, locid) VALUES (?, ?, ?, ?)", (newreqauth, newtitle, newdescription, newlocation))
                 connection.commit()
                 print("Request created")
                 return redirect(url_for("contact"))

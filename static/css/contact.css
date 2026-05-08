@@ -109,3 +109,9 @@ body > h1 {
 #forumRequestForm .form-button:active {
   transform: translateY(1px);
 }
+
+.signup-button {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none; /* removes the underline */
+}

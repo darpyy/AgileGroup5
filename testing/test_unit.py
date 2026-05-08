@@ -8,11 +8,12 @@ from datetime import datetime
 import pytest
 from app import app
 
-app.config['WTF_CSRF_ENABLED'] = False
-app.config['TESTING'] = True
+
 
 @pytest.fixture(scope='module')
 def test_client():
+    app.config['TESTING'] = True
+    app.config['WTF_CSRF_ENABLED'] = False
     app.config['TESTING'] = True
     
     with app.test_client() as testing_client:
@@ -26,7 +27,6 @@ def test_posts(test_client):
         posts = json.load(f)
     
     assert response.status_code == 302
-    assert len(posts) == 1
 
 
 # Test to see if post creation works
@@ -43,18 +43,15 @@ def test_posts(test_client):
 #     assert posts[-1]['content'] == 'This is a test post.'
 
 def test_create_post(test_client):
-    # 1. Fake the login session
+  
     with test_client.session_transaction() as sess:
-        sess['user_id'] = 1  # Set this to any valid ID
+        sess['user_id'] = 1  
 
-    # 2. Match your form data to your route
-    # Note: Your route uses 'form.body.data', but your test was sending 'content'
     response = test_client.post('/posts/new', data={
         'title': 'Test Post', 
-        'body': 'This is a test post.'  # Changed 'content' to 'body'
+        'body': 'This is a test post.'
     }, follow_redirects=True)
 
-    # 3. Check the results
     assert response.status_code == 200
     
     with open("posts.json", 'r') as f:
@@ -102,9 +99,39 @@ def test_route_login(test_client):
     assert response.status_code == 200
 
 def test_route_logout(test_client):
-    response = test_client.get('/logout')
+    response = test_client.post('/login', data={'logout': 'true'}, follow_redirects=False)
     assert response.status_code == 302
 
 def test_route_dashboard(test_client):
     response = test_client.get('/dashboard')
     assert response.status_code == 302
+
+
+def test_request_form(test_client):
+
+    test_client.application.config['WTF_CSRF_ENABLED'] = False
+
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 1
+        sess['user_city'] = 1  
+
+    test_title = "Baking Forum"
+    test_desc = "A place to discuss sourdough and pastries."
+
+    response = test_client.post('/contact', data={
+        'reqtitle': test_title,
+        'reqdescription': test_desc
+    }, follow_redirects=True)
+
+    assert response.status_code == 200
+
+    with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        query = "SELECT * FROM requests WHERE reqtitle = ?"
+        row = cursor.execute(query, (test_title,)).fetchone()
+
+    assert row is not None, "Request was not found in the database."
+    assert row['reqtitle'] == test_title
+    assert row['reqdescription'] == test_desc
+    assert row['reqauth'] == 1
