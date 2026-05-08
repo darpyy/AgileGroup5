@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS members (
 CREATE TABLE IF NOT EXISTS requests (
     reqid INTEGER PRIMARY KEY,
     id INTEGER NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    desc VARCHAR(255) NOT NULL,
+    reqtitle VARCHAR(255) NOT NULL,
+    reqdescription VARCHAR(255) NOT NULL,
     FOREIGN KEY (id) REFERENCES users(id)
 );
 CREATE TABLE IF NOT EXISTS user_tags (
@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS user_tags (
     cursor.execute("INSERT OR IGNORE INTO users (id, email, password, username) VALUES (?, ?, ?, ?)", (id1, email1, password1, username1))
 
     #for testing, remove later
-    reqid, id, title, desc = 0, 0, "my 1st post", "hi"
-    cursor.execute("INSERT OR IGNORE INTO requests (reqid, id, title, desc) VALUES (?, ?, ?, ?)", (reqid, id, title, desc))
+    reqid, id, reqtitle, reqdescription = 0, 0, "my 1st request", "hi"
+    cursor.execute("INSERT OR IGNORE INTO requests (reqid, id, reqtitle, reqdescription) VALUES (?, ?, ?, ?)", (reqid, id, reqtitle, reqdescription))
 
     actid, title, description = 0, "my 1st activity", "hi"
     cursor.execute("INSERT OR IGNORE INTO activities (actid, title, description) VALUES (?, ?, ?)", (actid, title, description))
@@ -52,4 +52,3 @@ CREATE TABLE IF NOT EXISTS user_tags (
 
     connection.commit()
     connection.close()
-

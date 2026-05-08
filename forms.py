@@ -21,7 +21,6 @@ class loginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
-
 # a class form for the posts
 
 class PostForm(FlaskForm):
@@ -30,7 +29,15 @@ class PostForm(FlaskForm):
     submit = SubmitField('Post')
 
 
-# a class form for creating activities
+# a class form for creating requests
+
+class RequestForm(FlaskForm):
+
+    reqtitle = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
+    reqdescription = StringField('Description', validators=[DataRequired(), Length(min=5, max=100)])
+    submit = SubmitField('Request')
+
+    # a class form for creating activities
 
 class ActivityForm(FlaskForm):
 

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, redirect, request, flash, url_for
-from forms import RegistrationForm, loginForm, PostForm, ActivityForm
+from forms import RegistrationForm, loginForm, PostForm, ActivityForm, RequestForm
 import json
 import os
 import sqlite3, hashlib #for talking to relational database
@@ -71,7 +71,6 @@ def signup():
                 query = "SELECT * FROM users WHERE email = ?"
                 cursor.execute(query, (email,))
 
-
                 if cursor.fetchone():
                     flash("This email already exists")
                     print("email exist")
@@ -103,7 +102,9 @@ def signup():
         except Exception as e:
             flash("an error occured")
             print(f"Error: {e}")
-
+    print(f"Form Errors: {form.errors}")
+    print(f"Form Data Received: {form.data}")
+    print("signup failed")
     return render_template('signup.html', title='Register', form=form)
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -149,7 +150,7 @@ def index():
 
 @app.route('/dashboard')
 def dashboard():
-    if not session.get("user_id"):
+    if session.get('user_id') is None:
         flash("please log in to view the dashboard")
         return redirect(url_for('login'))
     return render_template('dashboard.html')
@@ -158,12 +159,48 @@ def dashboard():
 def about():
     return render_template('about.html') 
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template('contact.html')
+
+    #add a new request
+    form = RequestForm()
+
+    print(session.get('user_id'))
+    if session.get('user_id') is None:
+        return redirect(url_for('login'))
+
+    if form.validate_on_submit():
+
+        try:
+            with sqlite3.connect("users.db") as connection:
+                cursor = connection.cursor()
+
+                newid, newtitle, newdescription = session.get('user_id'), form.reqtitle.data, form.reqdescription.data
+                cursor.execute("INSERT OR IGNORE INTO requests (id, reqtitle, reqdescription) VALUES (?, ?, ?)", (newid, newtitle, newdescription))
+                connection.commit()
+                print("Request created")
+                return redirect(url_for("contact"))
+            
+        except sqlite3.Error as e:
+            flash("An error occured with the database")
+            print(f"database error: {e}")
+
+        except Exception as e:
+            flash("an error occured")
+            print(f"Error: {e}")
+    print(f"Form Errors: {form.errors}")
+    print(f"Form Data Received: {form.data}")
+    print("request failed")
+
+    return render_template('contact.html', form=form)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
+
+    #check user is admin
+    print(session.get('user_id'))
+    if not session.get('user_id') == 0:
+        return redirect(url_for('login'))
     
     # requested and existing activities
     with sqlite3.connect("users.db") as connection:
@@ -177,7 +214,7 @@ def admin():
 
     if form.validate_on_submit():
         try:
-            # Check if email exists already
+            # Check if activity exists already
             with sqlite3.connect("users.db") as connection:
                 cursor = connection.cursor()
                 title = form.title.data
@@ -194,7 +231,7 @@ def admin():
                     newtitle, newdescription = form.title.data, form.description.data
                     cursor.execute("INSERT OR IGNORE INTO activities (title, description) VALUES (?, ?)", (newtitle, newdescription))
                     connection.commit()
-                    flash("Activity created")
+                    print("Activity created")
                     return redirect(url_for("admin"))
             
         except sqlite3.Error as e:
@@ -204,7 +241,10 @@ def admin():
         except Exception as e:
             flash("an error occured")
             print(f"Error: {e}")
-
+    print(f"Form Errors: {form.errors}")
+    print(f"Form Data Received: {form.data}")
+    print("bruhhh")
+    connection.close()
     return render_template('admin.html', requests=requests, activities=activities, form =form)
 
 
