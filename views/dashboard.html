@@ -44,14 +44,14 @@
       <!-- RIGHT: sidebar listing available forums -->
       <aside class="sidebar-card">
         <h2 class="sidebar-title">Available Forums</h2>
-        <p class="sidebar-sub">Browse community forums you can join.</p>
+        <p class="sidebar-sub">Browse your community forums.</p>
 
         <ul class="forum-list">
           {% if forums %}
             {% for forum in forums %}
               <li class="forum-item">
-                <a href="{{ url_for('forum', forum_id=forum.id) }}">
-                  <span class="forum-name">{{ forum.name }}</span>
+                <a href="{{ url_for('showActivity', actid=forum['actid']) }}">
+                  <span class="forum-name">{{ forum['title']}}</span>
                   {% if forum.member_count is defined %}
                     <span class="forum-meta">{{ forum.member_count }} members</span>
                   {% endif %}
@@ -67,7 +67,7 @@
           {% endif %}
         </ul>
 
-        <a href="#forumRequestForm" class="sidebar-cta">Request a new forum &rarr;</a>
+        <a href="#forumRequestForm" class="sidebar-cta">Request a new forum &rarr;</a>                     
       </aside>
     </main>
 

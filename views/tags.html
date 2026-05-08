@@ -38,21 +38,19 @@
     <label for="city">City</label>
     <select id="city" name="city" required>
       <option value="" disabled selected>Choose your city</option>
-      <option value="Vancouver">Vancouver</option>
-      <option value="Burnaby">Burnaby</option>
-      <option value="Surrey">Surrey</option>
-      <option value="Richmond">Richmond</option>
-      <option value="North Vancouver">North Vancouver</option>
+      {% for city in locations %}
+        <option value="{{ city.locid }}">{{ city.city }}</option>
+      {% endfor %}
     </select>
 
     <h3>Tags (pick up to 3)</h3>
     <div class="tags-grid">
-      <label class="tag-button"><input type="checkbox" name="tags" value="music"> Music</label>
-      <label class="tag-button"><input type="checkbox" name="tags" value="art"> Art</label>
-      <label class="tag-button"><input type="checkbox" name="tags" value="sports"> Sports</label>
-      <label class="tag-button"><input type="checkbox" name="tags" value="gaming"> Gaming</label>
-      <label class="tag-button"><input type="checkbox" name="tags" value="food"> Food</label>
-      <label class="tag-button"><input type="checkbox" name="tags" value="travel"> Travel</label>
+        {% for tag in tags %}
+            <label class="tag-button">
+                <input type="checkbox" name="tags" value="{{ tag.tagid }}"> 
+                {{ tag.tagname }}
+            </label>
+        {% endfor %}
     </div>
 
     <button type="submit" class="tag-button-submit">Continue</button>

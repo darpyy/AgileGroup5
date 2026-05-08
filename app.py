@@ -1,5 +1,5 @@
 from flask import Flask, render_template, session, redirect, request, flash, url_for
-from forms import RegistrationForm, loginForm, PostForm, ActivityForm
+from forms import RegistrationForm, loginForm, PostForm, ActivityForm, RequestForm
 import json
 import os
 import sqlite3, hashlib #for talking to relational database
@@ -71,7 +71,6 @@ def signup():
                 query = "SELECT * FROM users WHERE email = ?"
                 cursor.execute(query, (email,))
 
-
                 if cursor.fetchone():
                     flash("This email already exists")
                     print("email exist")
@@ -103,7 +102,9 @@ def signup():
         except Exception as e:
             flash("an error occured")
             print(f"Error: {e}")
-
+    print(f"Form Errors: {form.errors}")
+    print(f"Form Data Received: {form.data}")
+    print("signup failed")
     return render_template('signup.html', title='Register', form=form)
 
 @app.route('/home')
@@ -132,6 +133,7 @@ def login():
                         session['user_id'] = dbuser[0]
                         session['user_name'] = dbuser[3]
                         print(f"Logged in user: {session['user_id']}")
+                        session['user_city'] = dbuser[4]
                         return redirect(url_for("dashboard"))
 
                             
@@ -153,38 +155,118 @@ def login():
 def index():
     return render_template('index.html')
 
+@app.route('/activity/<int:actid>')
+def showActivity(actid):
+
+    with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+
+        query = """
+            SELECT a.*, l.city, t.tagname
+            FROM activities a
+            JOIN locations l ON a.locid = l.locid
+            JOIN tags t ON a.tagid = t.tagid
+            WHERE a.actid = ?
+        """
+        activity = cursor.execute(query, (actid,)).fetchone()
+
+    return render_template('activitiestemplate.html', activity=activity)
+
 @app.route('/dashboard')
 def dashboard():
-    if not session.get("user_id"):
+    #check user is logged in
+    if session.get('user_id') is None:
         flash("please log in to view the dashboard")
         return redirect(url_for('login'))
-    return render_template('dashboard.html')
+    
+    # requested and existing activities
+    with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+
+        query = """
+        SELECT DISTINCT a.actid, a.title, a.description, l.city
+        FROM activities a
+        JOIN usertags ut ON a.tagid = ut.tagid
+        JOIN locations l ON a.locid = l.locid
+        WHERE ut.userid = ?
+        """
+
+        forums = cursor.execute(query, (session.get('user_id'),)).fetchall()
+
+    return render_template('dashboard.html', forums=forums)
 
 @app.route('/about')
 def about():
     return render_template('about.html') 
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template('contact.html')
+
+    #add a new request
+    form = RequestForm()
+
+    print(session.get('user_id'))
+    if session.get('user_id') is None:
+        return redirect(url_for('login'))
+
+    if form.validate_on_submit():
+
+        try:
+            with sqlite3.connect("users.db") as connection:
+                cursor = connection.cursor()
+
+                newreqauth, newtitle, newdescription, newlocation = session.get('user_id'), form.reqtitle.data, form.reqdescription.data, session.get('user_city')
+                cursor.execute("INSERT OR IGNORE INTO requests (reqauthv, reqtitle, reqdescription, locid) VALUES (?, ?, ?, ?)", (newreqauth, newtitle, newdescription, newlocation))
+                connection.commit()
+                print("Request created")
+                return redirect(url_for("contact"))
+            
+        except sqlite3.Error as e:
+            flash("An error occured with the database")
+            print(f"database error: {e}")
+
+        except Exception as e:
+            flash("an error occured")
+            print(f"Error: {e}")
+    print(f"Form Errors: {form.errors}")
+    print(f"Form Data Received: {form.data}")
+    print("request failed")
+
+    return render_template('contact.html', form=form)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
+
+    #check user is admin
+    print(session.get('user_id'))
+    if not session.get('user_id') == 0:
+        return redirect(url_for('login'))
     
-    # requested and existing activities
+    form = ActivityForm()
+
+    # connect
     with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
         cursor = connection.cursor()
+    # requested and existing activities
         requests = connection.execute('SELECT * FROM requests').fetchall()
         activities = connection.execute('SELECT * FROM activities').fetchall()
-    
-    #add a new activity
+    # data for the form dropdowns
+        locrow = cursor.execute('SELECT locid, city FROM locations').fetchall()
+        tagrow = cursor.execute('SELECT tagid, tagname FROM tags').fetchall()
+        form.location.choices = [(str(l['locid']), l['city']) for l in locrow]
+        form.tag.choices = [(str(t['tagid']), t['tagname']) for t in tagrow]
 
-    form = ActivityForm()
+
+    #add a new activity
 
     if form.validate_on_submit():
         try:
-            # Check if email exists already
+            # Check if activity exists already
             with sqlite3.connect("users.db") as connection:
+                connection.row_factory = sqlite3.Row
                 cursor = connection.cursor()
                 title = form.title.data
                 query = "SELECT * FROM activities WHERE title = ?"
@@ -197,10 +279,10 @@ def admin():
                 
                 else: # Create new user/write to database
                     
-                    newtitle, newdescription = form.title.data, form.description.data
-                    cursor.execute("INSERT OR IGNORE INTO activities (title, description) VALUES (?, ?)", (newtitle, newdescription))
+                    newtitle, newdescription, newtag, newlocation = form.title.data, form.description.data, form.location.data, form.tag.data
+                    cursor.execute("INSERT OR IGNORE INTO activities (title, description, locid, tagid) VALUES (?, ?, ?, ?)", (newtitle, newdescription, newlocation, newtag))
                     connection.commit()
-                    flash("Activity created")
+                    print("Activity created")
                     return redirect(url_for("admin"))
             
         except sqlite3.Error as e:
@@ -210,11 +292,65 @@ def admin():
         except Exception as e:
             flash("an error occured")
             print(f"Error: {e}")
+    print(f"Form Errors: {form.errors}")
+    print(f"Form Data Received: {form.data}")
+    print("bruhhh")
+    connection.close()
+    return render_template('admin.html', requests=requests, activities=activities, form =form,locations=locrow, tags=tagrow)
 
-    return render_template('admin.html', requests=requests, activities=activities, form =form)
 
+@app.route('/signup/tags', methods=['GET', 'POST'])
+def tags():
+    # must be logged in
+    if not session.get('user_id'):
+        flash("Please log in to continue")
+        return redirect(url_for('login'))
 
+    if request.method == 'POST':
+        locid = request.form.get('city')
+        selected_tags = request.form.getlist('tags')[:3]   # cap at 3
 
+        try:
+            with sqlite3.connect("users.db") as connection:
+                cursor = connection.cursor()
+
+                # save city on the user row
+                cursor.execute(
+                    "UPDATE users SET locid = ? WHERE id = ?",
+                    (locid, session['user_id'])
+                )
+
+                # clear old tags for this user (in case they resubmit later)
+                cursor.execute(
+                    "DELETE FROM usertags WHERE userid = ?",
+                    (session['user_id'],)
+                )
+
+                # insert each selected tag
+                for tagid in selected_tags:
+                    cursor.execute(
+                        "INSERT INTO usertags (userid, tagid) VALUES (?, ?)",
+                        (session['user_id'], tagid)
+                    )
+
+                connection.commit()
+                flash("Preferences saved")
+                return redirect(url_for('dashboard'))
+
+        except sqlite3.Error as e:
+            flash("A database error occurred")
+            print(f"Database error: {e}")
+
+    #get locations and tags to list on form
+    with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        locations = cursor.execute("SELECT * FROM locations").fetchall()
+        tags = cursor.execute("SELECT * FROM tags").fetchall()
+
+    return render_template('tags.html', locations=locations, tags=tags)
+
+'''
 @app.route('/signup/tags', methods=['GET', 'POST'])
 def tags():
     # must be logged in
@@ -258,6 +394,9 @@ def tags():
             print(f"Database error: {e}")
 
     return render_template('tags.html')
+'''
+
+
 
 @app.route("/register")
 def register():
