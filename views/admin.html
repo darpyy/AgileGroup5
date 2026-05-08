@@ -62,7 +62,7 @@
             <h3>Requested Activities</h3>
             {% for item in requests %}
                 <span class="item-row">
-                    {{ item[2] }}:{{ item[3] }}
+                    {{ item[2] }}:{{ item[3] }}:{{ item[4] }}
                 </span>
             {% endfor %}
         </div>
@@ -78,6 +78,24 @@
         <div class="form-group">
         <label for="description">Description</label>
         <input type="description" id="description" name="description" placeholder="Enter description" required>
+        </div>
+
+        <label for="city">City</label>
+        <select id="city" name="location" required>
+        <option value="" disabled selected>Choose your city</option>
+        {% for city in locations %}
+            <option value="{{ city.locid }}">{{ city.city }}</option>
+        {% endfor %}
+        </select>
+
+        <h3>Tags (pick one)</h3>
+        <div class="tags-grid">
+            {% for tag in tags %}
+                <label class="tag-button">
+                    <input type="radio" name="tag" value="{{ tag.tagid }}"> 
+                    {{ tag.tagname }}
+                </label>
+            {% endfor %}
         </div>
 
         <button type="submit" name="submit" class="signup-button">Create</button>
