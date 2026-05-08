@@ -36,6 +36,7 @@
   </div>
 
   <form id="signupForm" method="POST" action="/signup">
+  {{ form.hidden_tag() }}
     <div class="form-group">
       <label for="email">Email</label>
       <input type="email" id="email" name="email" placeholder="you@example.com" required>
