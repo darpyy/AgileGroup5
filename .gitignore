@@ -1,3 +1,7 @@
 .pytest_cache 
 .venv
 __pychache____pycache__/
+_pycache__/
+*.pyc
+.pyc
+settings.json

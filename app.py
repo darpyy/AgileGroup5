@@ -107,6 +107,10 @@ def signup():
     print("signup failed")
     return render_template('signup.html', title='Register', form=form)
 
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = loginForm()
@@ -128,8 +132,10 @@ def login():
                         flash("login successful")
                         session['user_id'] = dbuser[0]
                         session['user_name'] = dbuser[3]
+                        print(f"Logged in user: {session['user_id']}")
                         session['user_city'] = dbuser[4]
                         return redirect(url_for("dashboard"))
+
                             
                     else:
                         flash("Invalid email/password")
@@ -212,7 +218,7 @@ def contact():
                 cursor = connection.cursor()
 
                 newreqauth, newtitle, newdescription, newlocation = session.get('user_id'), form.reqtitle.data, form.reqdescription.data, session.get('user_city')
-                cursor.execute("INSERT OR IGNORE INTO requests (reqauthv, reqtitle, reqdescription, locid) VALUES (?, ?, ?, ?)", (newreqauth, newtitle, newdescription, newlocation))
+                cursor.execute("INSERT OR IGNORE INTO requests (reqauth, reqtitle, reqdescription, locid) VALUES (?, ?, ?, ?)", (newreqauth, newtitle, newdescription, newlocation))
                 connection.commit()
                 print("Request created")
                 return redirect(url_for("contact"))
