@@ -11,7 +11,7 @@
 
 
 
-    <title>Document</title>
+    <title>CommonThread | Get Started</title>
 </head>
 <body>
     <nav>  
@@ -29,7 +29,48 @@
         </ul>
     </nav>
     
-    <h1>This is the Tags page</h1> 
+    <h1>Welcome {{ session['user_name'] }}!</h1>
+    <div class="tags-container">
+  <h1>Pick your city and up to 3 tags</h1>
+
+  <form method="POST" action="{{ url_for('tags') }}">
+
+    <label for="city">City</label>
+    <select id="city" name="city" required>
+      <option value="" disabled selected>Choose your city</option>
+      <option value="Vancouver">Vancouver</option>
+      <option value="Burnaby">Burnaby</option>
+      <option value="Surrey">Surrey</option>
+      <option value="Richmond">Richmond</option>
+      <option value="North Vancouver">North Vancouver</option>
+    </select>
+
+    <h3>Tags (pick up to 3)</h3>
+    <div class="tags-grid">
+      <label class="tag-button"><input type="checkbox" name="tags" value="music"> Music</label>
+      <label class="tag-button"><input type="checkbox" name="tags" value="art"> Art</label>
+      <label class="tag-button"><input type="checkbox" name="tags" value="sports"> Sports</label>
+      <label class="tag-button"><input type="checkbox" name="tags" value="gaming"> Gaming</label>
+      <label class="tag-button"><input type="checkbox" name="tags" value="food"> Food</label>
+      <label class="tag-button"><input type="checkbox" name="tags" value="travel"> Travel</label>
+    </div>
+
+    <button type="submit" class="tag-button-submit">Continue</button>
+  </form>
+</div>
+
+<script>
+  const tagBoxes = document.querySelectorAll('input[name="tags"]');
+  tagBoxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      const picked = document.querySelectorAll('input[name="tags"]:checked');
+      if (picked.length > 3) {
+        cb.checked = false;
+        alert('You can only pick 3 tags.');
+      }
+    });
+  });
+</script>
 </body>
 
     <!-- Footer -->
