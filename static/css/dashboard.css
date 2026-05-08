@@ -192,3 +192,48 @@ body {
     width: 100%;
   }
 }
+
+.profile-avatar-img {
+  flex: 0 0 auto;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 6px 16px rgba(89, 148, 243, 0.25);
+}
+
+.avatar-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 1rem 0;
+  flex-wrap: wrap;
+}
+
+.avatar-label {
+  font-size: 0.85rem;
+  color: var(--dark-color);
+  font-weight: 600;
+}
+
+.avatar-form input[type="file"] {
+  font-size: 0.85rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.avatar-upload-btn {
+  padding: 0.5rem 1.1rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent-color);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.avatar-upload-btn:hover {
+  background: #4a85e6;
+}

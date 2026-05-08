@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR (255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     username VARCHAR (255) UNIQUE NOT NULL,
-    city VARCHAR(255)
+    city VARCHAR(255),
+    profile_pic VARCHAR(255)
 );
 CREATE TABLE IF NOT EXISTS activities (
     actid INTEGER PRIMARY KEY,

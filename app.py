@@ -5,6 +5,8 @@ import os
 import sqlite3, hashlib #for talking to relational database
 from sqlitedb import startServer
 from datetime import datetime
+import uuid
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__, template_folder='views')
 
@@ -152,7 +154,22 @@ def dashboard():
     if not session.get("user_id"):
         flash("please log in to view the dashboard")
         return redirect(url_for('login'))
-    return render_template('dashboard.html')
+
+    profile_pic = None
+    try:
+        with sqlite3.connect("users.db") as connection:
+            cursor = connection.cursor()
+            cursor.execute(
+                "SELECT profile_pic FROM users WHERE id = ?",
+                (session['user_id'],)
+            )
+            row = cursor.fetchone()
+            if row and row[0]:
+                profile_pic = row[0]
+    except sqlite3.Error as e:
+        print(f"DB error: {e}")
+    
+    return render_template('dashboard.html', profile_pic=profile_pic)
 
 @app.route('/about')
 def about():
@@ -311,6 +328,50 @@ def new_post():
             print(e)
 
     return render_template('new_post.html', form=form)
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+UPLOAD_FOLDER = 'static/uploads/avatars'
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024   # 2 MB cap
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/upload_avatar', methods=['POST'])
+def upload_avatar():
+    if not session.get('user_id'):
+        flash("Please log in")
+        return redirect(url_for('login'))
+
+    file = request.files.get('avatar')
+    if not file or file.filename == '':
+        flash("No file selected")
+        return redirect(url_for('dashboard'))
+
+    if not allowed_file(file.filename):
+        flash("Only PNG, JPG, GIF, or WEBP allowed")
+        return redirect(url_for('dashboard'))
+
+    # build a unique safe filename so users can't overwrite each other
+    ext = file.filename.rsplit('.', 1)[1].lower()
+    safe_name = f"user_{session['user_id']}_{uuid.uuid4().hex}.{ext}"
+    save_path = os.path.join(UPLOAD_FOLDER, secure_filename(safe_name))
+    file.save(save_path)
+
+    # save the filename in the database
+    try:
+        with sqlite3.connect("users.db") as connection:
+            cursor = connection.cursor()
+            cursor.execute(
+                "UPDATE users SET profile_pic = ? WHERE id = ?",
+                (safe_name, session['user_id'])
+            )
+            connection.commit()
+        flash("Profile picture updated")
+    except sqlite3.Error as e:
+        flash("Database error")
+        print(f"DB error: {e}")
+
+    return redirect(url_for('dashboard'))
 
 # Error 404 handler
 @app.errorhandler(404)
