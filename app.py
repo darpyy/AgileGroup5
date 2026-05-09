@@ -227,6 +227,77 @@ def dashboard():
         profile_pic=profile_pic
     )
 
+@app.route('/search')
+def search():
+    # only logged-in users can search
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+
+    # get whatever the user typed in the search bar
+    query = request.args.get('q', '').strip()
+    results = []
+
+    # only search if they actually typed something
+    if query:
+        try:
+            with sqlite3.connect("users.db") as connection:
+                connection.row_factory = sqlite3.Row
+                cursor = connection.cursor()
+
+                # find users whose username CONTAINS what they typed
+                # (e.g. "ale" matches "alex", "alexandra", "kale")
+                cursor.execute("""
+                    SELECT id, username, profile_pic
+                    FROM users
+                    WHERE username LIKE ? AND id != ?
+                    LIMIT 50
+                """, (f"%{query}%", session['user_id']))
+
+                results = cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"DB error: {e}")
+
+    return render_template('search.html', query=query, results=results)
+
+
+@app.route('/user/<username>')
+def user_profile(username):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+
+    try:
+        with sqlite3.connect("users.db") as connection:
+            connection.row_factory = sqlite3.Row
+            cursor = connection.cursor()
+
+            # get the user's basic info + their city (if they have one)
+            cursor.execute("""
+                SELECT u.id, u.username, u.profile_pic, l.city
+                FROM users u
+                LEFT JOIN locations l ON u.locid = l.locid
+                WHERE u.username = ?
+            """, (username,))
+            user = cursor.fetchone()
+
+            if not user:
+                flash("User not found")
+                return redirect(url_for('dashboard'))
+
+            # get the tags they picked during signup
+            cursor.execute("""
+                SELECT t.tagname FROM tags t
+                JOIN usertags ut ON t.tagid = ut.tagid
+                WHERE ut.userid = ?
+            """, (user['id'],))
+            tags = [row['tagname'] for row in cursor.fetchall()]
+
+    except sqlite3.Error as e:
+        flash("Database error")
+        print(f"DB error: {e}")
+        return redirect(url_for('dashboard'))
+
+    return render_template('user_profile.html', user=user, tags=tags)
+
 @app.route('/about')
 def about():
     return render_template('about.html') 
