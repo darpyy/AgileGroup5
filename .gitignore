@@ -7,3 +7,4 @@ settings.json
 users.db
 static/uploads/avatars/*
 !static/uploads/avatars/.gitkeep
+.DS_Store
