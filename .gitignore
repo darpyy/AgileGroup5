@@ -5,6 +5,7 @@ __pycache__/
 *.pyc
 .pyc
 settings.json
+<<<<<<< HEAD
 users.db
 static/uploads/avatars/*
 !static/uploads/avatars/.gitkeep
