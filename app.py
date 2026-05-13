@@ -4,9 +4,11 @@ import json
 import os
 import sqlite3, hashlib #for talking to relational database
 from sqlitedb import startServer
-from datetime import datetime
+from datetime import datetime,timezone
 import uuid
 from werkzeug.utils import secure_filename
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
 
 app = Flask(__name__, template_folder='views')
 
@@ -15,7 +17,24 @@ app.config ['SECRET_KEY'] = '8e465ada7653afdc91a1be93b5403c23'
 ADDRESS = "http://localhost"
 PORT = 5000
 
+# for MongoDB ---
+uri = "mongodb+srv://sblair2001_db_user:6BUf6rQxUNhRFqk1@cluster0.fy6qtp5.mongodb.net/?appName=Cluster0"
+client = MongoClient(uri, server_api=ServerApi('1'))
+mdb = client.agile
+posts_col = mdb.posts
+
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
+#--- 
+
+#for Sqlite ---
 startServer()
+
+#---
 
 
 ''' Json version
@@ -380,59 +399,12 @@ def tags():
 
     return render_template('tags.html', locations=locations, tags=tags)
 
-'''
-@app.route('/signup/tags', methods=['GET', 'POST'])
-def tags():
-    # must be logged in
-    if not session.get('user_id'):
-        flash("Please log in to continue")
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        city = request.form.get('city')
-        selected_tags = request.form.getlist('tags')[:3]   # cap at 3
-
-        try:
-            with sqlite3.connect("users.db") as connection:
-                cursor = connection.cursor()
-
-                # save city on the user row
-                cursor.execute(
-                    "UPDATE users SET city = ? WHERE id = ?",
-                    (city, session['user_id'])
-                )
-
-                # clear old tags for this user (in case they resubmit later)
-                cursor.execute(
-                    "DELETE FROM user_tags WHERE id = ?",
-                    (session['user_id'],)
-                )
-
-                # insert each selected tag
-                for tag in selected_tags:
-                    cursor.execute(
-                        "INSERT INTO user_tags (id, tag) VALUES (?, ?)",
-                        (session['user_id'], tag)
-                    )
-
-                connection.commit()
-                flash("Preferences saved")
-                return redirect(url_for('dashboard'))
-
-        except sqlite3.Error as e:
-            flash("A database error occurred")
-            print(f"Database error: {e}")
-
-    return render_template('tags.html')
-'''
-
-
-
 @app.route("/register")
 def register():
     form = RegistrationForm()
     return render_template('signup.html', title='Register', form=form)    
 
+''' json version
 @app.route("/posts/new", methods=['GET', 'POST'])
 def new_post():
     # must be logged in
@@ -484,6 +456,41 @@ def new_post():
         except Exception as e:
             flash("an error occurred")
             print(e)
+
+    return render_template('new_post.html', form=form)
+'''
+
+@app.route("/posts/new", methods=['GET', 'POST'])
+def new_post():
+    # must be logged in
+    if not session.get('user_id'):
+        flash("You need to log in to create a post")
+        return redirect('/login')
+    
+    form = PostForm()
+    if form.validate_on_submit():
+        posts = []
+
+        #removed checking, app should break earlier if connection problem
+
+        #removed id & id math, mongo adds _id as primary key by default
+
+        new = {
+            'user_id': session['user_id'],
+            'title': form.title.data,
+            'body':  form.body.data,
+            'created_at': datetime.now(timezone.utc).isoformat(), #changed because vscode got mad at me
+        }
+
+        try:
+            posts_col.insert_one(new)
+            flash("Post created")
+            return redirect(url_for('dashboard'))
+
+        except Exception as e:
+            flash("an error occurred")
+            print(e)
+            print(type(e).__name__)
 
     return render_template('new_post.html', form=form)
 
