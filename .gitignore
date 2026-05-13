@@ -6,8 +6,19 @@ __pycache__/
 .pyc
 settings.json
 <<<<<<< HEAD
+<<<<<<< HEAD
 users.db
 static/uploads/avatars/*
 !static/uploads/avatars/.gitkeep
 .DS_Store
+<<<<<<< HEAD
 requirements.txt
+=======
+=======
+users.db
+>>>>>>> 3a63ba1 (git ignore db)
+=======
+users.db
+requirements.txt
+>>>>>>> 2db42a1 (made navbar display based off of login proper)
+>>>>>>> 46d37d8 (made navbar display based off of login proper)

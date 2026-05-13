@@ -25,12 +25,13 @@
 =======
     <nav>  
     <div class="logo"> 
-        <a href="{{ url_for('home') }}">
+        <a href="{{ url_for('index') }}">
             Common<span>Thread</span>
 >>>>>>> 97b4527 (merged)
 >>>>>>> da894dd (merged)
         </a>
       </div>
+<<<<<<< HEAD
 
       <form action="{{ url_for('search') }}" method="GET" class="nav-search">
         <input type="text" name="q" placeholder="Search users…" required>
@@ -60,6 +61,25 @@
           </ul>
         </li>
       </ul>
+=======
+        <ul class="nav-links">
+            {% if session.get('user_name') %}
+                <!-- Logged in: show these -->
+                <li><a href="{{ url_for('dashboard') }}" class = "active">Home</a></li>
+                <li><a href="{{ url_for('contact') }}" class = "bigItem">Contact</a></li>
+                <li><a href="{{ url_for('about') }}" class = "bigItem">About Us</a></li>
+                <form method="POST" action="{{ url_for('logout') }}">
+                    <button type="submit" name="logout">Logout</button>
+                </form>
+
+            {% else %}
+                <!-- Logged out: show these -->
+                <li><a href ="{{ url_for('index') }}" class="active">Home</a></li>
+                <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+                <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+            {% endif %}
+        </ul>
+>>>>>>> 2db42a1 (made navbar display based off of login proper)
     </nav>
 
     <main class="dashboard-wrap">
