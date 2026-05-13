@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, request, flash, url_for
+from flask import Flask, render_template, session, redirect, request, flash, url_for, jsonify
 from forms import RegistrationForm, loginForm, PostForm, ActivityForm, RequestForm
 import json
 import os
@@ -245,6 +245,76 @@ def dashboard():
         forums=forums,
         profile_pic=profile_pic
     )
+
+@app.route('/search')
+def search():
+    # only logged-in users can search
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+
+    # get whatever the user typed in the search bar
+    query = request.args.get('q', '').strip()
+    results = []
+
+    # only search if they actually typed something
+    if query:
+        try:
+            with sqlite3.connect("users.db") as connection:
+                connection.row_factory = sqlite3.Row
+                cursor = connection.cursor()
+
+                # find users whose username CONTAINS what they typed
+                # (e.g. "ale" matches "alex", "alexandra", "kale")
+                cursor.execute("""
+                    SELECT id, username, profile_pic
+                    FROM users
+                    WHERE username LIKE ? AND id != ?
+                    LIMIT 50
+                """, (f"%{query}%", session['user_id']))
+
+                results = cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"DB error: {e}")
+
+    return render_template('search.html', query=query, results=results)
+
+@app.route('/user/<username>')
+def user_profile(username):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+
+    try:
+        with sqlite3.connect("users.db") as connection:
+            connection.row_factory = sqlite3.Row
+            cursor = connection.cursor()
+
+            # get the user's basic info + their city (if they have one)
+            cursor.execute("""
+                SELECT u.id, u.username, u.profile_pic, l.city
+                FROM users u
+                LEFT JOIN locations l ON u.locid = l.locid
+                WHERE u.username = ?
+            """, (username,))
+            user = cursor.fetchone()
+
+            if not user:
+                flash("User not found")
+                return redirect(url_for('dashboard'))
+
+            # get the tags they picked during signup
+            cursor.execute("""
+                SELECT t.tagname FROM tags t
+                JOIN usertags ut ON t.tagid = ut.tagid
+                WHERE ut.userid = ?
+            """, (user['id'],))
+            tags = [row['tagname'] for row in cursor.fetchall()]
+
+    except sqlite3.Error as e:
+        flash("Database error")
+        print(f"DB error: {e}")
+        return redirect(url_for('dashboard'))
+
+    return render_template('user_profile.html', user=user, tags=tags)
 
 @app.route('/about')
 def about():
@@ -507,6 +577,8 @@ def upload_avatar():
         flash("Please log in")
         return redirect(url_for('login'))
 
+    print(f"DEBUG — user_id: {session.get('user_id')}, user_name: {session.get('user_name')}")
+
     file = request.files.get('avatar')
     if not file or file.filename == '':
         flash("No file selected")
@@ -515,30 +587,57 @@ def upload_avatar():
     if not allowed_file(file.filename):
         flash("Only PNG, JPG, GIF, or WEBP allowed")
         return redirect(url_for('dashboard'))
+    
+    # Builds the user's personal folder using their usernames
+    username = session.get('user_name', 'unknown')
+    safe_username = secure_filename(username)
+    userfolder = os.path.join(UPLOAD_FOLDER, safe_username)
+    os.makedirs(userfolder, exist_ok=True)
 
+    # Build 
     # build a unique safe filename so users can't overwrite each other
     ext = file.filename.rsplit('.', 1)[1].lower()
-    safe_name = f"user_{session['user_id']}_{uuid.uuid4().hex}.{ext}"
-    save_path = os.path.join(UPLOAD_FOLDER, secure_filename(safe_name))
-    file.save(save_path)
+    safe_name = f"{uuid.uuid4().hex}.{ext}"
+    save_path = os.path.join(userfolder, safe_name)
+    
 
+    # what will get stored in the DB — folder + filename, so we can find it later
+    relative_path = f"{safe_username}/{safe_name}"
     # save the filename in the database
     try:
         with sqlite3.connect("users.db") as connection:
             cursor = connection.cursor()
+
+            # Look up the OLD picture before we replace it
+            cursor.execute(
+                "SELECT profile_pic FROM users WHERE id = ?",
+                (session['user_id'],)
+            )
+            row = cursor.fetchone()
+            old_pic = row[0] if row else None
+
+            # Save the new file to disk
+            file.save(save_path)
+
+            # Update the DB to point to the new picture
             cursor.execute(
                 "UPDATE users SET profile_pic = ? WHERE id = ?",
-                (safe_name, session['user_id'])
+                (relative_path, session['user_id'])
             )
             connection.commit()
+
+            # Delete the OLD file (now that the DB is updated successfully)
+            if old_pic:
+                old_full_path = os.path.join(UPLOAD_FOLDER, old_pic)
+                if os.path.exists(old_full_path):
+                    os.remove(old_full_path)
+
         flash("Profile picture updated")
     except sqlite3.Error as e:
         flash("Database error")
         print(f"DB error: {e}")
 
     return redirect(url_for('dashboard'))
-
-
 
 # Error 404 handler
 @app.errorhandler(404)
