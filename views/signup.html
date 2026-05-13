@@ -21,11 +21,20 @@
             </a>
         </div>
         <ul class="nav-links">
-            <li><a href ="{{ url_for('dashboard') }}">Home</a></li>
-            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
             <li><a href="{{ url_for('about') }}">About Us</a></li>
             <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
             <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+            <li class="theme-menu-wrap">
+              <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
+                      aria-haspopup="true" aria-expanded="false">
+                <img src="/static/img/gear.png" alt="">
+              </button>
+              <ul id="theme-menu" class="theme-menu" hidden>
+                <li><button class="theme-option" data-theme="light">Light mode</button></li>
+                <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
+                <li><button class="theme-option" data-theme="system">System</button></li>
+              </ul>
+            </li>
         </ul>
     </nav>
 
@@ -36,6 +45,7 @@
   </div>
 
   <form id="signupForm" method="POST" action="/signup">
+  {{ form.hidden_tag() }}
     <div class="form-group">
       <label for="email">Email</label>
       <input type="email" id="email" name="email" placeholder="you@example.com" required>
@@ -43,7 +53,7 @@
 
     <div class="form-group">
       <label for="username">Username</label>
-      <input type="username" id="username" name="username" placeholder="Enter your username" required>
+      <input type="text" id="username" name="username" placeholder="Enter your username" required>
     </div>
 
     <div class="form-group">
@@ -52,8 +62,8 @@
     </div>
 
     <div class="form-group">
-      <label for="confirmPassword">Confirm Password</label>
-      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+      <label for="confirm_password">Confirm Password</label>
+      <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
     </div>
 
     <button type="submit" class="signup-button">Sign Up</button>
@@ -115,5 +125,6 @@
         <p></p>
         <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
     </footer>
+<script src="/static/js/darkmode.js"></script>    
 <script src="/static/js/main.js"></script>
 </html>

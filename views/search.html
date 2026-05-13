@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/static/css/global.css" />
+  <link rel="stylesheet" href="/static/css/search.css" />
+  <title>CommonThread | Search</title>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="{{ url_for('index') }}">Common<span>Thread</span></a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+      <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+      <li><a href="{{ url_for('about') }}">About Us</a></li>
+      <li class="theme-menu-wrap">
+        <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
+                aria-haspopup="true" aria-expanded="false">
+          <img src="/static/img/gear.png" alt="">
+        </button>
+        <ul id="theme-menu" class="theme-menu" hidden>
+          <li><button class="theme-option" data-theme="light">Light mode</button></li>
+          <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
+          <li><button class="theme-option" data-theme="system">System</button></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="search-wrap">
+    <h1 class="search-heading">
+      {% if query %}
+        Results for "{{ query }}"
+      {% else %}
+        Search
+      {% endif %}
+    </h1>
+
+    {% if query and not results %}
+      <p class="search-empty">No users match "{{ query }}"</p>
+    {% endif %}
+
+    <ul class="search-list">
+     {% for user in results %}
+        <li class="search-item">
+            <a href="{{ url_for('user_profile', username=user['username']) }}" class="search-link">
+                {% if user['profile_pic'] %}
+                    <img class="search-avatar"
+                    src="{{ url_for('static', filename='uploads/avatars/' + user['profile_pic']) }}"
+                    alt="">
+                {% else %}
+                    <div class="search-avatar search-avatar-letter">
+                    {{ user['username'][0]|upper }}
+                    </div>
+                {% endif %}
+                <div class="search-info">
+                    <span class="search-username">{{ user['username'] }}</span>
+                    <span class="search-handle">@{{ user['username'] }}</span>
+                </div>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+  </main>
+<script src="/static/js/darkmode.js"></script>
+</body>
+</html>

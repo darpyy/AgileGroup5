@@ -1,3 +1,10 @@
 .pytest_cache 
 .venv
-__pychache____pycache__/
+__pycache__/
+*.pyc
+.pyc
+settings.json
+users.db
+static/uploads/avatars/*
+!static/uploads/avatars/.gitkeep
+.DS_Store

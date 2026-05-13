@@ -11,73 +11,162 @@
     <title>CommonThread | Your dashboard</title>
   </head>
   <body>
-    <nav>  
-    <div class="logo"> 
+    <nav>
+      <div class="logo">
         <a href="{{ url_for('index') }}">
-            Common<span>Thread</span>
+          Common<span>Thread</span>
         </a>
-    </div>
-    <ul class="nav-links">
-        <li><a href ="{{ url_for('dashboard') }}" class = "active">Home</a></li>
+      </div>
+
+      <form action="{{ url_for('search') }}" method="GET" class="nav-search">
+        <input type="text" name="q" placeholder="Search users…" required>
+      </form>
+
+      <ul class="nav-links">
+        <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
         <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
         <li><a href="{{ url_for('about') }}">About Us</a></li>
-    </ul>
+        <li class="theme-menu-wrap">
+          <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
+              aria-haspopup="true" aria-expanded="false">
+            <img src="/static/img/gear.png" alt="">
+          </button>
+          <ul id="theme-menu" class="theme-menu" hidden>
+            <li><button class="theme-option" data-theme="light">Light mode</button></li>
+            <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
+            <li><button class="theme-option" data-theme="system">System</button></li>
+          </ul>
+        </li>
+      </ul>
     </nav>
-    <h1>Hello {{ session['user_name'] }}</h1>
-    <p>Welcome to your dashboard! Here you can find all the forums you are subscribed to and explore new ones.</p>
-    <h2 class = "form-header"> Don't see a forum you want? </h2>
-    <a href="{{ url_for('contact') }}" class="btn ref-button">Contact Us</a>
-    <form action="/login" method="POST">
-      <button type="submit" class="login-button" name="logout">Logout</button>
-    </form>
-  </body>
+
+    <main class="dashboard-wrap">
+      <!-- LEFT: profile card -->
+      <section class="profile-card">
+        <div class="profile-side">
+          {% if profile_pic %}
+            <img class="profile-avatar-img"
+              src="{{ url_for('static', filename='uploads/avatars/' + profile_pic) }}"
+              alt="Profile picture">
+          {% else %}
+            <div class="profile-avatar" aria-hidden="true">
+              {{ session['user_name'][0]|upper if session['user_name'] else 'U' }}
+            </div>
+          {% endif %}
+
+          <form id="avatarForm" action="{{ url_for('upload_avatar') }}" method="POST"
+              enctype="multipart/form-data" class="avatar-form">
+            <input type="file" id="avatar" name="avatar"
+              accept="image/png,image/jpeg,image/gif,image/webp" required
+              onchange="document.getElementById('avatarForm').submit();">
+            <label for="avatar" class="avatar-label">Edit picture</label>
+          </form>
+        </div>
+
+        <div class="profile-info">
+          <!-- top row: name on left, logout tucked to the right -->
+          <div class="profile-top">
+            <h1 class="profile-name">{{ session['user_name'] }}</h1>
+
+            <form action="{{ url_for('logout') }}" method="POST" class="profile-logout">
+              <button type="submit" class="logout-link">Logout</button>
+            </form>
+          </div>
+
+          <!-- handle and city under the name -->
+          <p class="profile-handle">
+            @{{ session['user_name'] }}
+            {% if session.get('user_city') %} · {{ session['user_city'] }}{% endif %}
+          </p>
+
+          <!-- stats row with placeholders -->
+          <div class="profile-stats">
+            <div class="stat-item">
+              <span class="stat-num">{{ forums|length if forums else 0 }}</span>
+              <span class="stat-label">forums</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">0</span>
+              <span class="stat-label">friends</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">0</span>
+              <span class="stat-label">following</span>
+            </div>
+          </div>
+
+          <p class="profile-meta">Welcome back to CommonThread.</p>
+        </div>
+      </section>
+
+      <!-- RIGHT: sidebar listing available forums -->
+      <aside class="sidebar-card">
+        <h2 class="sidebar-title">Available Forums</h2>
+        <p class="sidebar-sub">Browse your community forums.</p>
+
+        <ul class="forum-list">
+          {% if forums %}
+            {% for forum in forums %}
+              <li class="forum-item">
+                <a href="{{ url_for('showActivity', actid=forum['actid']) }}">
+                  <span class="forum-name">{{ forum['title'] }}</span>
+                  {% if forum.member_count is defined %}
+                    <span class="forum-meta">{{ forum.member_count }} members</span>
+                  {% endif %}
+                </a>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="forum-item"><a href="#"><span class="forum-name">Hiking &amp; Outdoors</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Book Club</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Local Eats</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Board Games</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Volunteering</span></a></li>
+          {% endif %}
+        </ul>
+
+        <a href="{{ url_for('contact') }}" class="sidebar-cta">Request a new forum &rarr;</a>
+      </aside>
+    </main>
 
     <!-- Footer -->
     <footer class="footerCopy">
-
-        <section class="navFooter">
-            <article class="footArticle">
-                <h3>About Us</h3>
-                <p> We are interested in bringing people closer together in your Community. We hope to help build meaningful friendships & keeping people active in the Greater Vancouver area!</p>
-                
-                <ul class="footer-links">
-                    <li> <a href="{{ url_for('about') }}">
-                    About Us
-                    </a>
-                    </li>
-                </ul>
-            </article>
-            <article class="footArticle">
-                <h3>Contact Info</h3>
-                <section  class="contactFoot">
-                    <h4 class="contacter">Call</h4>
-                    <p class="contacter">+1 123-456-6789</p>
-                </section>
-                <section  class="contactFoot">
-                    <h4 class="contacter">Email us</h4>
-                    <p class="contacter">contact@CommonThread.com</p>
-                </section>
-                <section  class="contactFoot">
-                    <h4 class="contacter">Find us</h4>
-                    <p class="contacter">Canada, Vancouver, Main 67A</p>
-                </section>
-                <section>
-                 <ul class="footer-links">
-                    <li> 
-                        <a href="{{ url_for('contact') }}">
-                            Contact Us
-                        </a>
-                    </li>
-                </ul>
-                </section>
-            </article>
-            <article class="footArticle">
-                <button onclick="scrollToTop()" class="backToTop">
-                    Back to Top
-                </button>
-            </article>
-        </section>
-        <p class="centerFoot">Copyright &copy; 2026 CommonThread. All rights reserved.</p>
+      <section class="navFooter">
+        <article class="footArticle">
+          <h3>About Us</h3>
+          <p>We are interested in bringing people closer together in your Community. We hope to help build meaningful friendships &amp; keeping people active in the Greater Vancouver area!</p>
+          <ul class="footer-links">
+            <li><a href="{{ url_for('about') }}">About Us</a></li>
+          </ul>
+        </article>
+        <article class="footArticle">
+          <h3>Contact Info</h3>
+          <section class="contactFoot">
+            <h4 class="contacter">Call</h4>
+            <p class="contacter">+1 123-456-6789</p>
+          </section>
+          <section class="contactFoot">
+            <h4 class="contacter">Email us</h4>
+            <p class="contacter">contact@CommonThread.com</p>
+          </section>
+          <section class="contactFoot">
+            <h4 class="contacter">Find us</h4>
+            <p class="contacter">Canada, Vancouver, Main 67A</p>
+          </section>
+          <section>
+            <ul class="footer-links">
+              <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+            </ul>
+          </section>
+        </article>
+        <article class="footArticle">
+          <button onclick="scrollToTop()" class="backToTop">Back to Top</button>
+        </article>
+      </section>
+      <p></p>
+      <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
     </footer>
-<script src="/static/js/main.js"></script>
+    <script src="/static/js/darkmode.js"></script>
+    <script src="/static/js/main.js"></script>
+  </body>
 </html>

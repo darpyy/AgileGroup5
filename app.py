@@ -1,10 +1,14 @@
-from flask import Flask, render_template, session, redirect, request, flash, url_for
-from forms import RegistrationForm, loginForm, PostForm
+from flask import Flask, render_template, session, redirect, request, flash, url_for, jsonify
+from forms import RegistrationForm, loginForm, PostForm, ActivityForm, RequestForm
 import json
 import os
 import sqlite3, hashlib #for talking to relational database
 from sqlitedb import startServer
-from datetime import datetime
+from datetime import datetime,timezone
+import uuid
+from werkzeug.utils import secure_filename
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
 
 app = Flask(__name__, template_folder='views')
 
@@ -13,7 +17,24 @@ app.config ['SECRET_KEY'] = '8e465ada7653afdc91a1be93b5403c23'
 ADDRESS = "http://localhost"
 PORT = 5000
 
+# for MongoDB ---
+uri = "mongodb+srv://sblair2001_db_user:6BUf6rQxUNhRFqk1@cluster0.fy6qtp5.mongodb.net/?appName=Cluster0"
+client = MongoClient(uri, server_api=ServerApi('1'))
+mdb = client.agile
+posts_col = mdb.posts
+
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
+#--- 
+
+#for Sqlite ---
 startServer()
+
+#---
 
 
 ''' Json version
@@ -71,19 +92,29 @@ def signup():
                 query = "SELECT * FROM users WHERE email = ?"
                 cursor.execute(query, (email,))
 
-
                 if cursor.fetchone():
                     flash("This email already exists")
                     print("email exist")
                     return redirect(url_for("login"))
                 
                 else: # Create new user/write to database
-                    
-                    newemail, newpassword, newusername = form.email.data, hashlib.sha256(form.password.data.encode()).hexdigest(), form.username.data
-                    cursor.execute("INSERT OR IGNORE INTO users (email, password, username) VALUES (?, ?, ?)", (newemail, newpassword, newusername))
+    
+                    newemail = form.email.data
+                    newpassword = hashlib.sha256(form.password.data.encode()).hexdigest()
+                    newusername = form.username.data
+    
+                    cursor.execute(
+                        "INSERT INTO users (email, password, username) VALUES (?, ?, ?)",
+                        (newemail, newpassword, newusername)
+                    )
                     connection.commit()
+
+                    # log the new user in
+                    session['user_id'] = cursor.lastrowid
+                    session['user_name'] = newusername
+
                     flash("Account created")
-                    return redirect(url_for("login"))
+                    return redirect(url_for("tags"))
             
         except sqlite3.Error as e:
             flash("An error occured with the database")
@@ -92,8 +123,14 @@ def signup():
         except Exception as e:
             flash("an error occured")
             print(f"Error: {e}")
-
+    print(f"Form Errors: {form.errors}")
+    print(f"Form Data Received: {form.data}")
+    print("signup failed")
     return render_template('signup.html', title='Register', form=form)
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -116,7 +153,10 @@ def login():
                         flash("login successful")
                         session['user_id'] = dbuser[0]
                         session['user_name'] = dbuser[3]
+                        print(f"Logged in user: {session['user_id']}")
+                        session['user_city'] = dbuser[4]
                         return redirect(url_for("dashboard"))
+
                             
                     else:
                         flash("Invalid email/password")
@@ -132,42 +172,309 @@ def login():
 
     return render_template('login.html', title='Login', form=form)
 
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    flash("You have been logged out")
+    return redirect(url_for('index'))
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
+@app.route('/activity/<int:actid>')
+def showActivity(actid):
+
+    with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+
+        query = """
+            SELECT a.*, l.city, t.tagname
+            FROM activities a
+            JOIN locations l ON a.locid = l.locid
+            JOIN tags t ON a.tagid = t.tagid
+            WHERE a.actid = ?
+        """
+        activity = cursor.execute(query, (actid,)).fetchone()
+
+    return render_template('activitiestemplate.html', activity=activity)
+
 @app.route('/dashboard')
 def dashboard():
-    if not session.get("user_id"):
+    #check user is logged in
+    if session.get('user_id') is None:
         flash("please log in to view the dashboard")
         return redirect(url_for('login'))
-    return render_template('dashboard.html')
+    
+    # requested and existing activities
+    with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+
+        query = """
+        SELECT DISTINCT a.actid, a.title, a.description, l.city
+        FROM activities a
+        JOIN usertags ut ON a.tagid = ut.tagid
+        JOIN locations l ON a.locid = l.locid
+        WHERE ut.userid = ?
+        """
+
+        forums = cursor.execute(query, (session.get('user_id'),)).fetchall()
+
+    # return render_template('dashboard.html', forums=forums)
+
+
+    profile_pic = None
+    try:
+        with sqlite3.connect("users.db") as connection:
+            cursor = connection.cursor()
+            cursor.execute(
+                "SELECT profile_pic FROM users WHERE id = ?",
+                (session['user_id'],)
+            )
+            row = cursor.fetchone()
+            if row and row[0]:
+                profile_pic = row[0]
+    except sqlite3.Error as e:
+        print(f"DB error: {e}")
+    
+    return render_template(
+        'dashboard.html',
+        forums=forums,
+        profile_pic=profile_pic
+    )
+
+@app.route('/search')
+def search():
+    # only logged-in users can search
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+
+    # get whatever the user typed in the search bar
+    query = request.args.get('q', '').strip()
+    results = []
+
+    # only search if they actually typed something
+    if query:
+        try:
+            with sqlite3.connect("users.db") as connection:
+                connection.row_factory = sqlite3.Row
+                cursor = connection.cursor()
+
+                # find users whose username CONTAINS what they typed
+                # (e.g. "ale" matches "alex", "alexandra", "kale")
+                cursor.execute("""
+                    SELECT id, username, profile_pic
+                    FROM users
+                    WHERE username LIKE ? AND id != ?
+                    LIMIT 50
+                """, (f"%{query}%", session['user_id']))
+
+                results = cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"DB error: {e}")
+
+    return render_template('search.html', query=query, results=results)
+
+@app.route('/user/<username>')
+def user_profile(username):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+
+    try:
+        with sqlite3.connect("users.db") as connection:
+            connection.row_factory = sqlite3.Row
+            cursor = connection.cursor()
+
+            # get the user's basic info + their city (if they have one)
+            cursor.execute("""
+                SELECT u.id, u.username, u.profile_pic, l.city
+                FROM users u
+                LEFT JOIN locations l ON u.locid = l.locid
+                WHERE u.username = ?
+            """, (username,))
+            user = cursor.fetchone()
+
+            if not user:
+                flash("User not found")
+                return redirect(url_for('dashboard'))
+
+            # get the tags they picked during signup
+            cursor.execute("""
+                SELECT t.tagname FROM tags t
+                JOIN usertags ut ON t.tagid = ut.tagid
+                WHERE ut.userid = ?
+            """, (user['id'],))
+            tags = [row['tagname'] for row in cursor.fetchall()]
+
+    except sqlite3.Error as e:
+        flash("Database error")
+        print(f"DB error: {e}")
+        return redirect(url_for('dashboard'))
+
+    return render_template('user_profile.html', user=user, tags=tags)
 
 @app.route('/about')
 def about():
     return render_template('about.html') 
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template('contact.html')
 
-@app.route('/admin')
+    #add a new request
+    form = RequestForm()
+
+    print(session.get('user_id'))
+    if session.get('user_id') is None:
+        return redirect(url_for('login'))
+
+    if form.validate_on_submit():
+
+        try:
+            with sqlite3.connect("users.db") as connection:
+                cursor = connection.cursor()
+
+                newreqauth, newtitle, newdescription, newlocation = session.get('user_id'), form.reqtitle.data, form.reqdescription.data, session.get('user_city')
+                cursor.execute("INSERT OR IGNORE INTO requests (reqauth, reqtitle, reqdescription, locid) VALUES (?, ?, ?, ?)", (newreqauth, newtitle, newdescription, newlocation))
+                connection.commit()
+                print("Request created")
+                return redirect(url_for("contact"))
+            
+        except sqlite3.Error as e:
+            flash("An error occured with the database")
+            print(f"database error: {e}")
+
+        except Exception as e:
+            flash("an error occured")
+            print(f"Error: {e}")
+    print(f"Form Errors: {form.errors}")
+    print(f"Form Data Received: {form.data}")
+    print("request failed")
+
+    return render_template('contact.html', form=form)
+
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    with sqlite3.connect("users.db") as connection:
-        cursor = connection.cursor()
-    requests = connection.execute('SELECT * FROM requests').fetchall()
-    connection.close()
-    return render_template('admin.html', requests=requests)
 
-@app.route('/signup/tags')
+    #check user is admin
+    print(session.get('user_id'))
+    if not session.get('user_id') == 0:
+        return redirect(url_for('login'))
+    
+    form = ActivityForm()
+
+    # connect
+    with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+    # requested and existing activities
+        requests = connection.execute('SELECT * FROM requests').fetchall()
+        activities = connection.execute('SELECT * FROM activities').fetchall()
+    # data for the form dropdowns
+        locrow = cursor.execute('SELECT locid, city FROM locations').fetchall()
+        tagrow = cursor.execute('SELECT tagid, tagname FROM tags').fetchall()
+        form.location.choices = [(str(l['locid']), l['city']) for l in locrow]
+        form.tag.choices = [(str(t['tagid']), t['tagname']) for t in tagrow]
+
+
+    #add a new activity
+
+    if form.validate_on_submit():
+        try:
+            # Check if activity exists already
+            with sqlite3.connect("users.db") as connection:
+                connection.row_factory = sqlite3.Row
+                cursor = connection.cursor()
+                title = form.title.data
+                query = "SELECT * FROM activities WHERE title = ?"
+                cursor.execute(query, (title,))
+
+                if cursor.fetchone():
+                    flash("This activity already exists")
+                    print("title exist")
+                    return redirect(url_for("admin"))
+                
+                else: # Create new user/write to database
+                    
+                    newtitle, newdescription, newtag, newlocation = form.title.data, form.description.data, form.location.data, form.tag.data
+                    cursor.execute("INSERT OR IGNORE INTO activities (title, description, locid, tagid) VALUES (?, ?, ?, ?)", (newtitle, newdescription, newlocation, newtag))
+                    connection.commit()
+                    print("Activity created")
+                    return redirect(url_for("admin"))
+            
+        except sqlite3.Error as e:
+            flash("An error occured with the database")
+            print(f"database error: {e}")
+
+        except Exception as e:
+            flash("an error occured")
+            print(f"Error: {e}")
+    print(f"Form Errors: {form.errors}")
+    print(f"Form Data Received: {form.data}")
+    print("bruhhh")
+    connection.close()
+    return render_template('admin.html', requests=requests, activities=activities, form =form,locations=locrow, tags=tagrow)
+
+
+@app.route('/signup/tags', methods=['GET', 'POST'])
 def tags():
-    return render_template('tags.html')
+    # must be logged in
+    if not session.get('user_id'):
+        flash("Please log in to continue")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        locid = request.form.get('city')
+        selected_tags = request.form.getlist('tags')[:3]   # cap at 3
+
+        try:
+            with sqlite3.connect("users.db") as connection:
+                cursor = connection.cursor()
+
+                # save city on the user row
+                cursor.execute(
+                    "UPDATE users SET locid = ? WHERE id = ?",
+                    (locid, session['user_id'])
+                )
+
+                # clear old tags for this user (in case they resubmit later)
+                cursor.execute(
+                    "DELETE FROM usertags WHERE userid = ?",
+                    (session['user_id'],)
+                )
+
+                # insert each selected tag
+                for tagid in selected_tags:
+                    cursor.execute(
+                        "INSERT INTO usertags (userid, tagid) VALUES (?, ?)",
+                        (session['user_id'], tagid)
+                    )
+
+                connection.commit()
+                flash("Preferences saved")
+                return redirect(url_for('dashboard'))
+
+        except sqlite3.Error as e:
+            flash("A database error occurred")
+            print(f"Database error: {e}")
+
+    #get locations and tags to list on form
+    with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        locations = cursor.execute("SELECT * FROM locations").fetchall()
+        tags = cursor.execute("SELECT * FROM tags").fetchall()
+
+    return render_template('tags.html', locations=locations, tags=tags)
 
 @app.route("/register")
 def register():
     form = RegistrationForm()
     return render_template('signup.html', title='Register', form=form)    
 
+''' json version
 @app.route("/posts/new", methods=['GET', 'POST'])
 def new_post():
     # must be logged in
@@ -221,6 +528,116 @@ def new_post():
             print(e)
 
     return render_template('new_post.html', form=form)
+'''
+
+@app.route("/posts/new", methods=['GET', 'POST'])
+def new_post():
+    # must be logged in
+    if not session.get('user_id'):
+        flash("You need to log in to create a post")
+        return redirect('/login')
+    
+    form = PostForm()
+    if form.validate_on_submit():
+        posts = []
+
+        #removed checking, app should break earlier if connection problem
+
+        #removed id & id math, mongo adds _id as primary key by default
+
+        new = {
+            'user_id': session['user_id'],
+            'title': form.title.data,
+            'body':  form.body.data,
+            'created_at': datetime.now(timezone.utc).isoformat(), #changed because vscode got mad at me
+        }
+
+        try:
+            posts_col.insert_one(new)
+            flash("Post created")
+            return redirect(url_for('dashboard'))
+
+        except Exception as e:
+            flash("an error occurred")
+            print(e)
+            print(type(e).__name__)
+
+    return render_template('new_post.html', form=form)
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+UPLOAD_FOLDER = 'static/uploads/avatars'
+app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024   # 2 MB cap
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/upload_avatar', methods=['POST'])
+def upload_avatar():
+    if not session.get('user_id'):
+        flash("Please log in")
+        return redirect(url_for('login'))
+
+    print(f"DEBUG — user_id: {session.get('user_id')}, user_name: {session.get('user_name')}")
+
+    file = request.files.get('avatar')
+    if not file or file.filename == '':
+        flash("No file selected")
+        return redirect(url_for('dashboard'))
+
+    if not allowed_file(file.filename):
+        flash("Only PNG, JPG, GIF, or WEBP allowed")
+        return redirect(url_for('dashboard'))
+    
+    # Builds the user's personal folder using their usernames
+    username = session.get('user_name', 'unknown')
+    safe_username = secure_filename(username)
+    userfolder = os.path.join(UPLOAD_FOLDER, safe_username)
+    os.makedirs(userfolder, exist_ok=True)
+
+    # Build 
+    # build a unique safe filename so users can't overwrite each other
+    ext = file.filename.rsplit('.', 1)[1].lower()
+    safe_name = f"{uuid.uuid4().hex}.{ext}"
+    save_path = os.path.join(userfolder, safe_name)
+    
+
+    # what will get stored in the DB — folder + filename, so we can find it later
+    relative_path = f"{safe_username}/{safe_name}"
+    # save the filename in the database
+    try:
+        with sqlite3.connect("users.db") as connection:
+            cursor = connection.cursor()
+
+            # Look up the OLD picture before we replace it
+            cursor.execute(
+                "SELECT profile_pic FROM users WHERE id = ?",
+                (session['user_id'],)
+            )
+            row = cursor.fetchone()
+            old_pic = row[0] if row else None
+
+            # Save the new file to disk
+            file.save(save_path)
+
+            # Update the DB to point to the new picture
+            cursor.execute(
+                "UPDATE users SET profile_pic = ? WHERE id = ?",
+                (relative_path, session['user_id'])
+            )
+            connection.commit()
+
+            # Delete the OLD file (now that the DB is updated successfully)
+            if old_pic:
+                old_full_path = os.path.join(UPLOAD_FOLDER, old_pic)
+                if os.path.exists(old_full_path):
+                    os.remove(old_full_path)
+
+        flash("Profile picture updated")
+    except sqlite3.Error as e:
+        flash("Database error")
+        print(f"DB error: {e}")
+
+    return redirect(url_for('dashboard'))
 
 # Error 404 handler
 @app.errorhandler(404)
