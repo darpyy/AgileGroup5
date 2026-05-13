@@ -13,13 +13,29 @@
     <div class="logo">
       <a href="{{ url_for('index') }}">Common<span>Thread</span></a>
     </div>
-    <form action="{{ url_for('search') }}" method="GET" class="nav-search">
-      <input type="text" name="q" placeholder="Search users…" required>
-    </form>
+    <div class="search-wrap">
+        <form action="{{ url_for('search') }}" method="GET" class="nav-search">
+          <input type="text" name="q" id="search-input"
+           placeholder="Search users…" autocomplete="off">
+        </form>
+      <ul id="search-dropdown" class="search-dropdown" hidden></ul>
+    </div>
+    
     <ul class="nav-links">
       <li><a href="{{ url_for('dashboard') }}">Home</a></li>
       <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
       <li><a href="{{ url_for('about') }}">About Us</a></li>
+      <li class="theme-menu-wrap">
+        <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
+                aria-haspopup="true" aria-expanded="false">
+          <img src="/static/img/gear.png" alt="">
+        </button>
+        <ul id="theme-menu" class="theme-menu" hidden>
+          <li><button class="theme-option" data-theme="light">☀ Light mode</button></li>
+          <li><button class="theme-option" data-theme="dark">☾ Dark mode</button></li>
+          <li><button class="theme-option" data-theme="system">🖥 System</button></li>
+        </ul>
+      </li>
     </ul>
   </nav>
 
@@ -52,5 +68,6 @@
       </div>
     </section>
   </main>
+<script src="/static/js/darkmode.js"></script>
 </body>
 </html>

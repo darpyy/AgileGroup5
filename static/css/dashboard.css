@@ -31,9 +31,18 @@ body {
 /* ---- LEFT: profile card ---- */
 .profile-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1.75rem;
   padding: 2.5rem;
+}
+
+/* Avatar + Edit-button column inside the profile card */
+.profile-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  flex: 0 0 auto;
 }
 
 /* letter avatar (no profile pic) */
@@ -89,7 +98,7 @@ body {
 }
 
 .profile-name {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--dark-color);
   word-break: break-word;
@@ -137,7 +146,8 @@ body {
 }
 
 .stat-label {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: #6b7280;
 }
 
@@ -193,8 +203,8 @@ body {
   color: #6b7280;
   border-radius: 8px;
   padding: 0.4rem 0.9rem;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 }

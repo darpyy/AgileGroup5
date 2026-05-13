@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, request, flash, url_for
+from flask import Flask, render_template, session, redirect, request, flash, url_for, jsonify
 from forms import RegistrationForm, loginForm, PostForm, ActivityForm, RequestForm
 import json
 import os
@@ -258,7 +258,6 @@ def search():
             print(f"DB error: {e}")
 
     return render_template('search.html', query=query, results=results)
-
 
 @app.route('/user/<username>')
 def user_profile(username):

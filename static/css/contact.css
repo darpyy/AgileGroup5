@@ -35,7 +35,7 @@ body > h1 {
   max-width: 600px;
   margin: 0 auto 60px;
   padding: 40px;
-  background: #ffffff;
+  background: var(--white-color);
   border-radius: 16px;
   box-shadow: 0 12px 32px rgba(58, 73, 89, 0.12);
   box-sizing: border-box;
@@ -114,4 +114,10 @@ body > h1 {
     display: inline-block;
     text-align: center;
     text-decoration: none; /* removes the underline */
+}
+
+html.dark-mode #forumRequestForm {
+  background: #2c2c2c !important;
+  border: 1px solid #3a3a3a;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }

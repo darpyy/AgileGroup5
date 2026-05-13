@@ -16,6 +16,17 @@
       <li><a href="{{ url_for('dashboard') }}">Home</a></li>
       <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
       <li><a href="{{ url_for('about') }}">About Us</a></li>
+      <li class="theme-menu-wrap">
+        <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
+                aria-haspopup="true" aria-expanded="false">
+          <img src="/static/img/gear.png" alt="">
+        </button>
+        <ul id="theme-menu" class="theme-menu" hidden>
+          <li><button class="theme-option" data-theme="light">☀ Light mode</button></li>
+          <li><button class="theme-option" data-theme="dark">☾ Dark mode</button></li>
+          <li><button class="theme-option" data-theme="system">🖥 System</button></li>
+        </ul>
+      </li>
     </ul>
   </nav>
 
@@ -54,5 +65,6 @@
     {% endfor %}
     </ul>
   </main>
+<script src="/static/js/darkmode.js"></script>
 </body>
 </html>
