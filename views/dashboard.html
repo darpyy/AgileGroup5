@@ -11,10 +11,10 @@
     <title>CommonThread | Your dashboard</title>
   </head>
   <body>
-    <nav>
-      <div class="logo">
+    <nav>  
+    <div class="logo"> 
         <a href="{{ url_for('index') }}">
-          Common<span>Thread</span>
+            Common<span>Thread</span>
         </a>
       </div>
 
@@ -23,14 +23,22 @@
       </form>
 
       <ul class="nav-links">
-        <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
-        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
-        <li><a href="{{ url_for('about') }}">About Us</a></li>
-        <li class="theme-menu-wrap">
-          <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
-              aria-haspopup="true" aria-expanded="false">
-            <img src="/static/img/gear.png" alt="">
-          </button>
+          {% if session.get('user_name') %}
+              <!-- Logged in: show these -->
+              <li><a href="{{ url_for('dashboard') }}" class = "bigItem">Home</a></li>
+              <li><a href="{{ url_for('contact') }}" class = "bigItem">Contact</a></li>
+              <li><a href="{{ url_for('about') }}" class = "active">About Us</a></li>
+              <form method="POST" action="{{ url_for('logout') }}">
+                  <button type="submit" name="logout">Logout</button>
+              </form>
+
+          {% else %}
+              <!-- Logged out: show these -->
+              <li><a href ="{{ url_for('index') }}" class="bigItem">Home</a></li>
+              <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+              <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+          {% endif %}
+          
           <ul id="theme-menu" class="theme-menu" hidden>
             <li><button class="theme-option" data-theme="light">Light mode</button></li>
             <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
