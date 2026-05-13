@@ -101,6 +101,13 @@ nav ul a:hover, nav ul a.active {
   color: var(--deep-color)
 }
 
+.welcome-message {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 2rem;
+  color: var(--dark-color);
+  padding: 40px;
+}
 
 
 /**
@@ -154,6 +161,7 @@ footer {
   background-color: var(--dark-color);
   color: var(--secondary-color);
   bottom: 0;
+  margin-top: 40px;
 }
 
 .navFooter { 

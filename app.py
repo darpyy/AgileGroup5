@@ -128,9 +128,6 @@ def signup():
     print("signup failed")
     return render_template('signup.html', title='Register', form=form)
 
-@app.route('/home')
-def home():
-    return render_template('home.html')
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
