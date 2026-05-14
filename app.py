@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, request, flash, url_for
+from flask import Flask, render_template, session, redirect, request, flash, url_for, jsonify
 from forms import RegistrationForm, loginForm, PostForm, ActivityForm, RequestForm
 import json
 import os
@@ -9,6 +9,7 @@ import uuid
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
+from bson.objectid import ObjectId
 
 app = Flask(__name__, template_folder='views')
 
@@ -128,9 +129,6 @@ def signup():
     print("signup failed")
     return render_template('signup.html', title='Register', form=form)
 
-@app.route('/home')
-def home():
-    return render_template('home.html')
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -191,15 +189,159 @@ def showActivity(actid):
         cursor = connection.cursor()
 
         query = """
-            SELECT a.*, l.city, t.tagname
-            FROM activities a
-            JOIN locations l ON a.locid = l.locid
-            JOIN tags t ON a.tagid = t.tagid
-            WHERE a.actid = ?
+            SELECT activities.*, locations.city, tags.tagname
+            FROM activities
+            JOIN locations ON activities.locid = locations.locid
+            JOIN tags ON activities.tagid = tags.tagid
+            WHERE activities.actid = ?
         """
         activity = cursor.execute(query, (actid,)).fetchone()
+        if not activity:
+            return render_template('404.html'), 404
 
-    return render_template('activitiestemplate.html', activity=activity)
+        # Fetch the created posts for the activity
+        posts = list(posts_col.find({"actid": actid}).sort("created_at", -1))
+
+        post_form = PostForm() 
+
+    return render_template('activitiestemplate.html', activity=activity, posts=posts, post_form=post_form)
+
+# Create Post route
+@app.route('/activity/<int:actid>/post', methods=['POST'])
+def create_post(actid):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+        
+    form = PostForm()
+    if form.validate_on_submit():
+        new_post = {
+            'actid': actid,
+            'user_id': session['user_id'],
+            'username': session['user_name'],
+            'title': form.title.data,
+            'body': form.body.data,
+            'created_at': datetime.now(timezone.utc).isoformat(),
+            'comments': []
+        }
+        try:
+            posts_col.insert_one(new_post)
+            flash("Post created.")
+        except Exception as e:
+            flash("An error occured while creating post")
+            print(e)
+            
+    return redirect(url_for('showActivity', actid=actid))
+
+
+# Edit a post
+@app.route('/post/<post_id>/edit', methods=['GET', 'POST'])
+def edit_post(post_id):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    
+    # Find post with mongoDB objectId
+    post = posts_col.find_one({"_id": ObjectId(post_id)})
+
+    # Check to see if the user editing is the creator of the post
+    if not post or post['user_id'] != session['user_id']:
+        flash("Cannot edit")
+        return redirect(url_for('dashboard'))
+    
+    form = PostForm()
+    if request.method == 'GET':
+        form.title.data = post['title']
+        form.body.data = post['body']
+
+    if form.validate_on_submit():
+        posts_col.update_one(
+
+            {"_id": ObjectId(post_id)},
+            {"$set": {
+                "title": form.title.data,
+                "body": form.body.data
+            }}
+        )
+        flash("Post edited")
+        return redirect(url_for('showActivity', actid=post['actid']))
+    
+    return render_template('edit_post.html', form=form, post=post)
+
+
+# Delete Post
+@app.route('/post/<post_id>/delete', methods=['POST'])
+def delete_post(post_id):
+
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    
+
+    post = posts_col.find_one({"_id": ObjectId(post_id)})
+
+    # Check if the user is the creator of the post or the admin
+    if post and (post['user_id'] == session['user_id'] or session.get('user_id') == 0):
+        posts_col.delete_one({"_id": ObjectId(post_id)})
+        flash("Post deleted")
+        return redirect(url_for('showActivity', actid=post['actid']))
+    
+    flash("Unable to delete or Post was not found")
+    return redirect(url_for('dashboard'))
+
+# Add comment to a post
+@app.route('/post/<post_id>/comment', methods=['POST'])
+def add_comment(post_id):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    
+    comment_body = request.form.get('body')
+
+    if comment_body:
+        # generate an id for each comment
+        comment = {
+            'comment_id': str(uuid.uuid4()),
+            'user_id': session['user_id'],
+            'username': session['user_name'],
+            'body': comment_body,
+            'created_at': datetime.now(timezone.utc).isoformat()
+        }
+
+        # Append the comment to the comment array
+        post = posts_col.find_one_and_update(
+            {"_id": ObjectId(post_id)},
+            {"$push": {"comments": comment}}
+        )
+
+        if post:
+            return redirect(url_for('showActivity', actid=post['actid']))
+        
+        flash("Unable to comment")
+        return redirect(url_for('dashboard'))
+
+# Delete a comment
+@app.route('/post/<post_id>/comment/<comment_id>/delete', methods=['POST'])
+def delete_comment(post_id, comment_id):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+    
+    post = posts_col.find_one({"_id": ObjectId(post_id)})
+
+    # check if the user is the one who posted the comment
+    if post:
+        comment = next((c for c in post.get('comments', []) if c['comment_id'] == comment_id), None)
+
+        if comment and (comment['user_id'] == session['user_id'] or post['user_id'] == session['user_id'] or session.get('user_id') == 0):
+
+            # remove the comment from the array based on its id
+            posts_col.update_one(
+                {"_id": ObjectId(post_id)},
+                {"$pull": {"comments": {"comment_id": comment_id}}}
+            )
+
+        else:
+            flash("Unable to delete comment")
+    
+        return redirect(url_for('showActivity', actid=post['actid']))
+    
+    return redirect(url_for('dashboard'))
 
 @app.route('/dashboard')
 def dashboard():
@@ -214,11 +356,11 @@ def dashboard():
         cursor = connection.cursor()
 
         query = """
-        SELECT DISTINCT a.actid, a.title, a.description, l.city
-        FROM activities a
-        JOIN usertags ut ON a.tagid = ut.tagid
-        JOIN locations l ON a.locid = l.locid
-        WHERE ut.userid = ?
+        SELECT DISTINCT activities.actid, activities.title, activities.description, locations.city
+        FROM activities
+        JOIN usertags ON activities.tagid = usertags.tagid
+        JOIN locations ON activities.locid = locations.locid
+        WHERE usertags.userid = ?
         """
 
         forums = cursor.execute(query, (session.get('user_id'),)).fetchall()
@@ -245,6 +387,76 @@ def dashboard():
         forums=forums,
         profile_pic=profile_pic
     )
+
+@app.route('/search')
+def search():
+    # only logged-in users can search
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+
+    # get whatever the user typed in the search bar
+    query = request.args.get('q', '').strip()
+    results = []
+
+    # only search if they actually typed something
+    if query:
+        try:
+            with sqlite3.connect("users.db") as connection:
+                connection.row_factory = sqlite3.Row
+                cursor = connection.cursor()
+
+                # find users whose username CONTAINS what they typed
+                # (e.g. "ale" matches "alex", "alexandra", "kale")
+                cursor.execute("""
+                    SELECT id, username, profile_pic
+                    FROM users
+                    WHERE username LIKE ? AND id != ?
+                    LIMIT 50
+                """, (f"%{query}%", session['user_id']))
+
+                results = cursor.fetchall()
+        except sqlite3.Error as e:
+            print(f"DB error: {e}")
+
+    return render_template('search.html', query=query, results=results)
+
+@app.route('/user/<username>')
+def user_profile(username):
+    if not session.get('user_id'):
+        return redirect(url_for('login'))
+
+    try:
+        with sqlite3.connect("users.db") as connection:
+            connection.row_factory = sqlite3.Row
+            cursor = connection.cursor()
+
+            # get the user's basic info + their city (if they have one)
+            cursor.execute("""
+                SELECT u.id, u.username, u.profile_pic, l.city
+                FROM users u
+                LEFT JOIN locations l ON u.locid = l.locid
+                WHERE u.username = ?
+            """, (username,))
+            user = cursor.fetchone()
+
+            if not user:
+                flash("User not found")
+                return redirect(url_for('dashboard'))
+
+            # get the tags they picked during signup
+            cursor.execute("""
+                SELECT t.tagname FROM tags t
+                JOIN usertags ut ON t.tagid = ut.tagid
+                WHERE ut.userid = ?
+            """, (user['id'],))
+            tags = [row['tagname'] for row in cursor.fetchall()]
+
+    except sqlite3.Error as e:
+        flash("Database error")
+        print(f"DB error: {e}")
+        return redirect(url_for('dashboard'))
+
+    return render_template('user_profile.html', user=user, tags=tags)
 
 @app.route('/about')
 def about():
@@ -327,9 +539,15 @@ def admin():
                     return redirect(url_for("admin"))
                 
                 else: # Create new user/write to database
-                    
-                    newtitle, newdescription, newtag, newlocation = form.title.data, form.description.data, form.location.data, form.tag.data
-                    cursor.execute("INSERT OR IGNORE INTO activities (title, description, locid, tagid) VALUES (?, ?, ?, ?)", (newtitle, newdescription, newlocation, newtag))
+
+                    newtag = "SELECT locid FROM locations WHERE city = ?"
+                    cursor.execute(query, (form.location.data))
+
+                    newlocation = "SELECT tagid FROM tags WHERE tagname = ?"
+                    cursor.execute(query, (form.tag.data))
+
+                    newtitle, newdescription = form.title.data, form.description.data
+                    cursor.execute("INSERT OR IGNORE INTO activities (title, description, locid, tagid) VALUES (?, ?, ?, ?)", (newtitle, newdescription, newlocation, newtag))#dumbest thing alive
                     connection.commit()
                     print("Activity created")
                     return redirect(url_for("admin"))
@@ -459,40 +677,40 @@ def new_post():
 
     return render_template('new_post.html', form=form)
 '''
-
-@app.route("/posts/new", methods=['GET', 'POST'])
-def new_post():
-    # must be logged in
-    if not session.get('user_id'):
-        flash("You need to log in to create a post")
-        return redirect('/login')
+# Old route
+# @app.route("/posts/new", methods=['GET', 'POST'])
+# def new_post():
+#     # must be logged in
+#     if not session.get('user_id'):
+#         flash("You need to log in to create a post")
+#         return redirect('/login')
     
-    form = PostForm()
-    if form.validate_on_submit():
-        posts = []
+#     form = PostForm()
+#     if form.validate_on_submit():
+#         posts = []
 
-        #removed checking, app should break earlier if connection problem
+#         #removed checking, app should break earlier if connection problem
 
-        #removed id & id math, mongo adds _id as primary key by default
+#         #removed id & id math, mongo adds _id as primary key by default
 
-        new = {
-            'user_id': session['user_id'],
-            'title': form.title.data,
-            'body':  form.body.data,
-            'created_at': datetime.now(timezone.utc).isoformat(), #changed because vscode got mad at me
-        }
+#         new = {
+#             'user_id': session['user_id'],
+#             'title': form.title.data,
+#             'body':  form.body.data,
+#             'created_at': datetime.now(timezone.utc).isoformat(), #changed because vscode got mad at me
+#         }
 
-        try:
-            posts_col.insert_one(new)
-            flash("Post created")
-            return redirect(url_for('dashboard'))
+#         try:
+#             posts_col.insert_one(new)
+#             flash("Post created")
+#             return redirect(url_for('dashboard'))
 
-        except Exception as e:
-            flash("an error occurred")
-            print(e)
-            print(type(e).__name__)
+#         except Exception as e:
+#             flash("an error occurred")
+#             print(e)
+#             print(type(e).__name__)
 
-    return render_template('new_post.html', form=form)
+#     return render_template('new_post.html', form=form)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 UPLOAD_FOLDER = 'static/uploads/avatars'
@@ -507,6 +725,8 @@ def upload_avatar():
         flash("Please log in")
         return redirect(url_for('login'))
 
+    print(f"DEBUG — user_id: {session.get('user_id')}, user_name: {session.get('user_name')}")
+
     file = request.files.get('avatar')
     if not file or file.filename == '':
         flash("No file selected")
@@ -515,30 +735,57 @@ def upload_avatar():
     if not allowed_file(file.filename):
         flash("Only PNG, JPG, GIF, or WEBP allowed")
         return redirect(url_for('dashboard'))
+    
+    # Builds the user's personal folder using their usernames
+    username = session.get('user_name', 'unknown')
+    safe_username = secure_filename(username)
+    userfolder = os.path.join(UPLOAD_FOLDER, safe_username)
+    os.makedirs(userfolder, exist_ok=True)
 
+    # Build 
     # build a unique safe filename so users can't overwrite each other
     ext = file.filename.rsplit('.', 1)[1].lower()
-    safe_name = f"user_{session['user_id']}_{uuid.uuid4().hex}.{ext}"
-    save_path = os.path.join(UPLOAD_FOLDER, secure_filename(safe_name))
-    file.save(save_path)
+    safe_name = f"{uuid.uuid4().hex}.{ext}"
+    save_path = os.path.join(userfolder, safe_name)
+    
 
+    # what will get stored in the DB — folder + filename, so we can find it later
+    relative_path = f"{safe_username}/{safe_name}"
     # save the filename in the database
     try:
         with sqlite3.connect("users.db") as connection:
             cursor = connection.cursor()
+
+            # Look up the OLD picture before we replace it
+            cursor.execute(
+                "SELECT profile_pic FROM users WHERE id = ?",
+                (session['user_id'],)
+            )
+            row = cursor.fetchone()
+            old_pic = row[0] if row else None
+
+            # Save the new file to disk
+            file.save(save_path)
+
+            # Update the DB to point to the new picture
             cursor.execute(
                 "UPDATE users SET profile_pic = ? WHERE id = ?",
-                (safe_name, session['user_id'])
+                (relative_path, session['user_id'])
             )
             connection.commit()
+
+            # Delete the OLD file (now that the DB is updated successfully)
+            if old_pic:
+                old_full_path = os.path.join(UPLOAD_FOLDER, old_pic)
+                if os.path.exists(old_full_path):
+                    os.remove(old_full_path)
+
         flash("Profile picture updated")
     except sqlite3.Error as e:
         flash("Database error")
         print(f"DB error: {e}")
 
     return redirect(url_for('dashboard'))
-
-
 
 # Error 404 handler
 @app.errorhandler(404)

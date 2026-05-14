@@ -73,6 +73,7 @@ nav ul {
   list-style: none;
   display: flex;
   gap: 3rem;
+  align-items: center;   
 }
 
 nav ul a {
@@ -101,6 +102,13 @@ nav ul a:hover, nav ul a.active {
   color: var(--deep-color)
 }
 
+.welcome-message {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 2rem;
+  color: var(--dark-color);
+  padding: 40px;
+}
 
 
 /**
@@ -154,6 +162,7 @@ footer {
   background-color: var(--dark-color);
   color: var(--secondary-color);
   bottom: 0;
+  margin-top: 40px;
 }
 
 .navFooter { 
@@ -639,3 +648,367 @@ template {
   display: none;
 }
 
+/* Dark mode — swap the CSS variables when html.dark-mode is set */
+html.dark-mode {
+  --primary-color: #1a1a1a;
+  --secondary-color: #3a4959;
+  --dark-color: #f2f2f2;
+  --white-color: #121212;
+  --accent-color: #75aaff;
+  --deep-color: #ffffff;
+}
+
+/* Smooth transition between modes */
+html {
+  transition: background-color 0.3s ease;
+}
+
+/* Theme menu — gear icon + dropdown with Light/Dark */
+.theme-menu-wrap {
+  position: relative;
+}
+
+.theme-gear {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--secondary-color);
+  background: transparent;
+  color: var(--primary-color);
+  font-size: 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.3s ease, background 0.2s ease;
+}
+
+.theme-gear:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+}
+
+.theme-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  min-width: 160px;
+  background: var(--dark-color);
+  border: 1px solid var(--secondary-color);
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.theme-menu[hidden] {
+  display: none;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: var(--primary-color);
+  font-family: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.theme-option:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.theme-option.active {
+  color: var(--accent-color);
+}
+
+/* In dark mode, give the menu a solid dark background instead
+   of the swapped (light) --dark-color value */
+html.dark-mode .theme-menu {
+  background: #252525;
+  border-color: #3a3a3a;
+}
+html.dark-mode .theme-option {
+  color: #f2f2f2;
+}
+html.dark-mode .theme-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+html.dark-mode .theme-gear {
+  color: #f2f2f2;
+  border-color: #3a3a3a;
+}
+
+/* ============================================================
+   Dark mode overrides for per-page CSS files
+   These override hardcoded colors in login.css, dashboard.css,
+   index.css, etc. that don't use CSS variables.
+   ============================================================ */
+
+/* Body backgrounds — kill the light gradient on login/dashboard */
+html.dark-mode body {
+  background: var(--primary-color) !important;
+  color: var(--dark-color);
+}
+
+/* Cards / containers that hardcode white backgrounds */
+html.dark-mode .login-container,
+html.dark-mode .profile-card,
+html.dark-mode .sidebar-card,
+html.dark-mode .dashboard-card {
+  background: #2c2c2c !important;
+  color: var(--dark-color);
+  border-color: #444;
+}
+
+/* Hardcoded mid-grey text (#555, #666, #6b7280, #9ca3af, #4b5563) */
+html.dark-mode p,
+html.dark-mode .content article:first-child p,
+html.dark-mode label,
+html.dark-mode h1,
+html.dark-mode h2,
+html.dark-mode h3,
+html.dark-mode h4 {
+  color: var(--dark-color);
+}
+
+/* Inputs/buttons that hardcode white or light backgrounds */
+html.dark-mode input,
+html.dark-mode textarea,
+html.dark-mode select {
+  background: #2c3a4d !important;
+  color: #f2f2f2 !important;
+  border-color: #444 !important;
+}
+
+/* Nav and footer — keep them dark in dark mode but a slightly
+   lighter tone than the body so they stand out */
+html.dark-mode nav,
+html.dark-mode footer {
+  background-color: #252525;
+  color: #f2f2f2;
+  border-color: #3a3a3a;
+}
+
+html.dark-mode nav ul a,
+html.dark-mode footer ul a,
+html.dark-mode .logo a {
+  color: #f2f2f2;
+}
+
+html.dark-mode .logo span {
+  color: var(--accent-color);
+}
+
+/* The pill .buttons row uses hardcoded #fff */
+html.dark-mode .buttons {
+  background: #2c2c2c !important;
+}
+html.dark-mode .btn:first-child {
+  color: #f2f2f2;
+}
+html.dark-mode .btn:first-child:hover {
+  background: #3a3a3a;
+}
+
+/* Edit profile picture button — was white bg with var(--dark-color) text,
+   which becomes white-on-white in dark mode */
+html.dark-mode .avatar-label {
+  background: #2c2c2c !important;
+  color: #f2f2f2 !important;
+  border-color: #444 !important;
+}
+html.dark-mode .avatar-label:hover {
+  background: #3a3a3a !important;
+  color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+}
+
+/* Request a new forum CTA — was light blue pill */
+html.dark-mode .sidebar-cta {
+  background: #2c2c2c !important;
+  color: var(--accent-color) !important;
+  border-color: #444 !important;
+}
+html.dark-mode .sidebar-cta:hover {
+  background: var(--accent-color) !important;
+  color: #fff !important;
+  border-color: var(--accent-color) !important;
+}
+
+.theme-gear img {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
+}
+
+/* Live search dropdown */
+.search-wrap {
+  position: relative;
+  flex: 0 1 auto;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--dark-color);
+  border: 1px solid var(--secondary-color);
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  z-index: 1500;
+}
+
+.search-dropdown[hidden] { display: none; }
+
+.search-dropdown li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+.search-dropdown li a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.search-dropdown img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.search-dropdown .empty {
+  padding: 10px;
+  color: var(--secondary-color);
+  text-align: center;
+  font-style: italic;
+}
+
+/* Dark mode: solid dark background */
+html.dark-mode .search-dropdown {
+  background: #252525;
+  border-color: #3a3a3a;
+}
+
+/* Signup page — dark mode */
+html.dark-mode .signup-container {
+  background: #2c2c2c !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid #3a3a3a;
+}
+
+html.dark-mode .signup-header p,
+html.dark-mode .login-text {
+  color: #aaa;
+}
+
+html.dark-mode .divider {
+  color: #888;
+}
+html.dark-mode .divider span {
+  background: #2c2c2c;          /* matches the card so the line "passes through" */
+}
+html.dark-mode .divider::before,
+html.dark-mode .divider::after {
+  background: #3a3a3a;
+}
+
+/* Tags selection page — dark mode */
+html.dark-mode .tags-container {
+  background: #2c2c2c !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid #3a3a3a;
+}
+html.dark-mode .tag-button {
+  background: rgba(255, 255, 255, 0.05);   
+  border-color: #555;                       /* lighter border, visible against #2c2c2c */
+  color: #f2f2f2;
+}
+
+html.dark-mode .tags-container select {
+  background: #1a1a1a !important;
+  color: #f2f2f2 !important;
+  border-color: #444 !important;
+}
+
+html.dark-mode .tags-container select:focus {
+  background: #1a1a1a !important;
+}
+
+html.dark-mode .tag-button {
+  border-color: #444;
+  color: #f2f2f2;
+}
+
+html.dark-mode .tag-button:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* Dashboard — stat labels and logout button */
+html.dark-mode .stat-label {
+  color: #aaa;
+}
+
+html.dark-mode .logout-link {
+  color: #ccc;
+  border-color: #444;
+}
+
+html.dark-mode .logout-link:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+/* Search results page — dark mode */
+html.dark-mode .search-list {
+  background: #2c2c2c;
+  border-color: #3a3a3a;
+}
+
+html.dark-mode .search-item {
+  border-bottom-color: #3a3a3a;
+}
+
+html.dark-mode .search-handle {
+  color: #aaa;
+}
+
+html.dark-mode .search-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html.dark-mode .search-empty {
+  color: #aaa;
+}
+
+html.dark-mode .profile-tag {
+  background: #1a1a1a;
+  border-color: #444;
+}
