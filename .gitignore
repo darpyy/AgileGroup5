@@ -10,6 +10,7 @@ settings.json
 users.db
 static/uploads/avatars/*
 !static/uploads/avatars/.gitkeep
+<<<<<<< HEAD
 .DS_Store
 <<<<<<< HEAD
 requirements.txt
@@ -21,4 +22,10 @@ users.db
 users.db
 requirements.txt
 >>>>>>> 2db42a1 (made navbar display based off of login proper)
+<<<<<<< HEAD
 >>>>>>> 46d37d8 (made navbar display based off of login proper)
+=======
+=======
+.DS_Storegit 
+>>>>>>> 9316590 (merging)
+>>>>>>> 5a02dca (merging)
