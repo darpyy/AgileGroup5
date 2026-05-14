@@ -14,6 +14,7 @@ from bson.objectid import ObjectId
 app = Flask(__name__, template_folder='views')
 
 app.config ['SECRET_KEY'] = '8e465ada7653afdc91a1be93b5403c23'
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0   # disable static-file caching during dev
 
 ADDRESS = "http://localhost"
 PORT = 5000
@@ -382,11 +383,28 @@ def dashboard():
     except sqlite3.Error as e:
         print(f"DB error: {e}")
     
+    # --- Feed: pull recent posts from forums the user is in ---
+    user_actids = [forum['actid'] for forum in forums]
+    feed_posts = []
+    if user_actids:
+        feed_posts = list(
+            posts_col.find({"actid": {"$in": user_actids}})
+                 .sort("created_at", -1)
+                 .limit(20)
+            )   
+
+    # Build a lookup so we can show forum titles in the feed
+    forum_titles = {forum['actid']: forum['title'] for forum in forums}
+    for post in feed_posts:
+        post['forum_title'] = forum_titles.get(post['actid'], 'Unknown forum')
+        post['_id'] = str(post['_id'])
+
     return render_template(
-        'dashboard.html',
-        forums=forums,
-        profile_pic=profile_pic
-    )
+    'dashboard.html',
+    forums=forums,
+    profile_pic=profile_pic,
+    posts=feed_posts
+)
 
 @app.route('/search')
 def search():
@@ -419,6 +437,34 @@ def search():
             print(f"DB error: {e}")
 
     return render_template('search.html', query=query, results=results)
+
+
+@app.route('/usernames')
+def get_usernames():
+    if not session.get('user_id'):
+        return jsonify([])
+
+    with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT id, username, profile_pic
+            FROM users
+            WHERE id != ?
+        """, (session['user_id'],))
+        rows = cursor.fetchall()
+
+    results = []
+    for row in rows:
+        pic_url = None
+        if row['profile_pic']:
+            pic_url = url_for('static', filename='uploads/avatars/' + row['profile_pic'])
+        results.append({
+            'username': row['username'],
+            'profile_pic': pic_url
+        })
+
+    return jsonify(results)
 
 @app.route('/user/<username>')
 def user_profile(username):
