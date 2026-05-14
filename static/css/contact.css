@@ -1,0 +1,123 @@
+/* ─── Contact Us Page — matches site theme ─────────────── */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #e9f0ff 0%, #f5f8ff 100%);
+  font-family: "Source Code Pro", monospace;
+  color: var(--dark-color);
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+/* page heading */
+body > h1 {
+  text-align: center;
+  margin: 50px 20px 10px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--dark-color);
+}
+
+/* form-header subtitle */
+.form-header {
+  text-align: center;
+  margin: 0 20px 30px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #555;
+}
+
+/* form wrapper as a card */
+#forumRequestForm {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 60px;
+  padding: 40px;
+  background: var(--white-color);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(58, 73, 89, 0.12);
+  box-sizing: border-box;
+}
+
+/* form fields */
+#forumRequestForm .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  max-width: 100%;
+  align-items: stretch;
+}
+
+#forumRequestForm label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--dark-color);
+  margin-top: 16px;
+}
+
+#forumRequestForm label:first-child {
+  margin-top: 0;
+}
+
+#forumRequestForm input[type="text"],
+#forumRequestForm textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #d8e0ee;
+  background: #f7f9ff;
+  color: var(--dark-color);
+  font-size: 15px;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  resize: vertical;
+}
+
+#forumRequestForm input[type="text"]:focus,
+#forumRequestForm textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(89, 148, 243, 0.18);
+  background: #fff;
+}
+
+/* submit button — overrides .btn from global.css */
+#forumRequestForm .form-button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin-top: 24px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent-color);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex: none;
+  transition: background 0.2s, transform 0.1s;
+}
+
+#forumRequestForm .form-button:hover {
+  background: #4a85e6;
+}
+
+#forumRequestForm .form-button:active {
+  transform: translateY(1px);
+}
+
+.signup-button {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none; /* removes the underline */
+}
+
+html.dark-mode #forumRequestForm {
+  background: #2c2c2c !important;
+  border: 1px solid #3a3a3a;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}

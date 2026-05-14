@@ -24,11 +24,42 @@
             </a>
         </div>
         <ul class="nav-links">
-            <li><a href ="{{ url_for('dashboard') }}">Home</a></li>
-            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+<<<<<<< HEAD
+<<<<<<< HEAD
+            {% if session.get('user_name') %}
+                <!-- Logged in: show these -->
+                <li><a href="{{ url_for('dashboard') }}" class = "active">Home</a></li>
+                <li><a href="{{ url_for('contact') }}" class = "bigItem">Contact</a></li>
+                <li><a href="{{ url_for('about') }}" class = "bigItem">About Us</a></li>
+                <form method="POST" action="{{ url_for('logout') }}">
+                    <button type="submit" name="logout">Logout</button>
+                </form>
+
+            {% else %}
+                <!-- Logged out: show these -->
+                <li><a href ="{{ url_for('index') }}" class="active">Home</a></li>
+                <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+                <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+            {% endif %}
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 4b6899b (merge conflicts)
             <li><a href="{{ url_for('about') }}">About Us</a></li>
             <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
             <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+>>>>>>> 46d37d8 (made navbar display based off of login proper)
+            <li class="theme-menu-wrap">
+              <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
+                      aria-haspopup="true" aria-expanded="false">
+                <img src="/static/img/gear.png" alt="">
+              </button>
+              <ul id="theme-menu" class="theme-menu" hidden>
+                <li><button class="theme-option" data-theme="light">Light mode</button></li>
+                <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
+                <li><button class="theme-option" data-theme="system">System</button></li>
+              </ul>
+            </li>
         </ul>
 
     </nav>
@@ -44,11 +75,17 @@
             
         
     </section>
-
-    <div class ="buttons">
-        <a href="{{ url_for('login') }}" class="btn">Login</a>
-        <a href="{{ url_for('signup') }}" class="btn">Sign Up</a>
-    </div>
+    {% if session.get('user_name') %}
+        <div class = "welcome-message">
+            <p>Welcome back, {{ session['user_name'] }}! Explore your dashboard and connect with others who share your interests.</p>
+            <a href="{{ url_for('dashboard') }}" class="btn bigItem">Dashboard</a>
+        </div>
+    {% else %}
+        <div class ="buttons">
+            <a href="{{ url_for('login') }}" class="btn">Login</a>
+            <a href="{{ url_for('signup') }}" class="btn">Sign Up</a>
+        </div>
+    {% endif %}
 
     <div class = slideshow>
         <div class = "slides fade">
@@ -122,5 +159,6 @@
         <p></p>
         <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
     </footer>
+<script src="/static/js/darkmode.js"></script>    
 <script src="/static/js/main.js"></script>
 </html>
