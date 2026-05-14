@@ -320,14 +320,14 @@ body {
 }
 
 .nav-search input {
-  width: 100%;
+  width: 400px;
   box-sizing: border-box;
-  padding: 0.7rem 1.1rem;
+  padding: 0.85rem 1.2rem;
   border-radius: 10px;
   border: 1px solid #d8e0ee;
   background: #f7f9ff;
   color: var(--dark-color);
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   font-family: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -341,4 +341,84 @@ body {
   border-color: var(--accent-color);
   box-shadow: 0 0 0 3px rgba(89, 148, 243, 0.18);
   background: #fff;
+}
+
+.search-dropdown {
+  /* keep all your existing styles, but change these two */
+  left: 2rem;      /* shift right by the form's margin so it aligns with input's left edge */
+  right: 2rem;     /* shift in by the form's margin on the right too */
+}
+
+/* --- Feed section --- */
+.posts-feed {
+  grid-column: 1 / -1;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+}
+
+.feed-title {
+  font-size: 1.4rem;
+  margin: 0 0 1rem;
+  color: var(--dark-color);
+}
+
+.post-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 0.9rem 1.2rem;    
+  margin-bottom: 0.8rem;     
+  transition: border-color 0.2s ease;
+}
+
+.post-card:hover {
+  border-color: var(--accent-color);
+}
+
+.post-meta {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.post-meta a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.post-meta a:hover {
+  text-decoration: underline;
+}
+
+.post-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.post-title a {
+  color: var(--dark-color);
+  text-decoration: none;
+}
+
+.post-title a:hover {
+  color: var(--accent-color);
+}
+
+.post-body {
+  margin: 0 0 0.6rem;
+  color: var(--dark-color);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.post-comments {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.feed-empty {
+  color: #6b7280;
+  font-style: italic;
 }
