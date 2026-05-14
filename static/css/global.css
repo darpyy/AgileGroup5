@@ -110,6 +110,17 @@ nav ul a:hover, nav ul a.active {
   padding: 40px;
 }
 
+.logout-btn {
+  padding: 6px 12px;
+  border-radius: 4px 16px;
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  text-transform: capitalize;
+}
+
 
 /**
  * Buttons 
