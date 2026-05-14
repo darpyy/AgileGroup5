@@ -11,10 +11,30 @@
     <title>CommonThread | Your dashboard</title>
   </head>
   <body>
+<<<<<<< HEAD
+<<<<<<< HEAD
     <nav>  
     <div class="logo"> 
         <a href="{{ url_for('index') }}">
             Common<span>Thread</span>
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 4b6899b (merge conflicts)
+    <nav>
+      <div class="logo">
+        <a href="{{ url_for('index') }}">
+          Common<span>Thread</span>
+<<<<<<< HEAD
+=======
+    <nav>  
+    <div class="logo"> 
+        <a href="{{ url_for('index') }}">
+            Common<span>Thread</span>
+>>>>>>> 97b4527 (merged)
+>>>>>>> da894dd (merged)
+=======
+>>>>>>> 4b6899b (merge conflicts)
         </a>
       </div>
 
@@ -112,22 +132,26 @@
         <h2 class="sidebar-title">Available Forums</h2>
         <p class="sidebar-sub">Browse your community forums.</p>
 
-<ul class="forum-list">
-  {% if forums %}
-    {% for forum in forums %}
-      <li class="forum-item">
-        <a href="{{ url_for('showActivity', actid=forum['actid']) }}">
-          <span class="forum-name">{{ forum['title'] }}</span>
-          <span class="forum-meta">{{ forum['city'] }}</span>
-        </a>
-      </li>
-    {% endfor %}
-  {% else %}
-    <li class="forum-item">
-      <p style="padding: 10px; color: #888; font-size: 0.9rem;">No existing forums match your tags</p>
-    </li>
-  {% endif %}
-</ul>
+        <ul class="forum-list">
+          {% if forums %}
+            {% for forum in forums %}
+              <li class="forum-item">
+                <a href="{{ url_for('showActivity', actid=forum['actid']) }}">
+                  <span class="forum-name">{{ forum['title'] }}</span>
+                  {% if forum.member_count is defined %}
+                    <span class="forum-meta">{{ forum.member_count }} members</span>
+                  {% endif %}
+                </a>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li class="forum-item"><a href="#"><span class="forum-name">Hiking &amp; Outdoors</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Book Club</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Local Eats</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Board Games</span></a></li>
+            <li class="forum-item"><a href="#"><span class="forum-name">Volunteering</span></a></li>
+          {% endif %}
+        </ul>
 
         <a href="{{ url_for('contact') }}" class="sidebar-cta">Request a new forum &rarr;</a>
       </aside>

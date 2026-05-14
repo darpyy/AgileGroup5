@@ -9,4 +9,23 @@ users.db
 static/uploads/avatars/*
 !static/uploads/avatars/.gitkeep
 .DS_Store
+<<<<<<< HEAD
+<<<<<<< HEAD
 requirements.txt
+=======
+=======
+users.db
+>>>>>>> 3a63ba1 (git ignore db)
+=======
+users.db
+requirements.txt
+>>>>>>> 2db42a1 (made navbar display based off of login proper)
+<<<<<<< HEAD
+>>>>>>> 46d37d8 (made navbar display based off of login proper)
+=======
+=======
+.DS_Storegit 
+>>>>>>> 9316590 (merging)
+>>>>>>> 5a02dca (merging)
+=======
+>>>>>>> 4b6899b (merge conflicts)
