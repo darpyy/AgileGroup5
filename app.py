@@ -189,11 +189,11 @@ def showActivity(actid):
         cursor = connection.cursor()
 
         query = """
-            SELECT a.*, l.city, t.tagname
-            FROM activities a
-            JOIN locations l ON a.locid = l.locid
-            JOIN tags t ON a.tagid = t.tagid
-            WHERE a.actid = ?
+            SELECT activities.*, locations.city, tags.tagname
+            FROM activities
+            JOIN locations ON activities.locid = locations.locid
+            JOIN tags ON activities.tagid = tags.tagid
+            WHERE activities.actid = ?
         """
         activity = cursor.execute(query, (actid,)).fetchone()
         if not activity:
@@ -356,11 +356,11 @@ def dashboard():
         cursor = connection.cursor()
 
         query = """
-        SELECT DISTINCT a.actid, a.title, a.description, l.city
-        FROM activities a
-        JOIN usertags ut ON a.tagid = ut.tagid
-        JOIN locations l ON a.locid = l.locid
-        WHERE ut.userid = ?
+        SELECT DISTINCT activities.actid, activities.title, activities.description, locations.city
+        FROM activities
+        JOIN usertags ON activities.tagid = usertags.tagid
+        JOIN locations ON activities.locid = locations.locid
+        WHERE usertags.userid = ?
         """
 
         forums = cursor.execute(query, (session.get('user_id'),)).fetchall()
@@ -539,9 +539,15 @@ def admin():
                     return redirect(url_for("admin"))
                 
                 else: # Create new user/write to database
-                    
-                    newtitle, newdescription, newtag, newlocation = form.title.data, form.description.data, form.location.data, form.tag.data
-                    cursor.execute("INSERT OR IGNORE INTO activities (title, description, locid, tagid) VALUES (?, ?, ?, ?)", (newtitle, newdescription, newlocation, newtag))
+
+                    newtag = "SELECT locid FROM locations WHERE city = ?"
+                    cursor.execute(query, (form.location.data))
+
+                    newlocation = "SELECT tagid FROM tags WHERE tagname = ?"
+                    cursor.execute(query, (form.tag.data))
+
+                    newtitle, newdescription = form.title.data, form.description.data
+                    cursor.execute("INSERT OR IGNORE INTO activities (title, description, locid, tagid) VALUES (?, ?, ?, ?)", (newtitle, newdescription, newlocation, newtag))#dumbest thing alive
                     connection.commit()
                     print("Activity created")
                     return redirect(url_for("admin"))
