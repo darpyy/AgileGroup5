@@ -1,0 +1,39 @@
+h1 {
+  display: flex;
+  justify-content: center;
+}
+
+.aboutPic {
+  width: 150px;
+  height: 150px;
+  object-fit: cover; /* Prevents the image from stretching */
+  border-radius: 8px;
+}
+
+.textAbout {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center;
+}
+
+.articleAbout {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  min-height: 10vh;
+  
+}
+
+.containerAbout {
+  display: flex;
+  flex-direction: column; /* Stacks children vertically */
+  align-items: center; /* Centers image and text horizontally */
+  text-align: center; /* Centers text inside the paragraph */
+  max-width: 15rem;
+  padding: 2rem;
+}
+
+.containerAbout img {
+  max-width: 100%; /* Ensures image fits container */
+  height: auto;
+}
