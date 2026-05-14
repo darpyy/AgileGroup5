@@ -5,13 +5,11 @@ __pycache__/
 *.pyc
 .pyc
 settings.json
-<<<<<<< HEAD
-<<<<<<< HEAD
 users.db
 static/uploads/avatars/*
 !static/uploads/avatars/.gitkeep
-<<<<<<< HEAD
 .DS_Store
+<<<<<<< HEAD
 <<<<<<< HEAD
 requirements.txt
 =======
@@ -29,3 +27,5 @@ requirements.txt
 .DS_Storegit 
 >>>>>>> 9316590 (merging)
 >>>>>>> 5a02dca (merging)
+=======
+>>>>>>> 4b6899b (merge conflicts)
