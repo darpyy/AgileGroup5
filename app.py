@@ -10,10 +10,12 @@ from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
+from flask import send_from_directory
 
 app = Flask(__name__, template_folder='views')
 
 app.config ['SECRET_KEY'] = '8e465ada7653afdc91a1be93b5403c23'
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0   # disable static-file caching during dev
 
 ADDRESS = "http://localhost"
 PORT = 5000
@@ -79,6 +81,9 @@ def signup():
             flash("an error occurred")
     return render_template('signup.html', title='Register', form=form)
 '''
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static/img', 'favicon.ico')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -311,8 +316,11 @@ def add_comment(post_id):
         )
 
         if post:
+            # if user came from the dashboard, send them back there
+            if request.referrer and 'dashboard' in request.referrer:
+                return redirect(url_for('dashboard'))
             return redirect(url_for('showActivity', actid=post['actid']))
-        
+
         flash("Unable to comment")
         return redirect(url_for('dashboard'))
 
@@ -382,11 +390,35 @@ def dashboard():
     except sqlite3.Error as e:
         print(f"DB error: {e}")
     
+    # --- Feed: pull recent posts from forums the user is in ---
+    user_actids = [forum['actid'] for forum in forums]
+    feed_posts = []
+    if user_actids:
+        feed_posts = list(
+            posts_col.find({"actid": {"$in": user_actids}})
+                 .sort("created_at", -1)
+                 .limit(20)
+            )   
+
+    # Build a lookup so we can show forum titles in the feed
+    forum_titles = {forum['actid']: forum['title'] for forum in forums}
+    for post in feed_posts:
+        post['forum_title'] = forum_titles.get(post['actid'], 'Unknown forum')
+        post['_id'] = str(post['_id'])
+        # Format date nicely
+        try:
+            from datetime import datetime
+            dt = datetime.fromisoformat(post['created_at'])
+            post['created_at'] = dt.strftime('%b %d')   # "May 14"
+        except (ValueError, TypeError):
+            pass
+
     return render_template(
-        'dashboard.html',
-        forums=forums,
-        profile_pic=profile_pic
-    )
+    'dashboard.html',
+    forums=forums,
+    profile_pic=profile_pic,
+    posts=feed_posts
+)
 
 @app.route('/search')
 def search():
@@ -419,6 +451,34 @@ def search():
             print(f"DB error: {e}")
 
     return render_template('search.html', query=query, results=results)
+
+
+@app.route('/usernames')
+def get_usernames():
+    if not session.get('user_id'):
+        return jsonify([])
+
+    with sqlite3.connect("users.db") as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        cursor.execute("""
+            SELECT id, username, profile_pic
+            FROM users
+            WHERE id != ?
+        """, (session['user_id'],))
+        rows = cursor.fetchall()
+
+    results = []
+    for row in rows:
+        pic_url = None
+        if row['profile_pic']:
+            pic_url = url_for('static', filename='uploads/avatars/' + row['profile_pic'])
+        results.append({
+            'username': row['username'],
+            'profile_pic': pic_url
+        })
+
+    return jsonify(results)
 
 @app.route('/user/<username>')
 def user_profile(username):
@@ -455,11 +515,41 @@ def user_profile(username):
         flash("Database error")
         print(f"DB error: {e}")
         return redirect(url_for('dashboard'))
+    
+    # --- Pull this user's posts across all forums ---
+    user_posts = list(
+        posts_col.find({"user_id": user['id']})
+                 .sort("created_at", -1)
+                 .limit(50)
+    )
 
-    return render_template('user_profile.html', user=user, tags=tags)
+    # Look up forum titles for each post (post only stores actid)
+    if user_posts:
+        actids = list({p.get('actid') for p in user_posts if p.get('actid')})
+        with sqlite3.connect("users.db") as connection:
+            connection.row_factory = sqlite3.Row
+            cursor = connection.cursor()
+            placeholders = ','.join('?' * len(actids))
+            cursor.execute(
+                f"SELECT actid, title FROM activities WHERE actid IN ({placeholders})",
+                actids
+            )
+            forum_titles = {row['actid']: row['title'] for row in cursor.fetchall()}
+
+        for post in user_posts:
+            post['forum_title'] = forum_titles.get(post['actid'], 'Unknown forum')
+            post['_id'] = str(post['_id'])
+            try:
+                dt = datetime.fromisoformat(post['created_at'])
+                post['created_at'] = dt.strftime('%b %d')
+            except (ValueError, TypeError):
+                pass
+
+    return render_template('user_profile.html', user=user, tags=tags, posts=user_posts)
 
 @app.route('/about')
-def about():
+def about(): 
+    user = session.get('user')
     return render_template('about.html') 
 
 @app.route('/contact', methods=['GET', 'POST'])
