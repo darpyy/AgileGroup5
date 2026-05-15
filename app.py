@@ -548,7 +548,8 @@ def user_profile(username):
     return render_template('user_profile.html', user=user, tags=tags, posts=user_posts)
 
 @app.route('/about')
-def about():
+def about(): 
+    user = session.get('user')
     return render_template('about.html') 
 
 @app.route('/contact', methods=['GET', 'POST'])

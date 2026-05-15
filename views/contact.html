@@ -19,11 +19,22 @@
                 </a>
             </div>
         <ul class="nav-links">
-            <li><a href="{{ url_for('dashboard') }}" class="bigItem">Home</a></li>
-            <li><a href="{{ url_for('contact') }}" class="active">Contact Us</a></li>
-            <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
-            <li><a href="{{ url_for('logout') }}" class="bigItem">Logout</a></li>
-            
+            {% if session.get('user_name') %}
+                <!-- Logged in: show these -->
+                <li><a href="{{ url_for('dashboard') }}" class = "bigItem">Home</a></li>
+                <li><a href="{{ url_for('contact') }}" class = "active">Contact</a></li>
+                <li><a href="{{ url_for('about') }}" class = "bigItem">About Us</a></li>
+                <form method="POST" action="{{ url_for('logout') }}">
+                    <button type="submit" name="logout">Logout</button>
+                </form>
+
+            {% else %}
+                <!-- Logged out: show these -->
+                <li><a href ="{{ url_for('index') }}" class="bigItem">Home</a></li>
+                <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+
+                <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+            {% endif %}
             <li class="theme-menu-wrap">
                 <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
                         aria-haspopup="true" aria-expanded="false">
@@ -36,7 +47,8 @@
                 </ul>
             </li>
         </ul>
-    </nav>
+        
+        </nav>
         <h1>Contact Us</h1>
         
         <h3 class = "form-header"> Got a forum we don't have? Make a request right here!</h3>

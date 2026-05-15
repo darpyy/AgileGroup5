@@ -163,6 +163,11 @@ nav ul a:hover, nav ul a.active {
     background: #5994f3;
     color: #fff;
 }
+.slideshow img {
+  width: 50rem;
+  height: auto;
+  border-radius: 8px;
+}
 
 .btn:last-child:hover {
     background: #b0caf6;
@@ -231,6 +236,11 @@ footer ul a:hover, nav ul a.active {
 
 footer ul a.active {
   color: var(--accent-color);
+}
+footer p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .centerFoot {
