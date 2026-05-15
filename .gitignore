@@ -29,3 +29,5 @@ requirements.txt
 >>>>>>> 5a02dca (merging)
 =======
 >>>>>>> 4b6899b (merge conflicts)
+testing/__pycache__/test_integration.cpython-314-pytest-9.0.3.pyc
+testing/__pycache__/test_unit.cpython-314-pytest-9.0.3.pyc
