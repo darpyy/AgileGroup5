@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Stylesheet -->
     <link rel="stylesheet" href="/static/css/global.css">
     <link rel="stylesheet" href="/static/css/index.css">
 
@@ -13,143 +11,161 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 
-
     <title>CommonThread | Welcome</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 </head>
+
 <body>
-    <nav>  
-        <div class="logo"> 
+    <nav>
+        <div class="logo">
             <a href="{{ url_for('index') }}">
                 Common<span>Thread</span>
             </a>
         </div>
+
         <ul class="nav-links">
 
             {% if session.get('user_name') %}
-                <!-- Logged in: show these -->
-                <li><a href="{{ url_for('dashboard') }}" class = "active">Home</a></li>
-                <li><a href="{{ url_for('contact') }}" class = "bigItem">Contact</a></li>
-                <li><a href="{{ url_for('about') }}" class = "bigItem">About Us</a></li>
-                <li><a href="{{ url_for('logout') }}" class = "bigItem">Logout</a></li>
-
+                <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
+                <li><a href="{{ url_for('contact') }}" class="bigItem">Contact</a></li>
+                <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
+                <li>
+                    <form method="POST" action="{{ url_for('logout') }}">
+                        <button type="submit" name="logout">Logout</button>
+                    </form>
+                </li>
             {% else %}
-                <!-- Logged out: show these -->
-                <li><a href ="{{ url_for('index') }}" class="active">Home</a></li>
-                <li><a href="{{ url_for('about') }}" class = "bigItem">About Us</a></li>
+                <li><a href="{{ url_for('index') }}" class="active">Home</a></li>
+                <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
                 <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
                 <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
             {% endif %}
 
             <li class="theme-menu-wrap">
-              <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
-                      aria-haspopup="true" aria-expanded="false">
-                <img src="/static/img/gear.png" alt="">
-              </button>
-              <ul id="theme-menu" class="theme-menu" hidden>
-                <li><button class="theme-option" data-theme="light">Light mode</button></li>
-                <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
-                <li><button class="theme-option" data-theme="system">System</button></li>
-              </ul>
+                <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
+                        aria-haspopup="true" aria-expanded="false">
+                    <img src="/static/img/gear.png" alt="">
+                </button>
+
+                <ul id="theme-menu" class="theme-menu" hidden>
+                    <li><button class="theme-option" data-theme="light">Light mode</button></li>
+                    <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
+                    <li><button class="theme-option" data-theme="system">System</button></li>
+                </ul>
             </li>
         </ul>
-
     </nav>
 
     <section class="content">
-        <article><h2>Join US Now</h2>
-        <p>Discover a world of knowledge and connection with CommonThread. Our platform is designed to bring people together through their common hobbies, interests and passions. Let us know what tags you are interested in and get right into the conversation!</p>
+        <article>
+            <h2>Join Us Now</h2>
+            <p>
+                Discover a world of knowledge and connection with CommonThread.
+                Our platform is designed to bring people together through their common hobbies,
+                interests, and passions. Let us know what tags you are interested in and get right
+                into the conversation!
+            </p>
         </article>
+
         <article>
             <h2>Top Chat this Month</h2>
-            <p><strong>Soccer</strong> has Over 10 Thousand Active users. Find people to play Soccer with now!</p>
+            <p>
+                <strong>Soccer</strong> has over 10 thousand active users.
+                Find people to play soccer with now!
+            </p>
         </article>
-            
-        
     </section>
+
     {% if session.get('user_name') %}
-        <div class = "welcome-message">
-            <p>Welcome back, {{ session['user_name'] }}! Explore your dashboard and connect with others who share your interests.</p>
+        <div class="welcome-message">
+            <p>
+                Welcome back, {{ session['user_name'] }}!
+                Explore your dashboard and connect with others who share your interests.
+            </p>
             <a href="{{ url_for('dashboard') }}" class="btn bigItem">Dashboard</a>
         </div>
     {% else %}
-        <div class ="buttons">
+        <div class="buttons">
             <a href="{{ url_for('login') }}" class="btn">Login</a>
             <a href="{{ url_for('signup') }}" class="btn">Sign Up</a>
         </div>
     {% endif %}
 
-    <div class = slideshow>
-        <div class = "slides fade">
-            <img src="/static/img/soccer.jpg" alt="Slideshow Image 1">
-            <div class = "slide_caption">Soccer</div>
+    <div class="slideshow">
+        <div class="slides fade">
+            <img src="/static/img/soccer.jpg" alt="Soccer">
+            <div class="slide_caption">Soccer</div>
         </div>
 
-        <div class = "slides fade">
-            <img src="/static/img/gaming.jpg" alt="Slideshow Image 1">
-            <div class = "slide_caption">Video Gaming</div>
+        <div class="slides fade">
+            <img src="/static/img/gaming.jpg" alt="Video Gaming">
+            <div class="slide_caption">Video Gaming</div>
         </div>
 
-        <div class = "slides fade">
-            <img src="/static/img/hiking.jpg" alt="Slideshow Image 1">
-            <div class = "slide_caption">Hiking</div>
+        <div class="slides fade">
+            <img src="/static/img/hiking.jpg" alt="Hiking">
+            <div class="slide_caption">Hiking</div>
         </div>
-        
-        <div class = "slides fade">
-            <img src="/static/img/fishing.jpg" alt="Slideshow Image 1">
-            <div class = "slide_caption">Fishing</div>
+
+        <div class="slides fade">
+            <img src="/static/img/fishing.jpg" alt="Fishing">
+            <div class="slide_caption">Fishing</div>
         </div>
     </div>
-    
-</body>
 
-    <!-- Footer -->
     <footer class="footerCopy">
-
         <section class="navFooter">
             <article class="footArticle">
                 <h3>About Us</h3>
-                <p> We are interested in bringing people closer together in your Community. We hope to help build meaningful friendships & keeping people active in the Greater Vancouver area!</p>
-                
+                <p>
+                    We are interested in bringing people closer together in your community.
+                    We hope to help build meaningful friendships and keep people active in
+                    the Greater Vancouver area!
+                </p>
+
                 <ul class="footer-links">
-                    <li> <a href="{{ url_for('about') }}">
-                    About Us
-                    </a>
+                    <li>
+                        <a href="{{ url_for('about') }}">About Us</a>
                     </li>
                 </ul>
             </article>
+
             <article class="footArticle">
                 <h3>Contact Info</h3>
-                <section  class="contactFoot">
+
+                <section class="contactFoot">
                     <h4 class="contacter">Call</h4>
                     <p class="contacter">+1 123-456-6789</p>
                 </section>
-                <section  class="contactFoot">
+
+                <section class="contactFoot">
                     <h4 class="contacter">Email us</h4>
                     <p class="contacter">contact@CommonThread.com</p>
                 </section>
-                <section  class="contactFoot">
+
+                <section class="contactFoot">
                     <h4 class="contacter">Find us</h4>
                     <p class="contacter">Canada, Vancouver, Main 67A</p>
                 </section>
-                <section>
-                 <ul class="footer-links">
-                    <li> 
-                        <a href="{{ url_for('contact') }}">
-                            Contact Us
-                        </a>
+
+                <ul class="footer-links">
+                    <li>
+                        <a href="{{ url_for('contact') }}">Contact Us</a>
                     </li>
                 </ul>
-                </section>
             </article>
+
             <article class="footArticle">
                 <button onclick="scrollToTop()" class="backToTop">
                     Back to Top
                 </button>
             </article>
         </section>
-        <p></p>
+
         <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
     </footer>
-<script src="/static/js/darkmode.js"></script>    
-<script src="/static/js/main.js"></script>
+
+    <script src="/static/js/darkmode.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
 </html>
