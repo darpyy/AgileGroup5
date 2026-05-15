@@ -1,0 +1,144 @@
+/* ─── Sign Up Page — matches index/login theme ─────────────── */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #e9f0ff 0%, #f5f8ff 100%);
+  font-family: "Source Code Pro", monospace;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.signup-container {
+  width: 100%;
+  max-width: 440px;
+  padding: 48px 40px;
+  border-radius: 16px;
+
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(58, 73, 89, 0.12);
+  margin: 60px auto;
+
+  color: var(--dark-color);
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.signup-header h1 {
+  margin: 0 0 8px 0;
+  font-size: 2rem;
+  color: var(--dark-color);
+}
+
+.signup-header p {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* form fields */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--dark-color);
+}
+
+.form-group input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #d8e0ee;
+  background: #f7f9ff;
+  color: var(--dark-color);
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(89, 148, 243, 0.18);
+  background: #fff;
+}
+
+/* primary button */
+.signup-button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent-color);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.signup-button:hover {
+  background: #4a85e6;
+}
+
+.signup-button:active {
+  transform: translateY(1px);
+}
+
+/* divider */
+.divider {
+  margin: 28px 0 18px;
+  text-align: center;
+  color: #999;
+  position: relative;
+  font-size: 0.85rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: #e0e6f0;
+}
+
+.divider::before { left: 0; }
+.divider::after  { right: 0; }
+
+.divider span {
+  background: #fff;
+  padding: 0 12px;
+  position: relative;
+  z-index: 1;
+}
+
+/* "Already have an account?" line */
+.login-text {
+  text-align: center;
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--dark-color);
+}
+
+.login-text a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}

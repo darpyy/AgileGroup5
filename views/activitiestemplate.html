@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/static/css/global.css" />
+    <link rel="stylesheet" href="/static/css/index.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>CommonThread</title>
+      <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+</head>
+  <body>
+    <nav>
+      <div class="logo">
+        <a href="{{ url_for('index') }}"> Common<span>Thread</span> </a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        <li><a href="{{ url_for('about') }}">About Us</a></li>
+        <li class="theme-menu-wrap">
+          <button
+            id="theme-gear"
+            class="theme-gear"
+            aria-label="Theme settings"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img src="/static/img/gear.png" alt="" />
+          </button>
+          <ul id="theme-menu" class="theme-menu" hidden>
+            <li>
+              <button class="theme-option" data-theme="light">
+                Light mode
+              </button>
+            </li>
+            <li>
+              <button class="theme-option" data-theme="dark">Dark mode</button>
+            </li>
+            <li>
+              <button class="theme-option" data-theme="system">System</button>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <div
+      class="content"
+      style="display: block; max-width: 800px; margin: 40px auto"
+    >
+      <div
+        style="
+          background: var(--dark-color);
+          color: var(--primary-color);
+          padding: 20px;
+          border-radius: 12px;
+          margin-bottom: 30px;
+        "
+      >
+        <h1 style="margin-top: 0">{{ activity['title'] }} Forum</h1>
+        <p>
+          <strong>City:</strong> {{ activity['city'] }} |
+          <strong>Tag:</strong> {{ activity['tagname'] }}
+        </p>
+        <p>{{ activity['description'] }}</p>
+      </div>
+
+      <div
+        style="
+          background: white;
+          padding: 25px;
+          border-radius: 12px;
+          margin-bottom: 30px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        "
+      >
+        <h3>Create a New Post</h3>
+        <form
+          method="POST"
+          action="{{ url_for('create_post', actid=activity['actid']) }}"
+        >
+          {{ post_form.hidden_tag() }}
+          <div class="form-group" style="margin: 0 0 15px 0; max-width: 100%">
+            {{ post_form.title(placeholder="Post Title", style="width: 100%;")
+            }}
+          </div>
+          <div class="form-group" style="margin: 0 0 15px 0; max-width: 100%">
+            {{ post_form.body(rows=4, placeholder="Description", style="width:
+            100%;") }}
+          </div>
+          <button
+            type="submit"
+            class="signup-button"
+            style="width: auto; padding: 10px 25px; margin-top: 0"
+          >
+            Post to Forum
+          </button>
+        </form>
+      </div>
+
+      <div class="posts-list">
+        {% for post in posts %}
+        <div
+          style="
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: baseline;
+            "
+          >
+            <h2 style="margin: 0; color: var(--dark-color)">
+              {{ post.title }}
+            </h2>
+            <small style="color: #888"
+              >By @{{ post.username }} on {{ post.created_at[:10] }}</small
+            >
+          </div>
+          <p style="font-size: 1.1rem; line-height: 1.5">{{ post.body }}</p>
+
+          {% if post.user_id == session.get('user_id') or session.get('user_id')
+          == 0 %}
+          <div style="margin-bottom: 20px; display: flex; gap: 10px">
+            <a
+              href="{{ url_for('edit_post', post_id=post._id) }}"
+              class="tag-button"
+              style="text-decoration: none"
+              >Edit</a
+            >
+            <form
+              action="{{ url_for('delete_post', post_id=post._id) }}"
+              method="POST"
+              style="display: inline"
+            >
+              <button
+                type="submit"
+                class="tag-button"
+                style="border-color: #e74c3c; color: #e74c3c"
+              >
+                Delete
+              </button>
+            </form>
+          </div>
+          {% endif %}
+          <hr
+            style="border: 0; height: 1px; background: #e0e6f0; margin: 20px 0"
+          />
+
+          <h4 style="margin-top: 0">Comments</h4>
+          {% for comment in post.comments %}
+          <div
+            style="
+              background: #f7f9ff;
+              padding: 12px 15px;
+              margin-bottom: 10px;
+              border-radius: 8px;
+              border: 1px solid #d8e0ee;
+            "
+          >
+            <div style="display: flex; justify-content: space-between">
+              <strong>@{{ comment.username }}</strong>
+
+              {% if comment.user_id == session.get('user_id') or post.user_id ==
+              session.get('user_id') or session.get('user_id') == 0 %}
+              <form
+                action="{{ url_for('delete_comment', post_id=post._id, comment_id=comment.comment_id) }}"
+                method="POST"
+                style="display: inline"
+              >
+                <button
+                  type="submit"
+                  style="
+                    background: none;
+                    border: none;
+                    color: #e74c3c;
+                    cursor: pointer;
+                    font-size: 0.85em;
+                    font-family: inherit;
+                  "
+                >
+                  Delete
+                </button>
+              </form>
+              {% endif %}
+            </div>
+            <p style="margin: 5px 0 0 0">{{ comment.body }}</p>
+          </div>
+          {% endfor %}
+
+          <form
+            action="{{ url_for('add_comment', post_id=post._id) }}"
+            method="POST"
+            style="display: flex; gap: 10px; margin-top: 15px"
+          >
+            <input
+              type="text"
+              name="body"
+              placeholder="Comment"
+              required
+              style="
+                flex: 1;
+                padding: 10px;
+                border-radius: 8px;
+                border: 1px solid #d8e0ee;
+                background: #f7f9ff;
+              "
+            />
+            <button
+              type="submit"
+              class="signup-button"
+              style="width: auto; padding: 10px 20px; margin-top: 0"
+            >
+              Comment
+            </button>
+          </form>
+        </div>
+        {% endfor %} {% if not posts %}
+        <p style="text-align: center; color: #666; font-style: italic">
+          No posts in this forum yet.
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+
+  <!-- Footer -->
+  <footer class="footerCopy">
+    <section class="navFooter">
+      <article class="footArticle">
+        <h3>About Us</h3>
+        <p>
+          We are interested in bringing people closer together in your
+          Community. We hope to help build meaningful friendships & keeping
+          people active in the Greater Vancouver area!
+        </p>
+
+        <ul class="footer-links">
+          <li><a href="{{ url_for('about') }}"> About Us </a></li>
+        </ul>
+      </article>
+      <article class="footArticle">
+        <h3>Contact Info</h3>
+        <section class="contactFoot">
+          <h4 class="contacter">Call</h4>
+          <p class="contacter">+1 123-456-6789</p>
+        </section>
+        <section class="contactFoot">
+          <h4 class="contacter">Email us</h4>
+          <p class="contacter">contact@CommonThread.com</p>
+        </section>
+        <section class="contactFoot">
+          <h4 class="contacter">Find us</h4>
+          <p class="contacter">Canada, Vancouver, Main 67A</p>
+        </section>
+        <section>
+          <ul class="footer-links">
+            <li>
+              <a href="{{ url_for('contact') }}"> Contact Us </a>
+            </li>
+          </ul>
+        </section>
+      </article>
+      <article class="footArticle">
+        <button onclick="scrollToTop()" class="backToTop">Back to Top</button>
+      </article>
+    </section>
+    <p></p>
+    <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
+  </footer>
+  <script src="/static/js/darkmode.js"></script>
+  <script src="/static/js/main.js"></script>
+</html>
