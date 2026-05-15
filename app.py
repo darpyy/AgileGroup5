@@ -172,7 +172,7 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET','POST'])
 def logout():
     session.clear()
     flash("You have been logged out")
