@@ -10,6 +10,7 @@ from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
+from flask import send_from_directory
 
 app = Flask(__name__, template_folder='views')
 
@@ -80,6 +81,9 @@ def signup():
             flash("an error occurred")
     return render_template('signup.html', title='Register', form=form)
 '''
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static/img', 'favicon.ico')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -172,7 +176,7 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
-@app.route('/logout', methods=['GET','POST'])
+@app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     flash("You have been logged out")
@@ -518,27 +522,22 @@ def user_profile(username):
                  .sort("created_at", -1)
                  .limit(50)
     )
-    # Drop any orphan posts that aren't tied to a forum
-    user_posts = [p for p in user_posts if p.get('actid')]
 
     # Look up forum titles for each post (post only stores actid)
     if user_posts:
         actids = list({p.get('actid') for p in user_posts if p.get('actid')})
-
-        forum_titles = {}
-        if actids:
-            with sqlite3.connect("users.db") as connection:
-                connection.row_factory = sqlite3.Row
-                cursor = connection.cursor()
-                placeholders = ','.join('?' * len(actids))
-                cursor.execute(
-                    f"SELECT actid, title FROM activities WHERE actid IN ({placeholders})",
-                    actids
-                )
-                forum_titles = {row['actid']: row['title'] for row in cursor.fetchall()}
+        with sqlite3.connect("users.db") as connection:
+            connection.row_factory = sqlite3.Row
+            cursor = connection.cursor()
+            placeholders = ','.join('?' * len(actids))
+            cursor.execute(
+                f"SELECT actid, title FROM activities WHERE actid IN ({placeholders})",
+                actids
+            )
+            forum_titles = {row['actid']: row['title'] for row in cursor.fetchall()}
 
         for post in user_posts:
-            post['forum_title'] = forum_titles.get(post.get('actid'), 'Unknown forum')
+            post['forum_title'] = forum_titles.get(post['actid'], 'Unknown forum')
             post['_id'] = str(post['_id'])
             try:
                 dt = datetime.fromisoformat(post['created_at'])
