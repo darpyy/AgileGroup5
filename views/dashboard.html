@@ -6,38 +6,36 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="/static/css/global.css" />
-    <link rel="stylesheet" href="/static/css/dashboard.css" />
+    <link rel="stylesheet" href="/static/css/dashboard.css?v=2" />
 
     <title>CommonThread | Your dashboard</title>
   </head>
-    <nav>  
-    <div class="logo"> 
+  <body>
+    <nav>
+      <div class="logo">
         <a href="{{ url_for('index') }}">
-            Common<span>Thread</span>
-        </a>
+          Common<span>Thread</span>
+      </a>
+      </div>
+      <div class="search-wrap">
+        <form action="{{ url_for('search') }}" method="GET" class="nav-search">
+          <input type="text" name="q" id="search-input"
+                 placeholder="Search users…" autocomplete="off">
+        </form>
+        <ul id="search-dropdown" class="search-dropdown" hidden></ul>
       </div>
 
-      <form action="{{ url_for('search') }}" method="GET" class="nav-search">
-        <input type="text" name="q" placeholder="Search users…" required>
-      </form>
-
       <ul class="nav-links">
-          {% if session.get('user_name') %}
-              <!-- Logged in: show these -->
-              <li><a href="{{ url_for('dashboard') }}" class = "bigItem">Home</a></li>
-              <li><a href="{{ url_for('contact') }}" class = "bigItem">Contact</a></li>
-              <li><a href="{{ url_for('about') }}" class = "active">About Us</a></li>
-              <form method="POST" action="{{ url_for('logout') }}">
-                  <button type="submit" name="logout">Logout</button>
-              </form>
-
-          {% else %}
-              <!-- Logged out: show these -->
-              <li><a href ="{{ url_for('index') }}" class="bigItem">Home</a></li>
-              <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
-              <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
-          {% endif %}
-          
+        <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
+        <li><a href="{{ url_for('contact') }}" class = "bigItem">Contact Us</a></li>
+        <li><a href="{{ url_for('about') }}" class = "bigItem">About Us</a></li>
+        <li><a href="{{ url_for('logout') }}" class = "bigItem">Logout</a></li>
+        
+        <li class="theme-menu-wrap">
+          <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
+                  aria-haspopup="true" aria-expanded="false">
+            <img src="/static/img/gear.png" alt="">
+          </button>
           <ul id="theme-menu" class="theme-menu" hidden>
             <li><button class="theme-option" data-theme="light">Light mode</button></li>
             <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
@@ -134,6 +132,37 @@
 
         <a href="{{ url_for('contact') }}" class="sidebar-cta">Request a new forum &rarr;</a>
       </aside>
+
+      <section class="posts-feed">
+        <h2 class="feed-title">Your feed</h2>
+
+        {% if posts %}
+          {% for post in posts %}
+            <article class="post-card">
+              <div class="post-meta">
+                <a href="{{ url_for('user_profile', username=post.username) }}" class="post-author">
+                  {{ post.username }}
+                </a>
+                <span> · in </span>
+                <a href="{{ url_for('showActivity', actid=post.actid) }}" class="post-forum">
+                  {{ post.forum_title }}
+                </a>
+                <span> · </span>
+                <span class="post-time">{{ post.created_at[:10] }}</span>
+              </div>
+              <h3 class="post-title">
+                <a href="{{ url_for('showActivity', actid=post.actid) }}">{{ post.title }}</a>
+              </h3>
+              <p class="post-body">
+                {{ post.body[:200] }}{% if post.body|length > 200 %}…{% endif %}
+              </p>
+              <p class="post-comments">💬 {{ post.comments|length }} comments</p>
+            </article>
+          {% endfor %}
+        {% else %}
+          <p class="feed-empty">No posts yet. Join a forum to start seeing posts here!</p>
+        {% endif %}
+      </section>
     </main>
 
     <!-- Footer -->
@@ -174,6 +203,7 @@
       <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
     </footer>
     <script src="/static/js/darkmode.js"></script>
+    <script src="/static/js/search.js"></script>
     <script src="/static/js/main.js"></script>
   </body>
 </html>

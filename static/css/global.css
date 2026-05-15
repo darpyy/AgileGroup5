@@ -110,6 +110,17 @@ nav ul a:hover, nav ul a.active {
   padding: 40px;
 }
 
+.logout-btn {
+  padding: 6px 12px;
+  border-radius: 4px 16px;
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  text-transform: capitalize;
+}
+
 
 /**
  * Buttons 
@@ -865,8 +876,8 @@ html.dark-mode .sidebar-cta:hover {
 .search-dropdown {
   position: absolute;
   top: calc(100% + 4px);
-  left: 0;
-  right: 0;
+  left: 2rem;
+  right: 2rem;
   list-style: none;
   margin: 0;
   padding: 6px;
@@ -877,6 +888,9 @@ html.dark-mode .sidebar-cta:hover {
   border-radius: 8px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
   z-index: 1500;
+  flex-direction: column;
+  align-items: stretch; 
+  gap: 2px;
 }
 
 .search-dropdown[hidden] { display: none; }
@@ -1011,4 +1025,20 @@ html.dark-mode .search-empty {
 html.dark-mode .profile-tag {
   background: #1a1a1a;
   border-color: #444;
+}
+
+/* --- Feed cards in dark mode --- */
+html.dark-mode .post-card {
+  background: #2c2c2c;
+  border-color: #3a3a3a;
+}
+
+html.dark-mode .post-card:hover {
+  border-color: var(--accent-color);
+}
+
+html.dark-mode .post-meta,
+html.dark-mode .post-comments,
+html.dark-mode .feed-empty {
+  color: #aaa;
 }
