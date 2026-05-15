@@ -1031,3 +1031,19 @@ html.dark-mode .post-comments,
 html.dark-mode .feed-empty {
   color: #aaa;
 }
+
+/* Inline comment form — dark mode */
+html.dark-mode .quick-comment input {
+  background: #1a1a1a;
+  border-color: #444;
+  color: #f2f2f2;
+}
+
+html.dark-mode .quick-comment input:focus {
+  background: #2c2c2c;
+  border-color: var(--accent-color);
+}
+
+html.dark-mode .comment-item strong {
+  color: #f2f2f2;
+}

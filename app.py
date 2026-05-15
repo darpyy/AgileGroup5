@@ -312,8 +312,11 @@ def add_comment(post_id):
         )
 
         if post:
+            # if user came from the dashboard, send them back there
+            if request.referrer and 'dashboard' in request.referrer:
+                return redirect(url_for('dashboard'))
             return redirect(url_for('showActivity', actid=post['actid']))
-        
+
         flash("Unable to comment")
         return redirect(url_for('dashboard'))
 
@@ -398,6 +401,13 @@ def dashboard():
     for post in feed_posts:
         post['forum_title'] = forum_titles.get(post['actid'], 'Unknown forum')
         post['_id'] = str(post['_id'])
+        # Format date nicely
+        try:
+            from datetime import datetime
+            dt = datetime.fromisoformat(post['created_at'])
+            post['created_at'] = dt.strftime('%b %d')   # "May 14"
+        except (ValueError, TypeError):
+            pass
 
     return render_template(
     'dashboard.html',
@@ -501,8 +511,42 @@ def user_profile(username):
         flash("Database error")
         print(f"DB error: {e}")
         return redirect(url_for('dashboard'))
+    
+    # --- Pull this user's posts across all forums ---
+    user_posts = list(
+        posts_col.find({"user_id": user['id']})
+                 .sort("created_at", -1)
+                 .limit(50)
+    )
+    # Drop any orphan posts that aren't tied to a forum
+    user_posts = [p for p in user_posts if p.get('actid')]
 
-    return render_template('user_profile.html', user=user, tags=tags)
+    # Look up forum titles for each post (post only stores actid)
+    if user_posts:
+        actids = list({p.get('actid') for p in user_posts if p.get('actid')})
+
+        forum_titles = {}
+        if actids:
+            with sqlite3.connect("users.db") as connection:
+                connection.row_factory = sqlite3.Row
+                cursor = connection.cursor()
+                placeholders = ','.join('?' * len(actids))
+                cursor.execute(
+                    f"SELECT actid, title FROM activities WHERE actid IN ({placeholders})",
+                    actids
+                )
+                forum_titles = {row['actid']: row['title'] for row in cursor.fetchall()}
+
+        for post in user_posts:
+            post['forum_title'] = forum_titles.get(post.get('actid'), 'Unknown forum')
+            post['_id'] = str(post['_id'])
+            try:
+                dt = datetime.fromisoformat(post['created_at'])
+                post['created_at'] = dt.strftime('%b %d')
+            except (ValueError, TypeError):
+                pass
+
+    return render_template('user_profile.html', user=user, tags=tags, posts=user_posts)
 
 @app.route('/about')
 def about():

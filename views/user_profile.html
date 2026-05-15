@@ -90,6 +90,33 @@
       </div>
 
     </section>
+    <section class="posts-feed">
+      <h2 class="feed-title">Posts by {{ user['username'] }}</h2>
+
+      {% if posts %}
+        {% for post in posts %}
+          <article class="post-card">
+            <div class="post-meta">
+              <span> in </span>
+              <a href="{{ url_for('showActivity', actid=post.actid) }}" class="post-forum">
+                {{ post.forum_title }}
+              </a>
+              <span> · </span>
+              <span class="post-time">{{ post.created_at }}</span>
+            </div>
+            <h3 class="post-title">
+              <a href="{{ url_for('showActivity', actid=post.actid) }}">{{ post.title }}</a>
+            </h3>
+            <p class="post-body">
+              {{ post.body[:200] }}{% if post.body|length > 200 %}…{% endif %}
+            </p>
+            <p class="post-comments">💬 {{ post.comments|length }} comments</p>
+          </article>
+        {% endfor %}
+      {% else %}
+        <p class="feed-empty">{{ user['username'] }} hasn't posted yet.</p>
+      {% endif %}
+    </section>
   </main>
 
   <script src="/static/js/darkmode.js"></script>
