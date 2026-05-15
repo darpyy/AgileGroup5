@@ -20,6 +20,9 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0   # disable static-file caching duri
 ADDRESS = "http://localhost"
 PORT = 5000
 
+# hi
+
+
 # for MongoDB ---
 uri = "mongodb+srv://sblair2001_db_user:6BUf6rQxUNhRFqk1@cluster0.fy6qtp5.mongodb.net/?appName=Cluster0"
 client = MongoClient(uri, server_api=ServerApi('1'))
