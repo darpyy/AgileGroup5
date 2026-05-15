@@ -29,11 +29,7 @@
                 <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
                 <li><a href="{{ url_for('contact') }}" class="bigItem">Contact</a></li>
                 <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
-                <li>
-                    <form method="POST" action="{{ url_for('logout') }}">
-                        <button type="submit" name="logout">Logout</button>
-                    </form>
-                </li>
+                <li><a href="{{ url_for('logout') }}" class="bigItem">Logout</a></li>
             {% else %}
                 <li><a href="{{ url_for('index') }}" class="active">Home</a></li>
                 <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
@@ -114,7 +110,6 @@
             <div class="slide_caption">Fishing</div>
         </div>
 
-        </div>
         <div class = "slides fade">
             <img src="/static/img/volleyball.jpg" alt="Slideshow Image 1">
             <div class = "slide_caption">Volleyball</div>
@@ -172,8 +167,7 @@
 
         <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
     </footer>
-
-    <script src="/static/js/darkmode.js"></script>
     <script src="/static/js/main.js"></script>
+    <script src="/static/js/darkmode.js"></script>
 </body>
 </html>

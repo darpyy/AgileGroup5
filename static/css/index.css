@@ -56,8 +56,9 @@
 }
 
 .slideshow img {
-  width: 100%;
+  width: 50rem;
   height: auto;
+  border-radius: 8px;
 }
 
 .slide_caption {

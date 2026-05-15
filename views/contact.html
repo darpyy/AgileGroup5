@@ -24,9 +24,7 @@
                 <li><a href="{{ url_for('dashboard') }}" class = "bigItem">Home</a></li>
                 <li><a href="{{ url_for('contact') }}" class = "active">Contact</a></li>
                 <li><a href="{{ url_for('about') }}" class = "bigItem">About Us</a></li>
-                <form method="POST" action="{{ url_for('logout') }}">
-                    <button type="submit" name="logout">Logout</button>
-                </form>
+                <li><a href="{{ url_for('logout') }}" class = "bigItem">Logout</a></li>
 
             {% else %}
                 <!-- Logged out: show these -->
