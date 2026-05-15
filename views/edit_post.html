@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/global.css" />
+    <title>Edit Post</title>
+      <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+</head>
+  <body
+    style="
+      background: linear-gradient(180deg, #e9f0ff 0%, #f5f8ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    "
+  >
+    <div
+      style="
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 12px 32px rgba(58, 73, 89, 0.12);
+        width: 100%;
+        max-width: 600px;
+      "
+    >
+      <h1 style="margin-top: 0; color: var(--dark-color)">Edit Post</h1>
+
+      <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div
+          class="form-group"
+          style="max-width: 100%; margin-left: 0; margin-right: 0"
+        >
+          <label>Title</label>
+          {{ form.title(style="width: 100%; padding: 14px 16px; border-radius:
+          10px; border: 1px solid #d8e0ee; background: #f7f9ff;") }}
+        </div>
+
+        <div
+          class="form-group"
+          style="max-width: 100%; margin-left: 0; margin-right: 0"
+        >
+          <label>Message</label>
+          {{ form.body(rows=6, style="width: 100%; padding: 14px 16px;
+          border-radius: 10px; border: 1px solid #d8e0ee; background: #f7f9ff;
+          resize: vertical;") }}
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-top: 20px">
+          <button type="submit" class="signup-button" style="margin-top: 0">
+            Save Changes
+          </button>
+          <a
+            href="{{ url_for('showActivity', actid=post.actid) }}"
+            class="btn"
+            style="
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border: 1px solid #ccc;
+              border-radius: 999px;
+              flex: 1;
+            "
+            >Cancel</a
+          >
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
