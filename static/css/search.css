@@ -151,7 +151,7 @@ body {
 }
 
 
-@media(min-width: 43.75rem){
+@media(max-width: 30rem){ 
 
 
 
