@@ -37,3 +37,8 @@ h1 {
   max-width: 100%; /* Ensures image fits container */
   height: auto;
 }
+
+@media(min-width: 43.75rem){
+
+  
+}
