@@ -41,8 +41,8 @@ class RequestForm(FlaskForm):
 
 class ActivityForm(FlaskForm):
 
-    title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
-    description = StringField('Description', validators=[DataRequired(), Length(min=5, max=100)])
+    title = StringField('Title', validators=[DataRequired(), Length(min=1, max=100)])
+    description = StringField('Description', validators=[DataRequired(), Length(min=1, max=100)])
     location = SelectField('Description', validators=[DataRequired()])
     tag = SelectField('Description', validators=[DataRequired()])
     submit = SubmitField('Create')
