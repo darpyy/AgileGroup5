@@ -88,7 +88,7 @@ def signup():
 def favicon():
     return send_from_directory('static/img', 'favicon.ico')
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST']) #--------------------------------------------------------------------------------------------------------------------
 def signup():
     form = RegistrationForm()   
 
@@ -378,7 +378,6 @@ def dashboard():
 
     # return render_template('dashboard.html', forums=forums)
 
-
     profile_pic = None
     try:
         with sqlite3.connect("users.db") as connection:
@@ -598,7 +597,7 @@ def admin():
     if not session.get('user_id') == 0:
         return redirect(url_for('login'))
     
-    form = ActivityForm()
+    form = ActivityForm(request.form)
 
     # connect
     with sqlite3.connect("users.db") as connection:
@@ -612,7 +611,6 @@ def admin():
         tagrow = cursor.execute('SELECT tagid, tagname FROM tags').fetchall()
         form.location.choices = [(str(l['locid']), l['city']) for l in locrow]
         form.tag.choices = [(str(t['tagid']), t['tagname']) for t in tagrow]
-
 
     #add a new activity
 
@@ -633,11 +631,15 @@ def admin():
                 
                 else: # Create new user/write to database
 
-                    newtag = "SELECT locid FROM locations WHERE city = ?"
-                    cursor.execute(query, (form.location.data))
+                    #lquery = "SELECT locid FROM locations WHERE city = ?"
+                    #newlocation = cursor.execute(lquery, (form.location.data)).fetchone()
+                    #print(newlocation)
+                    newlocation = form.location.data
 
-                    newlocation = "SELECT tagid FROM tags WHERE tagname = ?"
-                    cursor.execute(query, (form.tag.data))
+                    #tquery = "SELECT tagid FROM tags WHERE tagname = ?"
+                    #newtag = cursor.execute(tquery, (form.tag.data)).fetchone()
+                    #print(newtag)
+                    newtag = form.tag.data
 
                     newtitle, newdescription = form.title.data, form.description.data
                     cursor.execute("INSERT OR IGNORE INTO activities (title, description, locid, tagid) VALUES (?, ?, ?, ?)", (newtitle, newdescription, newlocation, newtag))#dumbest thing alive
