@@ -1,37 +1,19 @@
-/* search bar in the nav — matches login/signup form style */
-.nav-search {
-  flex: 1;
-  max-width: 400px;
-  margin: 0 2rem;
+/* User profile page specific overrides */
+
+.profile-page .posts-feed {
+  grid-column: 1 / 2;
 }
 
-.nav-search input {
+.profile-page .profile-card,
+.profile-page .post-card {
   width: 100%;
   box-sizing: border-box;
-  padding: 0.7rem 1.1rem;
-  border-radius: 10px;
-  border: 1px solid #d8e0ee;
-  background: #f7f9ff;
-  color: var(--dark-color);
-  font-size: 0.9rem;
-  font-family: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.nav-search input::placeholder {
-  color: #9ca3af;
+.profile-page .sidebar-card {
+  min-height: 210px;
 }
 
-.nav-search input:focus {
-  outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 3px rgba(89, 148, 243, 0.18);
-  background: #fff;
-}
-
-@media(max-width: 30rem){ 
-
-
-
-  
+.profile-page .profile-card {
+  min-height: 210px;
 }

@@ -345,7 +345,7 @@ body {
 
 /* --- Feed section --- */
 .posts-feed {
-  grid-column: 1 / -1;
+  grid-column: 1 / 2;
   margin-top: 2rem;
   margin-bottom: 4rem;
 }

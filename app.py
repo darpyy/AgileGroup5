@@ -513,6 +513,17 @@ def user_profile(username):
             """, (user['id'],))
             tags = [row['tagname'] for row in cursor.fetchall()]
 
+            # get forums this user can access
+            cursor.execute("""
+                SELECT DISTINCT activities.actid, activities.title, activities.description, locations.city
+                FROM activities
+                JOIN usertags ON activities.tagid = usertags.tagid
+                JOIN locations ON activities.locid = locations.locid
+                WHERE usertags.userid = ?
+            """, (user['id'],))
+
+            forums = cursor.fetchall()
+
     except sqlite3.Error as e:
         flash("Database error")
         print(f"DB error: {e}")
@@ -539,7 +550,7 @@ def user_profile(username):
             forum_titles = {row['actid']: row['title'] for row in cursor.fetchall()}
 
         for post in user_posts:
-            post['forum_title'] = forum_titles.get(post['actid'], 'Unknown forum')
+            post['forum_title'] = forum_titles.get(post.get('actid'), 'Unknown forum')
             post['_id'] = str(post['_id'])
             try:
                 dt = datetime.fromisoformat(post['created_at'])
@@ -547,7 +558,7 @@ def user_profile(username):
             except (ValueError, TypeError):
                 pass
 
-    return render_template('user_profile.html', user=user, tags=tags, posts=user_posts)
+    return render_template('user_profile.html', user=user, tags=tags, posts=user_posts, forums=forums)
 
 @app.route('/about')
 def about(): 
