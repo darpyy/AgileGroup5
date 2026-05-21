@@ -299,11 +299,10 @@ def delete_post(post_id):
 def add_comment(post_id):
     if not session.get('user_id'):
         return redirect(url_for('login'))
-    
+
     comment_body = request.form.get('body')
 
     if comment_body:
-        # generate an id for each comment
         comment = {
             'comment_id': str(uuid.uuid4()),
             'user_id': session['user_id'],
@@ -312,21 +311,20 @@ def add_comment(post_id):
             'created_at': datetime.now(timezone.utc).isoformat()
         }
 
-        # Append the comment to the comment array
         post = posts_col.find_one_and_update(
             {"_id": ObjectId(post_id)},
             {"$push": {"comments": comment}}
         )
 
         if post:
-            # if user came from the dashboard, send them back there
-            if request.referrer and 'dashboard' in request.referrer:
-                return redirect(url_for('dashboard'))
+            # Send the user back to whichever page they were on
+            if request.referrer:
+                return redirect(request.referrer)
             return redirect(url_for('showActivity', actid=post['actid']))
 
         flash("Unable to comment")
-        return redirect(url_for('dashboard'))
 
+    return redirect(request.referrer or url_for('dashboard'))
 # Delete a comment
 @app.route('/post/<post_id>/comment/<comment_id>/delete', methods=['POST'])
 def delete_comment(post_id, comment_id):
