@@ -4,10 +4,11 @@ h1 {
 }
 
 .aboutPic {
-  width: 150px;
-  height: 150px;
-  object-fit: cover; /* Prevents the image from stretching */
+  width: 200px;
+  height: 200px;
+  object-fit: fill;
   border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .textAbout {
@@ -17,28 +18,19 @@ h1 {
 }
 
 .articleAbout {
-  display: flex;
-  justify-content: center; /* Centers horizontally */
-  align-items: center; /* Centers vertically */
-  min-height: 10vh;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
   
 }
 
 .containerAbout {
   display: flex;
-  flex-direction: column; /* Stacks children vertically */
-  align-items: center; /* Centers image and text horizontally */
-  text-align: center; /* Centers text inside the paragraph */
-  max-width: 15rem;
-  padding: 2rem;
-}
-
-.containerAbout img {
-  max-width: 100%; /* Ensures image fits container */
-  height: auto;
-}
-
-@media(min-width: 43.75rem){
-
-  
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
 }
