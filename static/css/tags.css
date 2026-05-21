@@ -144,3 +144,11 @@ body > h1 {
 .tag-button-submit:active {
   transform: translateY(1px);
 }
+
+
+@media(max-width: 30rem){ 
+
+
+
+  
+}

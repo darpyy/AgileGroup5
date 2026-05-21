@@ -88,7 +88,7 @@ def signup():
 def favicon():
     return send_from_directory('static/img', 'favicon.ico')
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST']) #--------------------------------------------------------------------------------------------------------------------
 def signup():
     form = RegistrationForm()   
 
@@ -179,7 +179,7 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET','POST'])
 def logout():
     session.clear()
     flash("You have been logged out")
@@ -378,7 +378,6 @@ def dashboard():
 
     # return render_template('dashboard.html', forums=forums)
 
-
     profile_pic = None
     try:
         with sqlite3.connect("users.db") as connection:
@@ -514,6 +513,17 @@ def user_profile(username):
             """, (user['id'],))
             tags = [row['tagname'] for row in cursor.fetchall()]
 
+            # get forums this user can access
+            cursor.execute("""
+                SELECT DISTINCT activities.actid, activities.title, activities.description, locations.city
+                FROM activities
+                JOIN usertags ON activities.tagid = usertags.tagid
+                JOIN locations ON activities.locid = locations.locid
+                WHERE usertags.userid = ?
+            """, (user['id'],))
+
+            forums = cursor.fetchall()
+
     except sqlite3.Error as e:
         flash("Database error")
         print(f"DB error: {e}")
@@ -540,7 +550,7 @@ def user_profile(username):
             forum_titles = {row['actid']: row['title'] for row in cursor.fetchall()}
 
         for post in user_posts:
-            post['forum_title'] = forum_titles.get(post['actid'], 'Unknown forum')
+            post['forum_title'] = forum_titles.get(post.get('actid'), 'Unknown forum')
             post['_id'] = str(post['_id'])
             try:
                 dt = datetime.fromisoformat(post['created_at'])
@@ -548,7 +558,7 @@ def user_profile(username):
             except (ValueError, TypeError):
                 pass
 
-    return render_template('user_profile.html', user=user, tags=tags, posts=user_posts)
+    return render_template('user_profile.html', user=user, tags=tags, posts=user_posts, forums=forums)
 
 @app.route('/about')
 def about(): 
@@ -598,7 +608,7 @@ def admin():
     if not session.get('user_id') == 0:
         return redirect(url_for('login'))
     
-    form = ActivityForm()
+    form = ActivityForm(request.form)
 
     # connect
     with sqlite3.connect("users.db") as connection:
@@ -612,7 +622,6 @@ def admin():
         tagrow = cursor.execute('SELECT tagid, tagname FROM tags').fetchall()
         form.location.choices = [(str(l['locid']), l['city']) for l in locrow]
         form.tag.choices = [(str(t['tagid']), t['tagname']) for t in tagrow]
-
 
     #add a new activity
 
@@ -633,11 +642,15 @@ def admin():
                 
                 else: # Create new user/write to database
 
-                    newtag = "SELECT locid FROM locations WHERE city = ?"
-                    cursor.execute(query, (form.location.data))
+                    #lquery = "SELECT locid FROM locations WHERE city = ?"
+                    #newlocation = cursor.execute(lquery, (form.location.data)).fetchone()
+                    #print(newlocation)
+                    newlocation = form.location.data
 
-                    newlocation = "SELECT tagid FROM tags WHERE tagname = ?"
-                    cursor.execute(query, (form.tag.data))
+                    #tquery = "SELECT tagid FROM tags WHERE tagname = ?"
+                    #newtag = cursor.execute(tquery, (form.tag.data)).fetchone()
+                    #print(newtag)
+                    newtag = form.tag.data
 
                     newtitle, newdescription = form.title.data, form.description.data
                     cursor.execute("INSERT OR IGNORE INTO activities (title, description, locid, tagid) VALUES (?, ?, ?, ?)", (newtitle, newdescription, newlocation, newtag))#dumbest thing alive

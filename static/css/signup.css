@@ -142,3 +142,11 @@ body {
 .login-text a:hover {
   text-decoration: underline;
 }
+
+
+@media(max-width: 30rem){ 
+
+
+
+  
+}

@@ -345,7 +345,7 @@ body {
 
 /* --- Feed section --- */
 .posts-feed {
-  grid-column: 1 / -1;
+  grid-column: 1 / 2;
   margin-top: 2rem;
   margin-bottom: 4rem;
 }
@@ -505,4 +505,12 @@ body {
 
 .quick-comment button:hover {
   background: #4a85e6;
+}
+
+
+@media(max-width: 30rem){ 
+
+
+
+  
 }

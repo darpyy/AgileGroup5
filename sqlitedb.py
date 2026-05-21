@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS usertags (
     reqid, reqauth, reqtitle, reqdescription, locid = 0, 0, "my 1st request", "hi", 2
     cursor.execute("INSERT OR IGNORE INTO requests (reqid, reqauth, reqtitle, reqdescription, locid) VALUES (?, ?, ?, ?, ?)", (reqid, reqauth, reqtitle, reqdescription, locid))
 
-    actid, title, description, locid, tagid = 0, "my 1st activity", "hi", 1, 1
+    actid, title, description, locid, tagid = 0, "Music", "hi", 1, 1
     cursor.execute("INSERT OR IGNORE INTO activities (actid, title, description, locid, tagid) VALUES (?, ?, ?, ?, ?)", (actid, title, description, locid, tagid))
 
     newtags = [('music',), ('art',), ('sports',), ('gaming',), ('food',), ('travel',)]
