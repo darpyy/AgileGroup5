@@ -19,7 +19,7 @@
                 </a>
             </div>
         <ul class="nav-links">
-            {% if session.get('user_name') %}
+            {% if session.get('user_id') != None %}
                 <!-- Logged in: show these -->
                 <li><a href="{{ url_for('dashboard') }}" class = "bigItem">Home</a></li>
                 <li><a href="{{ url_for('contact') }}" class = "bigItem">Contact</a></li>
