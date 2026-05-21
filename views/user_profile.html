@@ -3,12 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <link rel="stylesheet" href="/static/css/global.css" />
-  <link rel="stylesheet" href="/static/css/dashboard.css" />
   <link rel="stylesheet" href="/static/css/search.css" />
+  <link rel="stylesheet" href="/static/css/user_profile.css" />
+
   <title>CommonThread | {{ user['username'] }}</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+  <link rel="icon" type="image/x-icon"
+        href="{{ url_for('static', filename='img/favicon.ico') }}">
 </head>
+
 <body>
   <nav>
     <div class="logo">
@@ -17,8 +21,13 @@
 
     <div class="search-wrap">
       <form action="{{ url_for('search') }}" method="GET" class="nav-search">
-        <input type="text" name="q" id="search-input"
-               placeholder="Search users…" autocomplete="off">
+        <input
+          type="text"
+          name="q"
+          id="search-input"
+          placeholder="Search users…"
+          autocomplete="off"
+        >
       </form>
       <ul id="search-dropdown" class="search-dropdown" hidden></ul>
     </div>
@@ -27,11 +36,18 @@
       <li><a href="{{ url_for('dashboard') }}">Home</a></li>
       <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
       <li><a href="{{ url_for('about') }}">About Us</a></li>
+
       <li class="theme-menu-wrap">
-        <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
-                aria-haspopup="true" aria-expanded="false">
+        <button
+          id="theme-gear"
+          class="theme-gear"
+          aria-label="Theme settings"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
           <img src="/static/img/gear.png" alt="">
         </button>
+
         <ul id="theme-menu" class="theme-menu" hidden>
           <li><button class="theme-option" data-theme="light">Light mode</button></li>
           <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
@@ -41,84 +57,139 @@
     </ul>
   </nav>
 
-  <main class="dashboard-wrap" style="grid-template-columns: 1fr;">
-    <section class="profile-card">
+<main class="public-profile-page">
 
-      <div class="profile-side">
-        {% if user['profile_pic'] %}
-          <img class="profile-avatar-img"
-               src="{{ url_for('static', filename='uploads/avatars/' + user['profile_pic']) }}"
-               alt="Profile picture">
-        {% else %}
-          <div class="profile-avatar" aria-hidden="true">
-            {{ user['username'][0]|upper }}
-          </div>
-        {% endif %}
+  <!-- PROFILE CARD -->
+  <section class="public-profile-card">
+    <div class="public-profile-avatar-area">
+      {% if user['profile_pic'] %}
+        <img
+          class="public-profile-avatar-img"
+          src="{{ url_for('static', filename='uploads/avatars/' + user['profile_pic']) }}"
+          alt="Profile picture"
+        >
+      {% else %}
+        <div class="public-profile-avatar-placeholder" aria-hidden="true">
+          {{ user['username'][0]|upper }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="public-profile-details">
+      <div class="public-profile-header">
+        <h1 class="public-profile-username">{{ user['username'] }}</h1>
       </div>
 
-      <div class="profile-info">
-        <div class="profile-top">
-          <h1 class="profile-name">{{ user['username'] }}</h1>
+      <p class="public-profile-handle">
+        @{{ user['username'] }}
+        {% if user['city'] %} · {{ user['city'] }}{% endif %}
+      </p>
+
+      <div class="public-profile-stats">
+        <div class="public-profile-stat">
+          <span class="public-profile-stat-number">0</span>
+          <span class="public-profile-stat-label">forums</span>
         </div>
 
-        <p class="profile-handle">
-          @{{ user['username'] }}
-          {% if user['city'] %} · {{ user['city'] }}{% endif %}
-        </p>
-
-        <div class="profile-stats">
-          <div class="stat-item">
-            <span class="stat-num">0</span>
-            <span class="stat-label">forums</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-num">0</span>
-            <span class="stat-label">friends</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-num">0</span>
-            <span class="stat-label">following</span>
-          </div>
+        <div class="public-profile-stat">
+          <span class="public-profile-stat-number">0</span>
+          <span class="public-profile-stat-label">friends</span>
         </div>
 
-        {% if tags %}
-          <div class="profile-tags">
-            {% for tag in tags %}
-              <span class="profile-tag">{{ tag }}</span>
-            {% endfor %}
-          </div>
-        {% endif %}
+        <div class="public-profile-stat">
+          <span class="public-profile-stat-number">0</span>
+          <span class="public-profile-stat-label">following</span>
+        </div>
       </div>
 
-    </section>
-    <section class="posts-feed">
-      <h2 class="feed-title">Posts by {{ user['username'] }}</h2>
+      <p class="public-profile-note">
+        Viewing {{ user['username'] }}'s profile.
+      </p>
+    </div>
+  </section>
 
-      {% if posts %}
-        {% for post in posts %}
-          <article class="post-card">
-            <div class="post-meta">
-              <span> in </span>
-              <a href="{{ url_for('showActivity', actid=post.actid) }}" class="post-forum">
-                {{ post.forum_title }}
-              </a>
-              <span> · </span>
-              <span class="post-time">{{ post.created_at }}</span>
-            </div>
-            <h3 class="post-title">
-              <a href="{{ url_for('showActivity', actid=post.actid) }}">{{ post.title }}</a>
-            </h3>
-            <p class="post-body">
-              {{ post.body[:200] }}{% if post.body|length > 200 %}…{% endif %}
-            </p>
-            <p class="post-comments">💬 {{ post.comments|length }} comments</p>
-          </article>
+  <!-- RIGHT SIDEBAR -->
+  <aside class="public-profile-sidebar">
+    <h2 class="public-profile-sidebar-title">User's Forums</h2>
+    <p class="public-profile-sidebar-subtitle">Browse this user's forums.</p>
+
+    <ul class="public-profile-forum-list">
+      {% if forums %}
+        {% for forum in forums %}
+          <li class="public-profile-forum-item">
+            <a href="{{ url_for('showActivity', actid=forum['actid']) }}">
+              <span class="public-profile-forum-name">{{ forum['title'] }}</span>
+              {% if forum['city'] %}
+                <span class="public-profile-forum-city">{{ forum['city'] }}</span>
+              {% endif %}
+            </a>
+          </li>
         {% endfor %}
       {% else %}
-        <p class="feed-empty">{{ user['username'] }} hasn't posted yet.</p>
+        <li class="public-profile-forum-item">
+          <a href="#">
+            <span class="public-profile-forum-name">No forums available</span>
+          </a>
+        </li>
       {% endif %}
-    </section>
-  </main>
+    </ul>
+  </aside>
+
+  <!-- POSTS -->
+  <section class="public-profile-posts">
+    <h2 class="public-profile-posts-title">Posts by {{ user['username'] }}</h2>
+
+    {% if posts %}
+      {% for post in posts %}
+        <article class="public-profile-post-card">
+          <div class="public-profile-post-meta">
+            <span>in </span>
+
+            {% if post.get('actid') %}
+              <a
+                href="{{ url_for('showActivity', actid=post.get('actid')) }}"
+                class="public-profile-post-forum"
+              >
+                {{ post.forum_title }}
+              </a>
+            {% else %}
+              <span class="public-profile-post-forum">
+                {{ post.forum_title }}
+              </span>
+            {% endif %}
+
+            <span> · </span>
+            <span class="public-profile-post-time">{{ post.created_at }}</span>
+          </div>
+
+          <h3 class="public-profile-post-title">
+            {% if post.get('actid') %}
+              <a href="{{ url_for('showActivity', actid=post.get('actid')) }}">
+                {{ post.title }}
+              </a>
+            {% else %}
+              {{ post.title }}
+            {% endif %}
+          </h3>
+
+          <p class="public-profile-post-body">
+            {{ post.body[:200] }}
+            {% if post.body|length > 200 %}…{% endif %}
+          </p>
+
+          <p class="public-profile-post-comments">
+            💬 {{ post.comments|length }} comments
+          </p>
+        </article>
+      {% endfor %}
+    {% else %}
+      <p class="public-profile-empty">
+        {{ user['username'] }} hasn't posted yet.
+      </p>
+    {% endif %}
+  </section>
+
+</main>
 
   <script src="/static/js/darkmode.js"></script>
   <script src="/static/js/search.js"></script>

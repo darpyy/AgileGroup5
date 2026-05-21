@@ -88,7 +88,7 @@ def signup():
 def favicon():
     return send_from_directory('static/img', 'favicon.ico')
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST']) #--------------------------------------------------------------------------------------------------------------------
 def signup():
     form = RegistrationForm()   
 
@@ -299,11 +299,10 @@ def delete_post(post_id):
 def add_comment(post_id):
     if not session.get('user_id'):
         return redirect(url_for('login'))
-    
+
     comment_body = request.form.get('body')
 
     if comment_body:
-        # generate an id for each comment
         comment = {
             'comment_id': str(uuid.uuid4()),
             'user_id': session['user_id'],
@@ -312,21 +311,20 @@ def add_comment(post_id):
             'created_at': datetime.now(timezone.utc).isoformat()
         }
 
-        # Append the comment to the comment array
         post = posts_col.find_one_and_update(
             {"_id": ObjectId(post_id)},
             {"$push": {"comments": comment}}
         )
 
         if post:
-            # if user came from the dashboard, send them back there
-            if request.referrer and 'dashboard' in request.referrer:
-                return redirect(url_for('dashboard'))
+            # Send the user back to whichever page they were on
+            if request.referrer:
+                return redirect(request.referrer)
             return redirect(url_for('showActivity', actid=post['actid']))
 
         flash("Unable to comment")
-        return redirect(url_for('dashboard'))
 
+    return redirect(request.referrer or url_for('dashboard'))
 # Delete a comment
 @app.route('/post/<post_id>/comment/<comment_id>/delete', methods=['POST'])
 def delete_comment(post_id, comment_id):
@@ -377,7 +375,6 @@ def dashboard():
         forums = cursor.execute(query, (session.get('user_id'),)).fetchall()
 
     # return render_template('dashboard.html', forums=forums)
-
 
     profile_pic = None
     try:
@@ -514,6 +511,17 @@ def user_profile(username):
             """, (user['id'],))
             tags = [row['tagname'] for row in cursor.fetchall()]
 
+            # get forums this user can access
+            cursor.execute("""
+                SELECT DISTINCT activities.actid, activities.title, activities.description, locations.city
+                FROM activities
+                JOIN usertags ON activities.tagid = usertags.tagid
+                JOIN locations ON activities.locid = locations.locid
+                WHERE usertags.userid = ?
+            """, (user['id'],))
+
+            forums = cursor.fetchall()
+
     except sqlite3.Error as e:
         flash("Database error")
         print(f"DB error: {e}")
@@ -540,7 +548,7 @@ def user_profile(username):
             forum_titles = {row['actid']: row['title'] for row in cursor.fetchall()}
 
         for post in user_posts:
-            post['forum_title'] = forum_titles.get(post['actid'], 'Unknown forum')
+            post['forum_title'] = forum_titles.get(post.get('actid'), 'Unknown forum')
             post['_id'] = str(post['_id'])
             try:
                 dt = datetime.fromisoformat(post['created_at'])
@@ -548,7 +556,7 @@ def user_profile(username):
             except (ValueError, TypeError):
                 pass
 
-    return render_template('user_profile.html', user=user, tags=tags, posts=user_posts)
+    return render_template('user_profile.html', user=user, tags=tags, posts=user_posts, forums=forums)
 
 @app.route('/about')
 def about(): 
@@ -598,7 +606,7 @@ def admin():
     if not session.get('user_id') == 0:
         return redirect(url_for('login'))
     
-    form = ActivityForm()
+    form = ActivityForm(request.form)
 
     # connect
     with sqlite3.connect("users.db") as connection:
@@ -612,7 +620,6 @@ def admin():
         tagrow = cursor.execute('SELECT tagid, tagname FROM tags').fetchall()
         form.location.choices = [(str(l['locid']), l['city']) for l in locrow]
         form.tag.choices = [(str(t['tagid']), t['tagname']) for t in tagrow]
-
 
     #add a new activity
 
@@ -633,11 +640,15 @@ def admin():
                 
                 else: # Create new user/write to database
 
-                    newtag = "SELECT locid FROM locations WHERE city = ?"
-                    cursor.execute(query, (form.location.data))
+                    #lquery = "SELECT locid FROM locations WHERE city = ?"
+                    #newlocation = cursor.execute(lquery, (form.location.data)).fetchone()
+                    #print(newlocation)
+                    newlocation = form.location.data
 
-                    newlocation = "SELECT tagid FROM tags WHERE tagname = ?"
-                    cursor.execute(query, (form.tag.data))
+                    #tquery = "SELECT tagid FROM tags WHERE tagname = ?"
+                    #newtag = cursor.execute(tquery, (form.tag.data)).fetchone()
+                    #print(newtag)
+                    newtag = form.tag.data
 
                     newtitle, newdescription = form.title.data, form.description.data
                     cursor.execute("INSERT OR IGNORE INTO activities (title, description, locid, tagid) VALUES (?, ?, ?, ?)", (newtitle, newdescription, newlocation, newtag))#dumbest thing alive

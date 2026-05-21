@@ -1,6 +1,4 @@
-/* =========================================================
-   dashboard.css — Instagram-style profile + forums sidebar
-   ========================================================= */
+
 
 body {
   background: linear-gradient(180deg, #e9f0ff 0%, #f5f8ff 100%);
@@ -345,7 +343,7 @@ body {
 
 /* --- Feed section --- */
 .posts-feed {
-  grid-column: 1 / -1;
+  grid-column: 1 / 2;
   margin-top: 2rem;
   margin-bottom: 4rem;
 }
