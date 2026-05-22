@@ -43,6 +43,14 @@
       <h1>Welcome back</h1>
       <p>Please sign in to your account</p>
     </div>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash-error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
     <form id="loginForm" method="POST" action="/login">
       {{ form.hidden_tag() }}
