@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="/static/css/global.css" />
-  <link rel="stylesheet" href="/static/css/search.css" />
   <link rel="stylesheet" href="/static/css/user_profile.css" />
 
   <title>CommonThread | {{ user['username'] }}</title>
@@ -137,7 +136,7 @@
 
   <!-- POSTS -->
   <section class="public-profile-posts">
-    <h2 class="public-profile-posts-title">Posts by {{ user['username'] }}</h2>
+    <h2 class="public-profile-posts-title">Posts by {{ user['username'] }}:</h2>
 
     {% if posts %}
       {% for post in posts %}
@@ -177,9 +176,10 @@
             {% if post.body|length > 200 %}…{% endif %}
           </p>
 
-          <p class="public-profile-post-comments">
-            💬 {{ post.comments|length }} comments
-          </p>
+          <form action="{{ url_for('add_comment', post_id=post._id) }}" method="POST" class="quick-comment">
+            <input type="text" name="body" placeholder="Add a comment…" required>
+            <button type="submit">Send</button>
+          </form>
         </article>
       {% endfor %}
     {% else %}

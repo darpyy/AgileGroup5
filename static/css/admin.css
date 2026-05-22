@@ -1,0 +1,311 @@
+
+body {
+  background: #eaf2ff;
+}
+
+/* ---------- Page wrapper ---------- */
+.admin-page {
+  width: min(980px, calc(100% - 32px));
+  margin: 48px auto 80px;
+  padding: 0 8px;
+}
+
+/* ---------- Page header ---------- */
+.admin-header {
+  margin-bottom: 36px;
+}
+
+.admin-header h1 {
+  margin: 0 0 6px 0;
+  font-size: 1.75rem;
+  color: var(--dark-color);
+  letter-spacing: -0.01em;
+}
+
+.admin-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+/* ---------- Two-column grid for activities + requests ---------- */
+.content {
+  width: 100%;
+  margin: 0 0 36px 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+  align-items: start;
+}
+
+/* ---------- Scroll boxes ---------- */
+.scroll-box {
+  height: 280px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #e3e8f1;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 1px 2px rgba(20, 30, 60, 0.04);
+}
+
+.scroll-box h3 {
+  margin: 0 0 18px 0;
+  color: var(--dark-color);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #eef0f5;
+  padding-bottom: 14px;
+}
+
+/* ---------- Items inside scroll boxes ---------- */
+.item-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: #f7f9fd;
+  border: 1px solid #e7ecf5;
+  border-radius: 8px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.item-row:last-child {
+  margin-bottom: 0;
+}
+
+.item-row:hover {
+  background: #eef4ff;
+  border-color: #cdd9ef;
+}
+
+.item-row strong {
+  color: var(--dark-color);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.item-meta {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.empty-msg {
+  color: #8a93a3;
+  font-style: italic;
+  text-align: center;
+  padding: 24px 0;
+  margin: 0;
+}
+
+/* ---------- Activity creation form ---------- */
+#ActivityForm {
+  background: #ffffff;
+  border: 1px solid #e3e8f1;
+  border-radius: 14px;
+  padding: 36px 40px;
+  box-shadow: 0 1px 2px rgba(20, 30, 60, 0.04);
+}
+
+.form-title {
+  margin: 0 0 28px 0;
+  color: var(--dark-color);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+#ActivityForm .form-group {
+  margin-bottom: 36px;
+  display: block;
+  max-width: none;
+  padding: 0;
+}
+
+#ActivityForm label,
+#ActivityForm .tags-label {
+  display: block;
+  margin: 0 0 12px 0;
+  color: var(--dark-color);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* Inputs / selects */
+#ActivityForm input[type="text"],
+#ActivityForm input[type="title"],
+#ActivityForm input[type="description"],
+#ActivityForm select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d8dfeb;
+  background: #fafbfd;
+  color: var(--dark-color);
+  padding: 13px 16px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+#ActivityForm input::placeholder {
+  color: #9aa3b2;
+}
+
+#ActivityForm input:hover,
+#ActivityForm select:hover {
+  border-color: #b9c4da;
+}
+
+#ActivityForm input:focus,
+#ActivityForm select:focus {
+  border-color: var(--accent-color, #5994f3);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(89, 148, 243, 0.15);
+}
+
+/* Tag radio pills */
+.tags-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 10px 0 12px 0;
+}
+
+.tags-grid .tag-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border: 1px solid #d8dfeb;
+  border-radius: 999px;
+  background: #fafbfd;
+  color: var(--dark-color);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.tags-grid .tag-button:hover {
+  border-color: var(--accent-color, #5994f3);
+  color: var(--accent-color, #5994f3);
+}
+
+/* When the radio inside is checked, highlight the whole pill */
+.tags-grid .tag-button:has(input:checked) {
+  background: var(--accent-color, #5994f3);
+  border-color: var(--accent-color, #5994f3);
+  color: #ffffff;
+}
+
+/* Hide the radio circle but keep it functional for the form */
+.tags-grid input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Submit button */
+#ActivityForm #submit {
+  display: inline-block;
+  width: auto;
+  margin-top: 12px;
+  padding: 13px 32px;
+  border-radius: 8px;
+  background: var(--accent-color, #5994f3);
+  color: #ffffff;
+  border: none;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+#ActivityForm #submit:hover {
+  background: #3f82f7;
+  box-shadow: 0 4px 12px rgba(89, 148, 243, 0.25);
+}
+
+/* DARK MODE */
+html.dark-mode body {
+  background: #141414;
+}
+
+html.dark-mode .admin-header h1 {
+  color: #f5f5f5;
+}
+
+html.dark-mode .admin-header p {
+  color: #9aa3b2;
+}
+
+html.dark-mode .scroll-box,
+html.dark-mode #ActivityForm {
+  background: #242424;
+  border-color: #3a3a3a;
+}
+
+html.dark-mode .scroll-box h3,
+html.dark-mode .form-title,
+html.dark-mode #ActivityForm label,
+html.dark-mode #ActivityForm .tags-label {
+  color: #f5f5f5;
+}
+
+html.dark-mode .scroll-box h3 {
+  border-bottom-color: #3a3a3a;
+}
+
+html.dark-mode .item-row {
+  background: #2b2b2b;
+  border-color: #3a3a3a;
+}
+
+html.dark-mode .item-row:hover {
+  background: #323232;
+  border-color: #4a4a4a;
+}
+
+html.dark-mode .item-row strong {
+  color: #f5f5f5;
+}
+
+html.dark-mode .item-meta,
+html.dark-mode .empty-msg {
+  color: #9aa3b2;
+}
+
+html.dark-mode #ActivityForm input,
+html.dark-mode #ActivityForm select {
+  background: #2e2e2e;
+  border-color: #4a4a4a;
+  color: #f5f5f5;
+}
+
+html.dark-mode #ActivityForm input::placeholder {
+  color: #9aa3b2;
+}
+
+html.dark-mode #ActivityForm input:focus,
+html.dark-mode #ActivityForm select:focus {
+  background: #1f1f1f;
+  border-color: var(--accent-color, #5994f3);
+}
+
+html.dark-mode .tags-grid .tag-button {
+  background: #2e2e2e;
+  border-color: #4a4a4a;
+  color: #f5f5f5;
+}
+
+html.dark-mode .tags-grid .tag-button:hover {
+  border-color: var(--accent-color, #5994f3);
+  color: var(--accent-color, #5994f3);
+}

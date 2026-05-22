@@ -87,19 +87,35 @@ body > h1 {
 
 /* submit button — overrides .btn from global.css */
 #forumRequestForm .form-button {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  padding: 14px;
-  margin-top: 24px;
+  padding: 14px 18px;
+  margin: 24px auto 0 auto;
   border: none;
   border-radius: 999px;
   background: var(--accent-color);
-  color: #fff;
+  color: #ffffff;
+  font-family: inherit;
   font-size: 1rem;
   font-weight: 600;
+  text-align: center;
   cursor: pointer;
   flex: none;
-  transition: background 0.2s, transform 0.1s;
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+#forumRequestForm .form-button:hover {
+  background: #3f82f7;
+  box-shadow: 0 6px 16px rgba(89, 148, 243, 0.3);
+}
+
+#forumRequestForm .form-button:active {
+  transform: translateY(1px);
 }
 
 #forumRequestForm .form-button:hover {
