@@ -1,4 +1,4 @@
-<<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -22,23 +22,21 @@
 <body>
   <nav>
     <div class="logo">
-      <a href="{{ url_for('index') }}">Common<span>Thread</span></a>
+      <a href="{{ url_for('index') }}">
+        Common<span>Thread</span>
+      </a>
     </div>
 
     <ul class="nav-links">
-      <li><a href="{{ url_for('dashboard') }}">Home</a></li>
-      <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
-      <li><a href="{{ url_for('about') }}">About Us</a></li>
+      <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
+      <li><a href="{{ url_for('contact') }}" class="bigItem">Contact Us</a></li>
+      <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
+      <li><a href="{{ url_for('logout') }}" class="bigItem">Logout</a></li>
 
       <li class="theme-menu-wrap">
-        <button
-          id="theme-gear"
-          class="theme-gear"
-          aria-label="Theme settings"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          <img src="/static/img/gear.png" alt="" />
+        <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
+                aria-haspopup="true" aria-expanded="false">
+          <img src="/static/img/gear.png" alt="">
         </button>
 
         <ul id="theme-menu" class="theme-menu" hidden>
@@ -107,7 +105,7 @@
         </div>
         {% endif %}
 
-        <hr />
+        <hr>
 
         <h4>Comments</h4>
 
