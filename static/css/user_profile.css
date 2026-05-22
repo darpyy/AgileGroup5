@@ -489,3 +489,8 @@ html.dark-mode .nav-search input:focus {
   }
 }
 
+@media (max-width: 768px) {
+  .nav-search {
+    display: none;
+  }
+}

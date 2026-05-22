@@ -139,9 +139,19 @@ html.dark-mode #forumRequestForm {
 }
 
 
-@media(min-width: 43.75rem){
+@media (max-width: 768px) {
+  body > h1 {
+    font-size: 1.6rem;
+    margin: 24px 16px 8px;
+  }
 
+  .form-header {
+    font-size: 0.95rem;
+    margin: 0 16px 20px;
+  }
 
-
-  
+  #forumRequestForm {
+    margin: 0 16px 40px;
+    padding: 24px 16px;
+  }
 }

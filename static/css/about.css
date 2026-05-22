@@ -147,4 +147,27 @@ html.dark-mode .containerAbout pre::first-line {
   color: #1a1a1a;
 }
 
+/* 
+  align-items: center;
+  text-align: center;
+  max-width: 15rem;
+  padding: 2rem;
+} */
 
+.containerAbout img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .articleAbout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .containerAbout {
+    max-width: 100%;
+    width: 85%;
+    padding: 1.25rem 1rem;
+  }
+}

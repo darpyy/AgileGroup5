@@ -1,13 +1,14 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <!-- Stylesheet -->
-        <link rel="stylesheet" href="/static/css/global.css" />
-        <link rel="stylesheet" href="/static/css/contact.css" />
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/static/css/global.css" />
+    <link rel="stylesheet" href="/static/css/contact.css" />
 
+<<<<<<< HEAD
         <title>CommonThread | Contact Us</title>
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 </head>
@@ -25,26 +26,116 @@
                 <li><a href="{{ url_for('contact') }}" class = "active">Contact</a></li>
                 <li><a href="{{ url_for('about') }}" class = "bigItem">About Us</a></li>
                 <li><a href="{{ url_for('logout') }}" class = "bigItem">Logout</a></li>
+=======
+    <title>CommonThread | Contact Us</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/favicon.ico') }}"
+    />
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <a href="{{ url_for('index') }}"> Common<span>Thread</span> </a>
+      </div>
+>>>>>>> marcoa
 
-            {% else %}
-                <!-- Logged out: show these -->
-                <li><a href ="{{ url_for('index') }}" class="bigItem">Home</a></li>
-                <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+      <button class="nav-toggle" aria-label="toggle navigation">
+        <span class="hamburger">☰</span>
+      </button>
 
-                <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
-            {% endif %}
-            <li class="theme-menu-wrap">
-                <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
-                        aria-haspopup="true" aria-expanded="false">
-                <img src="/static/img/gear.png" alt="">
-                </button>
-                <ul id="theme-menu" class="theme-menu" hidden>
-                <li><button class="theme-option" data-theme="light">Light mode</button></li>
-                <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
-                <li><button class="theme-option" data-theme="system">System</button></li>
-                </ul>
+      <ul class="nav-links">
+        {% if session.get('user_name') %}
+        <!-- Logged in: show these -->
+        <li><a href="{{ url_for('dashboard') }}" class="bigItem">Home</a></li>
+        <li><a href="{{ url_for('contact') }}" class="active">Contact</a></li>
+        <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
+        <li><a href="{{ url_for('logout') }}" class="bigItem">Logout</a></li>
+
+        {% else %}
+        <!-- Logged out: show these -->
+        <li><a href="{{ url_for('index') }}" class="bigItem">Home</a></li>
+        <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+
+        <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+        {% endif %}
+        <li class="theme-menu-wrap">
+          <button
+            id="theme-gear"
+            class="theme-gear"
+            aria-label="Theme settings"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img src="/static/img/gear.png" alt="" />
+          </button>
+          <ul id="theme-menu" class="theme-menu" hidden>
+            <li>
+              <button class="theme-option" data-theme="light">
+                Light mode
+              </button>
             </li>
+            <li>
+              <button class="theme-option" data-theme="dark">Dark mode</button>
+            </li>
+            <li>
+              <button class="theme-option" data-theme="system">System</button>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <h1>Contact Us</h1>
+
+    <h3 class="form-header">
+      Got a forum we don't have? Make a request right here!
+    </h3>
+    <form id="forumRequestForm" method="POST" action="/contact">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        <label for="reqtitle">Forum Name</label>
+        <input
+          type="text"
+          id="reqtitle"
+          name="reqtitle"
+          size="50"
+          placeholder="Enter the name of the forum you want to request"
+          required
+        />
+        <br />
+
+        <label for="reqdescription">Forum Description</label>
+        <textarea
+          id="reqdescription"
+          name="reqdescription"
+          rows="4"
+          cols="50"
+          placeholder="Enter a brief description of the forum you want to request and reason for the request"
+          required
+        ></textarea>
+      </div>
+      <button type="submit" name="req_btn" class="signup-button">
+        Request
+      </button>
+    </form>
+  </body>
+
+  <!-- Footer -->
+  <footer class="footerCopy">
+    <section class="navFooter">
+      <article class="footArticle">
+        <h3>About Us</h3>
+        <p>
+          We are interested in bringing people closer together in your
+          Community. We hope to help build meaningful friendships & keeping
+          people active in the Greater Vancouver area!
+        </p>
+
+        <ul class="footer-links">
+          <li><a href="{{ url_for('about') }}"> About Us </a></li>
         </ul>
+<<<<<<< HEAD
         
         </nav>
         <h1>Contact Us</h1>
@@ -120,10 +211,39 @@
                     Back to Top
                 </button>
             </article>
+=======
+      </article>
+      <article class="footArticle">
+        <h3>Contact Info</h3>
+        <section class="contactFoot">
+          <h4 class="contacter">Call</h4>
+          <p class="contacter">+1 123-456-6789</p>
+>>>>>>> marcoa
         </section>
-        <p></p>
-        <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
-    </footer>
-  <script src="/static/js/darkmode.js"></script>  
+        <section class="contactFoot">
+          <h4 class="contacter">Email us</h4>
+          <p class="contacter">contact@CommonThread.com</p>
+        </section>
+        <section class="contactFoot">
+          <h4 class="contacter">Find us</h4>
+          <p class="contacter">Canada, Vancouver, Main 67A</p>
+        </section>
+        <section>
+          <ul class="footer-links">
+            <li>
+              <a href="{{ url_for('contact') }}" class="active"> Contact Us </a>
+            </li>
+          </ul>
+        </section>
+      </article>
+      <article class="footArticle">
+        <button onclick="scrollToTop()" class="backToTop">Back to Top</button>
+      </article>
+    </section>
+    <p></p>
+    <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
+  </footer>
+  <script src="/static/js/darkmode.js"></script>
   <script src="/static/js/main.js"></script>
+  <script src="/static/js/banner.js"></script>
 </html>

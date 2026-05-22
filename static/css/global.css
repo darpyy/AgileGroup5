@@ -1149,3 +1149,65 @@ html.dark-mode .quick-comment input:focus {
 html.dark-mode .comment-item strong {
   color: #f2f2f2;
 }
+
+.nav-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+  }
+
+  /* Vertical dropdown drawer */
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--dark-color);
+    border-top: 1px solid var(--secondary-color);
+    padding: 0.75rem 0;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    gap: 0;
+  }
+
+  .nav-links li {
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  .nav-links a,
+  .nav-links .bigItem {
+    display: inline-block;
+    width: auto;
+  }
+
+  /* Show when JS adds .open */
+  .nav-links.open {
+    display: flex;
+  }
+
+  /* Stack footer articles vertically on mobile */
+  .navFooter {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .footArticle {
+    width: 90%;
+    max-width: 400px;
+  }
+}

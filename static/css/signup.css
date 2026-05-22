@@ -155,9 +155,10 @@ body {
 }
 
 
-@media(max-width: 30rem){ 
-
-
-
-  
+@media (max-width: 768px) {
+  .signup-container {
+    width: 80%;
+    margin: 26px;
+    padding: 24px 16px;
+  }
 }

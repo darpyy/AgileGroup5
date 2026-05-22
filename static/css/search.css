@@ -151,9 +151,8 @@ body {
 }
 
 
-@media(max-width: 30rem){ 
-
-
-
-  
+@media (max-width: 768px) {
+  .nav-search {
+    display: none;
+  }
 }
