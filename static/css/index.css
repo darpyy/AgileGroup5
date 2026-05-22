@@ -56,7 +56,7 @@
 }
 
 .slideshow img {
-  width: 50rem;
+  width: 100%;
   height: auto;
   border-radius: 8px;
 }
@@ -99,10 +99,3 @@
   to {opacity: 1}
 }
 
-
-@media(max-width: 30rem){ 
-
-
-
-  
-}

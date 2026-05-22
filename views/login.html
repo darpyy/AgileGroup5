@@ -20,22 +20,10 @@
             </a>
         </div>
         <ul class="nav-links">
-           {% if session.get('user_name') %}
-                <!-- Logged in: show these -->
-                <li><a href="{{ url_for('dashboard') }}" class = "active">Home</a></li>
-                <li><a href="{{ url_for('contact') }}" class = "bigItem">Contact</a></li>
-                <li><a href="{{ url_for('about') }}" class = "bigItem">About Us</a></li>
-                <form method="POST" action="{{ url_for('logout') }}">
-                    <button type="submit" name="logout">Logout</button>
-                </form>
-
-            {% else %}
-                <!-- Logged out: show these -->
-                <li><a href ="{{ url_for('index') }}" class="active">Home</a></li>
-                <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
-                <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
-            {% endif %}
-
+            <li><a href ="{{ url_for('index') }}" class="bigItem">Home</a></li>
+            <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
+            <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+            <li><a href="{{ url_for('login') }}" class="active">Login</a></li>
             <li class="theme-menu-wrap">
               <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
                       aria-haspopup="true" aria-expanded="false">
