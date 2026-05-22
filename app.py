@@ -133,8 +133,6 @@ def signup():
                 # log the new user in
                 session['user_id'] = cursor.lastrowid
                 session['user_name'] = newusername
-
-                flash("Account created")
                 return redirect(url_for("tags"))
 
         except sqlite3.Error as e:
@@ -195,7 +193,6 @@ def login():
 @app.route('/logout', methods=['GET','POST'])
 def logout():
     session.clear()
-    flash("You have been logged out")
     return redirect(url_for('index'))
 
 @app.route('/')
