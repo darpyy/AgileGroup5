@@ -143,6 +143,17 @@ body {
   text-decoration: underline;
 }
 
+.flash-error {
+    background: #ffe5e5;
+    color: #b00020;
+    border: 1px solid #ffb3b3;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+}
+
 
 @media(max-width: 30rem){ 
 

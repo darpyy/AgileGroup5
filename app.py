@@ -88,15 +88,16 @@ def signup():
 def favicon():
     return send_from_directory('static/img', 'favicon.ico')
 
-@app.route('/signup', methods=['GET', 'POST']) #--------------------------------------------------------------------------------------------------------------------
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    form = RegistrationForm()   
+    form = RegistrationForm()
 
     if form.validate_on_submit():
         try:
-            # Check if email exists already
             with sqlite3.connect("users.db") as connection:
                 cursor = connection.cursor()
+
+                # Check if email exists already
                 email = form.email.data
                 query = "SELECT * FROM users WHERE email = ?"
                 cursor.execute(query, (email,))
@@ -104,39 +105,51 @@ def signup():
                 if cursor.fetchone():
                     flash("This email already exists")
                     print("email exist")
-                    return redirect(url_for("login"))
-                
-                else: # Create new user/write to database
-    
-                    newemail = form.email.data
-                    newpassword = hashlib.sha256(form.password.data.encode()).hexdigest()
-                    newusername = form.username.data
-    
-                    cursor.execute(
-                        "INSERT INTO users (email, password, username) VALUES (?, ?, ?)",
-                        (newemail, newpassword, newusername)
-                    )
-                    connection.commit()
+                    return redirect(url_for("signup"))
 
-                    # log the new user in
-                    session['user_id'] = cursor.lastrowid
-                    session['user_name'] = newusername
+                # Check if username exists already
+                username = form.username.data
+                query = "SELECT * FROM users WHERE username = ?"
+                cursor.execute(query, (username,))
 
-                    flash("Account created")
-                    return redirect(url_for("tags"))
-            
+                if cursor.fetchone():
+                    flash("This username already exists")
+                    print("username exist")
+                    return redirect(url_for("signup"))
+
+                # Create new user/write to database
+                newemail = form.email.data
+                newpassword = hashlib.sha256(
+                    form.password.data.encode()
+                ).hexdigest()
+                newusername = form.username.data
+
+                cursor.execute(
+                    "INSERT INTO users (email, password, username) VALUES (?, ?, ?)",
+                    (newemail, newpassword, newusername)
+                )
+                connection.commit()
+
+                # log the new user in
+                session['user_id'] = cursor.lastrowid
+                session['user_name'] = newusername
+
+                flash("Account created")
+                return redirect(url_for("tags"))
+
         except sqlite3.Error as e:
-            flash("An error occured with the database")
+            flash("An error occurred with the database")
             print(f"database error: {e}")
 
         except Exception as e:
-            flash("an error occured")
+            flash("An error occurred")
             print(f"Error: {e}")
+
     print(f"Form Errors: {form.errors}")
     print(f"Form Data Received: {form.data}")
     print("signup failed")
-    return render_template('signup.html', title='Register', form=form)
 
+    return render_template('signup.html', title='Register', form=form)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -681,6 +694,11 @@ def tags():
         locid = request.form.get('city')
         selected_tags = request.form.getlist('tags')[:3]   # cap at 3
 
+        # REQUIRE EXACTLY 3
+        if len(selected_tags) != 3:
+            flash("Please select 3 tags.")
+            return redirect(url_for('tags'))
+        
         try:
             with sqlite3.connect("users.db") as connection:
                 cursor = connection.cursor()

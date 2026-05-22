@@ -145,6 +145,19 @@ body > h1 {
   transform: translateY(1px);
 }
 
+.flash-messages {
+    margin: 15px 0;
+}
+
+.flash-error {
+    background: #ffdddd;
+    color: #a00000;
+    border: 1px solid #ff9999;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+}
 
 @media(max-width: 30rem){ 
 
