@@ -1,14 +1,12 @@
-/* ============================================================
-   activity.css — CommonThread activity / forum page
-   ============================================================ */
 
-/* ---------- Page wrapper ---------- */
+
+/* Page wrapper */
 .activity-page {
   width: min(980px, calc(100% - 32px));
   margin: 32px auto 64px;
 }
 
-/* ---------- Shared card look ---------- */
+/* Shared card look */
 .card,
 .forum-header,
 .create-post-card,
@@ -30,7 +28,7 @@
   transform: translateY(-3px);
 }
 
-/* ---------- Forum header ---------- */
+/* Forum header */
 .forum-header {
   padding: 26px 32px;
   margin-bottom: 24px;
@@ -64,7 +62,7 @@
   line-height: 1.6;
 }
 
-/* ---------- Create post ---------- */
+/* Create post */
 .create-post-card {
   padding: 24px 32px;
   margin-bottom: 28px;
@@ -80,7 +78,7 @@
   margin-bottom: 14px;
 }
 
-/* ---------- Inputs ---------- */
+/* Inputs  */
 .activity-page input,
 .activity-page textarea {
   width: 100%;
@@ -123,7 +121,7 @@
   box-shadow: 0 0 0 3px rgba(89, 148, 243, 0.15);
 }
 
-/* ---------- Main buttons ---------- */
+/*  Main buttons */
 .post-button,
 .comment-button {
   background: var(--accent-color, #5994f3);
@@ -149,7 +147,7 @@
   box-shadow: 0 10px 20px rgba(89, 148, 243, 0.30);
 }
 
-/* ---------- Posts ---------- */
+/* Posts */
 .posts-list {
   display: flex;
   flex-direction: column;
@@ -201,7 +199,7 @@
   letter-spacing: 0.04em;
 }
 
-/* ---------- Edit/Delete buttons ---------- */
+/* Edit/Delete buttons */
 .post-actions {
   display: flex;
   align-items: center;
@@ -265,7 +263,7 @@
   box-shadow: 0 10px 22px rgba(231, 76, 60, 0.30);
 }
 
-/* ---------- Comments ---------- */
+/* Comments  */
 .comments-list {
   display: flex;
   flex-direction: column;
@@ -314,7 +312,7 @@
   color: #c0392b;
 }
 
-/* ---------- Comment form ---------- */
+/*  Comment form */
 .activity-page .comment-form {
   display: flex;
   flex-wrap: nowrap;
@@ -334,7 +332,7 @@
   white-space: nowrap;
 }
 
-/* ---------- Dark mode ---------- */
+/*  Dark mode */
 html.dark-mode body {
   background: #141414;
 }
