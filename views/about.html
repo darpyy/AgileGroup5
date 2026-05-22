@@ -16,26 +16,10 @@
     />
   </head>
   <body>
-<<<<<<< HEAD
-        <nav>  
-            <div class="logo"> 
-                <a href="{{ url_for('index') }}">
-                    Common<span>Thread</span>
-                </a>
-            </div>
-        <ul class="nav-links">
-            {% if session.get('user_id') != None %}
-                <!-- Logged in: show these -->
-                <li><a href="{{ url_for('dashboard') }}" class = "bigItem">Home</a></li>
-                <li><a href="{{ url_for('contact') }}" class = "bigItem">Contact</a></li>
-                <li><a href="{{ url_for('about') }}" class = "active">About Us</a></li>
-                <li><a href="{{ url_for('logout') }}" class = "bigItem">Logout</a></li>
-=======
     <nav>
       <div class="logo">
         <a href="{{ url_for('index') }}"> Common<span>Thread</span> </a>
       </div>
->>>>>>> marcoa
 
       <button class="nav-toggle" aria-label="toggle navigation">
         <span class="hamburger"></span>
@@ -127,49 +111,6 @@
       </article>
     </div>
     <div>
-<<<<<<< HEAD
-        <article class="articleAbout">
-      <section class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/meowl.png') }}"
-        alt="Profile picture"
-      /> 
-      <p>Katrina Here
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maxime molestias sunt harum voluptate voluptatibus id suscipit ea incidunt maiores veniam repellendus, aspernatur, itaque adipisci sint ipsam consectetur, nostrum quia totam!
-      </p>
-      </section> 
-
-      <section class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/kelvin-bad-photo.jpg') }}"
-        alt="Profile picture"
-      /> 
-      <p>Kelvin Here
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maxime molestias sunt harum voluptate voluptatibus id suscipit ea incidunt maiores veniam repellendus, aspernatur, itaque adipisci sint ipsam consectetur, nostrum quia totam!
-      </p>
-      </section> 
-
-      <section class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/bao.jpg') }}"
-        alt="Profile picture"
-      /> 
-      <p>Bao Here,
-        67 Girlfriends
-        2M followers on Instagram
-        Called uncle Bao but Bao is just fine.
-        Pronouns She/her, SamBao tried
-      </p>
-      </section> 
-      <section  class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/dylan67Agile.jpg') }}"
-        alt="Profile picture"
-      /> 
-      <p>
-        Dylan Here
-        <br>
-=======
       <article class="articleAbout">
         <section class="containerAbout">
           <img
@@ -179,20 +120,26 @@
           />
           <p>
             Katrina Here Lorem ipsum dolor sit, amet consectetur adipisicing
-            elit.
+            elit. Maxime molestias sunt harum voluptate voluptatibus id suscipit
+            ea incidunt maiores veniam repellendus, aspernatur, itaque adipisci
+            sint ipsam consectetur, nostrum quia totam!
           </p>
         </section>
+
         <section class="containerAbout">
           <img
             class="aboutPic"
-            src="{{ url_for('static', filename='img/aboutUs/meowl.png') }}"
+            src="{{ url_for('static', filename='img/aboutUs/kelvin-bad-photo.jpg') }}"
             alt="Profile picture"
           />
           <p>
             Kelvin Here Lorem ipsum dolor sit, amet consectetur adipisicing
-            elit.
+            elit. Maxime molestias sunt harum voluptate voluptatibus id suscipit
+            ea incidunt maiores veniam repellendus, aspernatur, itaque adipisci
+            sint ipsam consectetur, nostrum quia totam!
           </p>
         </section>
+
         <section class="containerAbout">
           <img
             class="aboutPic"
@@ -210,30 +157,21 @@
             src="{{ url_for('static', filename='img/aboutUs/dylan67Agile.jpg') }}"
             alt="Profile picture"
           />
-          <pre>
-        Dylan,
->>>>>>> marcoa
-        Huzzless
-        <br>
-        NO GF!
-        <br>
-        Sigma? EW 
-        <br>
-        Mewing 
-        <br>
-        67 
-<<<<<<< HEAD
-      </p>
-      </section> 
-    </article>
-=======
-        Job: construction 
-        Owner: Chris Harris
-      </pre
-          >
+          <p>
+            Dylan Here
+            <br />
+            Huzzless
+            <br />
+            NO GF!
+            <br />
+            Sigma? EW
+            <br />
+            Mewing
+            <br />
+            67
+          </p>
         </section>
       </article>
->>>>>>> marcoa
     </div>
   </body>
 

@@ -31,8 +31,7 @@
       <button class="nav-toggle" aria-label="toggle navigation">
         <span class="hamburger">☰</span>
       </button>
-
-<<<<<<< HEAD
+<ul>
             {% if session.get('user_id') != None %}
                 <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
                 <li><a href="{{ url_for('contact') }}" class="bigItem">Contact</a></li>
@@ -44,21 +43,7 @@
                 <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
                 <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
             {% endif %}
-=======
-      <ul class="nav-links">
-        {% if session.get('user_name') %}
-        <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
-        <li><a href="{{ url_for('contact') }}" class="bigItem">Contact</a></li>
-        <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
-        <li><a href="{{ url_for('logout') }}" class="bigItem">Logout</a></li>
-        {% else %}
-        <li><a href="{{ url_for('index') }}" class="active">Home</a></li>
-        <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
-        <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
-        <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
-        {% endif %}
->>>>>>> marcoa
-
+</ul>
         <li class="theme-menu-wrap">
           <button
             id="theme-gear"
@@ -88,7 +73,6 @@
     </nav>
 
     <section class="content">
-<<<<<<< HEAD
         <article>
             <h2>Join Us Now</h2>   
             <p>
@@ -98,19 +82,6 @@
                 into the conversation!
             </p>
         </article>
-=======
-      <article>
-        <h2>Join Us Now</h2>
-        <h2>hello</h2>
-        <h3>TESTING</h3>
-        <p>
-          Discover a world of knowledge and connection with CommonThread. Our
-          platform is designed to bring people together through their common
-          hobbies, interests, and passions. Let us know what tags you're
-          interested in and get right into the conversation!
-        </p>
-      </article>
->>>>>>> marcoa
 
       <article>
         <h2>Top Chat this Month</h2>

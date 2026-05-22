@@ -82,7 +82,6 @@
       </form>
     </div>
 
-<<<<<<< HEAD
     <ul class="nav-links">
       <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
       <li><a href="{{ url_for('contact') }}" class="bigItem">Contact Us</a></li>
@@ -112,18 +111,6 @@
                src="{{ url_for('static', filename='uploads/avatars/' + profile_pic) }}"
                alt="Profile picture">
         {% else %}
-=======
-    <main class="dashboard-wrap">
-      <section class="profile-card">
-        <div class="profile-side">
-          {% if profile_pic %}
-          <img
-            class="profile-avatar-img"
-            src="{{ url_for('static', filename='uploads/avatars/' + profile_pic) }}"
-            alt="Profile picture"
-          />
-          {% else %}
->>>>>>> marcoa
           <div class="profile-avatar" aria-hidden="true">
             {{ session['user_name'][0]|upper if session['user_name'] else 'U' }}
           </div>
