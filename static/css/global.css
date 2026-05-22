@@ -62,7 +62,7 @@ html {
     border: 1px solid var(--secondary-color);
     background-color: var(--dark-color);
     color: var(--primary-color);
-    border-radius: 4px 16px;
+    border-radius: 0;
     backdrop-filter: blur(12px);
     position: sticky;
     top: 0;

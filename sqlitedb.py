@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS tags (
 CREATE TABLE IF NOT EXISTS usertags (
     tagid INTEGER NOT NULL,
     userid INTEGER NOT NULL,
-    PRIMARY KEY (tagid, userid) 
+    PRIMARY KEY (tagid, userid), 
     FOREIGN KEY (tagid) REFERENCES tags(tagid) ON DELETE CASCADE,
     FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -63,8 +63,31 @@ CREATE TABLE IF NOT EXISTS usertags (
     newtags = [('music',), ('art',), ('sports',), ('gaming',), ('food',), ('travel',)]
     cursor.executemany("INSERT OR IGNORE INTO tags (tagname) VALUES (?)", newtags)
     
-    newcities = [('Vancouver',), ('Surrey',), ('Burnaby',)]
-    cursor.executemany("INSERT OR IGNORE INTO locations (city) VALUES (?)", newcities)
+    newcities = [
+        ('Vancouver',),
+        ('Burnaby',),
+        ('Surrey',),
+        ('Richmond',),
+        ('Coquitlam',),
+        ('Port Coquitlam',),
+        ('Port Moody',),
+        ('New Westminster',),
+        ('North Vancouver',),
+        ('West Vancouver',),
+        ('Delta',),
+        ('Langley',),
+        ('Maple Ridge',),
+        ('Pitt Meadows',),
+        ('White Rock',),
+        ('Tsawwassen',),
+        ('Abbotsford',),
+        ('Mission',)
+    ]
+
+    cursor.executemany(
+        "INSERT OR IGNORE INTO locations (city) VALUES (?)",
+        newcities
+    )
 
     connection.commit()
     connection.close()
