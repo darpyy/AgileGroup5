@@ -1,0 +1,379 @@
+/* ============================================================
+   activity.css — CommonThread activity / forum page
+   ============================================================ */
+
+/* ---------- Page wrapper ---------- */
+.activity-page {
+  width: min(980px, calc(100% - 32px));
+  margin: 32px auto 64px;
+}
+
+/* ---------- Shared card look ---------- */
+.card,
+.forum-header,
+.create-post-card,
+.post-card {
+  background: #ffffff;
+  border: 1px solid #e3e8f1;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(20, 30, 60, 0.04);
+
+  transition:
+    box-shadow 0.35s ease 100ms,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1) 100ms,
+    border-color 0.30s ease 100ms;
+}
+
+.post-card:hover {
+  box-shadow: 0 8px 24px rgba(20, 30, 60, 0.10);
+  border-color: #d3dcec;
+  transform: translateY(-3px);
+}
+
+/* ---------- Forum header ---------- */
+.forum-header {
+  padding: 26px 32px;
+  margin-bottom: 24px;
+}
+
+.forum-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 1.75rem;
+  color: var(--dark-color);
+  letter-spacing: -0.01em;
+}
+
+.forum-meta {
+  margin: 0 0 12px 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.forum-meta span {
+  margin-right: 14px;
+}
+
+.forum-meta strong {
+  color: var(--dark-color);
+  font-weight: 700;
+}
+
+.forum-description {
+  margin: 0;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* ---------- Create post ---------- */
+.create-post-card {
+  padding: 24px 32px;
+  margin-bottom: 28px;
+}
+
+.create-post-card h3 {
+  margin: 0 0 16px 0;
+  color: var(--dark-color);
+  font-size: 1.1rem;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+/* ---------- Inputs ---------- */
+.activity-page input,
+.activity-page textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d8dfeb;
+  background: #fafbfd;
+  color: var(--dark-color);
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+
+  transition:
+    border-color 0.25s ease 60ms,
+    background 0.25s ease 60ms,
+    box-shadow 0.25s ease 60ms;
+}
+
+.activity-page textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.activity-page input::placeholder,
+.activity-page textarea::placeholder {
+  color: #9aa3b2;
+}
+
+.activity-page input:hover,
+.activity-page textarea:hover {
+  border-color: #b9c4da;
+}
+
+.activity-page input:focus,
+.activity-page textarea:focus {
+  border-color: var(--accent-color, #5994f3);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(89, 148, 243, 0.15);
+}
+
+/* ---------- Main buttons ---------- */
+.post-button,
+.comment-button {
+  background: var(--accent-color, #5994f3);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1) 90ms,
+    background-color 0.30s ease 90ms,
+    box-shadow 0.35s ease 90ms;
+}
+
+.post-button:hover,
+.comment-button:hover {
+  background: #3f82f7;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(89, 148, 243, 0.30);
+}
+
+/* ---------- Posts ---------- */
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.post-card {
+  padding: 22px 28px;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.post-header h2 {
+  margin: 0;
+  color: var(--dark-color);
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.post-header small {
+  color: #8a93a3;
+  white-space: nowrap;
+  font-size: 0.8rem;
+}
+
+.post-body {
+  margin: 12px 0 18px;
+  line-height: 1.6;
+  color: #2a3142;
+}
+
+.post-card hr {
+  border: 0;
+  height: 1px;
+  background: #eef0f5;
+  margin: 18px 0;
+}
+
+.post-card h4 {
+  margin: 0 0 12px 0;
+  color: var(--dark-color);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Edit/Delete buttons ---------- */
+.post-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.post-actions form {
+  margin: 0;
+  display: flex;
+}
+
+.tag-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 100px;
+  height: 40px;
+  padding: 0 18px;
+
+  text-decoration: none;
+  border: 1px solid #d8dfeb;
+  background: #fafbfd;
+  color: var(--accent-color, #5994f3);
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+
+  box-sizing: border-box;
+  cursor: pointer;
+
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) 180ms,
+    background-color 0.35s ease 180ms,
+    border-color 0.35s ease 180ms,
+    color 0.35s ease 180ms,
+    box-shadow 0.45s ease 180ms;
+}
+
+.tag-button:hover {
+  background: var(--accent-color, #5994f3);
+  color: white;
+  border-color: var(--accent-color, #5994f3);
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 10px 22px rgba(89, 148, 243, 0.28);
+}
+
+.delete-button {
+  color: #e74c3c;
+}
+
+.delete-button:hover {
+  background: #e74c3c;
+  border-color: #e74c3c;
+  color: white;
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 10px 22px rgba(231, 76, 60, 0.30);
+}
+
+/* ---------- Comments ---------- */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.comment-card {
+  background: #f7f9fd;
+  border: 1px solid #e7ecf5;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.comment-header strong {
+  color: var(--dark-color);
+  font-weight: 600;
+}
+
+.comment-card p {
+  margin: 4px 0 0 0;
+  color: #2a3142;
+  line-height: 1.5;
+}
+
+.comment-delete-button {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0;
+}
+
+.comment-delete-button:hover {
+  color: #c0392b;
+}
+
+/* ---------- Comment form ---------- */
+.activity-page .comment-form {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin-top: 12px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.activity-page .comment-form input[type="text"] {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-page .comment-form button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* ---------- Dark mode ---------- */
+html.dark-mode body {
+  background: #141414;
+}
+
+html.dark-mode .forum-header,
+html.dark-mode .create-post-card,
+html.dark-mode .post-card {
+  background: #242424;
+  border-color: #3a3a3a;
+}
+
+html.dark-mode .forum-header h1,
+html.dark-mode .create-post-card h3,
+html.dark-mode .post-header h2,
+html.dark-mode .post-card h4 {
+  color: #f5f5f5;
+}
+
+html.dark-mode .forum-meta,
+html.dark-mode .forum-description,
+html.dark-mode .post-body,
+html.dark-mode .comment-card p {
+  color: #d6d9df;
+}
+
+html.dark-mode .activity-page input,
+html.dark-mode .activity-page textarea {
+  background: #2e2e2e;
+  border-color: #4a4a4a;
+  color: #f5f5f5;
+}
+
+html.dark-mode .comment-card {
+  background: #2b2b2b;
+  border-color: #3a3a3a;
+}
+
+html.dark-mode .tag-button {
+  background: #2e2e2e;
+  border-color: #4a4a4a;
+  color: #cfd6e4;
+}

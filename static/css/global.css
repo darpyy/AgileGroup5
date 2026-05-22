@@ -44,7 +44,7 @@ html {
 .logo a{
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--primary-color); 
+    color: var(--primary-color);
     text-decoration: none;
 }
 
@@ -55,7 +55,7 @@ html {
 /** * Navigation bar
  */
  nav {
-    display: flex; 
+    display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1.4rem 1rem;
@@ -73,7 +73,7 @@ nav ul {
   list-style: none;
   display: flex;
   gap: 3rem;
-  align-items: center;   
+  align-items: center;
 }
 
 nav ul a {
@@ -123,7 +123,7 @@ nav ul a:hover, nav ul a.active {
 
 
 /**
- * Buttons 
+ * Buttons
  */
 
  .buttons {
@@ -134,7 +134,7 @@ nav ul a:hover, nav ul a.active {
     background: #fff;
     border-radius: 999px;
     padding: 6px;
-    max-width: 650px;   /* was 460px */
+    max-width: 650px;
     width: 100%;
     margin: 30px auto 60px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
@@ -143,7 +143,7 @@ nav ul a:hover, nav ul a.active {
 .btn {
     flex: 1;
     text-align: center;
-    padding: 18px 50px;  
+    padding: 18px 50px;
     border-radius: 999px;
     text-decoration: none;
     font-weight: 600;
@@ -168,94 +168,158 @@ nav ul a:hover, nav ul a.active {
     background: #b0caf6;
 }
 
-/* navigation footer for all web pages */
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
 footer {
   background-color: var(--dark-color);
   color: var(--secondary-color);
+  margin-top: 60px;
+  padding: 56px 32px 20px;
+  min-height: 50px;
   bottom: 0;
-  margin-top: 40px;
 }
 
-.navFooter { 
-  display: flex; 
-  justify-content: space-evenly;
+.navFooter {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr auto;
+  gap: 60px;
+  max-width: 1200px;
+  margin: 0 auto;
   text-align: left;
-  margin-top: 4rem;
+  align-items: start;
 }
-
 
 .footArticle {
-  width: 350px;
-  margin-bottom: 2rem;
+  width: auto;
+  margin: 0;
 }
 
-/* space between div articles */
+.footArticle h3 {
+  color: var(--primary-color);
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 18px 0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.footArticle p {
+  color: var(--secondary-color);
+  line-height: 1.6;
+  margin: 0 0 18px 0;
+  font-size: 0.95rem;
+}
+
+/* Contact info rows */
 .contactFoot {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 14px;
+  margin: 8px 0;
 }
-
 
 .contacter {
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin: 0;
 }
 
-.footerCopy{
-  text-align: center;
-  padding: 1rem;
-}
-
-footer ul {
-  list-style: none;
-  display: flex;
-  gap: 3rem;
-}
-
-footer ul a {
-  text-decoration: none;
+.contactFoot h4.contacter {
   color: var(--primary-color);
-  font-size: 1.1rem;
-  font-weight: heavy;
-  letter-spacing: 0.1rem;
-  text-transform: capitalize;
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 70px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
-footer ul a.active {
+.contactFoot p.contacter {
   color: var(--secondary-color);
+  font-size: 0.92rem;
 }
 
-footer ul a:hover, nav ul a.active {
-  color: var(--accent-color);
-}
-
-footer ul a.active {
-  color: var(--accent-color);
-}
-footer p {
+/* Footer link buttons (About Us / Contact Us at bottom of columns) */
+.footer-links {
+  list-style: none;
+  margin: 20px 0 0 0;
+  padding: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  gap: 12px;
 }
 
-.centerFoot {
-  display: block;
-  width: 100%;
-  text-align: center;
-}
-
-
-.backToTop {
-  background-color: var(--primary-color);
-  color: var(--dark-color);
+.footer-links a {
+  display: inline-block;
+  padding: 9px 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--secondary-color);
   border-radius: 8px;
-  border-color: var(--primary-color);
-  
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  text-transform: capitalize;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.footer-links a:hover {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #ffffff;
+}
+
+/* Back to Top button — sits in its own column */
+.backToTop {
+  background: var(--accent-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 22px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.backToTop:hover {
+  background: #3f82f7;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(89, 148, 243, 0.3);
+}
+
+/* Copyright line at the very bottom */
+footer > p {
+  display: block;
+  text-align: center;
+  margin: 48px auto 0 auto;
+  padding: 22px 0 0 0;
+  max-width: 1200px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--secondary-color);
+  font-size: 0.85rem;
+}
+
+/* Footer mobile */
+@media (max-width: 800px) {
+  footer {
+    padding: 40px 22px 20px;
+  }
+
+  .navFooter {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .backToTop {
+    width: 100%;
+  }
 }
 
 
 /*
-Cool stuff to add before 
+Cool stuff to add before
 */
 /*
 Source - https://stackoverflow.com/a/20352949
@@ -271,10 +335,6 @@ body {
 }
 
 header {
-  min-height: 50px;
-}
-
-footer {
   min-height: 50px;
 }
 
@@ -509,7 +569,7 @@ button,
 [type="reset"],
 [type="submit"] {
   -webkit-appearance: button;
-  -moz-appearance: button;    /* For older Firefox */
+  -moz-appearance: button;
   appearance: button;
 }
 
@@ -604,7 +664,7 @@ textarea {
 [type="search"] {
   -webkit-appearance: textfield; /* 1 */
   outline-offset: -2px; /* 2 */
-  -moz-appearance: button;    /* For older Firefox */
+  -moz-appearance: button;
   appearance: button;
 }
 
@@ -770,8 +830,6 @@ html.dark-mode .theme-gear {
 
 /* ============================================================
    Dark mode overrides for per-page CSS files
-   These override hardcoded colors in login.css, dashboard.css,
-   index.css, etc. that don't use CSS variables.
    ============================================================ */
 
 /* Body backgrounds — kill the light gradient on login/dashboard */
@@ -790,7 +848,7 @@ html.dark-mode .dashboard-card {
   border-color: #444;
 }
 
-/* Hardcoded mid-grey text (#555, #666, #6b7280, #9ca3af, #4b5563) */
+/* Hardcoded mid-grey text */
 html.dark-mode p,
 html.dark-mode .content article:first-child p,
 html.dark-mode label,
@@ -810,8 +868,7 @@ html.dark-mode select {
   border-color: #444 !important;
 }
 
-/* Nav and footer — keep them dark in dark mode but a slightly
-   lighter tone than the body so they stand out */
+/* Nav and footer — keep them dark in dark mode */
 html.dark-mode nav,
 html.dark-mode footer {
   background-color: #252525;
@@ -840,8 +897,7 @@ html.dark-mode .btn:first-child:hover {
   background: #3a3a3a;
 }
 
-/* Edit profile picture button — was white bg with var(--dark-color) text,
-   which becomes white-on-white in dark mode */
+/* Edit profile picture button */
 html.dark-mode .avatar-label {
   background: #2c2c2c !important;
   color: #f2f2f2 !important;
@@ -853,7 +909,7 @@ html.dark-mode .avatar-label:hover {
   border-color: var(--accent-color) !important;
 }
 
-/* Request a new forum CTA — was light blue pill */
+/* Request a new forum CTA */
 html.dark-mode .sidebar-cta {
   background: #2c2c2c !important;
   color: var(--accent-color) !important;
@@ -863,6 +919,36 @@ html.dark-mode .sidebar-cta:hover {
   background: var(--accent-color) !important;
   color: #fff !important;
   border-color: var(--accent-color) !important;
+}
+
+/* Footer dark-mode tweaks */
+html.dark-mode footer > p {
+  border-top-color: rgba(255, 255, 255, 0.06);
+}
+
+html.dark-mode .footer-links a {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: #444;
+  color: #f2f2f2;
+}
+
+html.dark-mode .footer-links a:hover {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #ffffff;
+}
+
+html.dark-mode .footArticle h3 {
+  color: #f2f2f2;
+}
+
+html.dark-mode .footArticle p,
+html.dark-mode .contactFoot p.contacter {
+  color: #aaa;
+}
+
+html.dark-mode .contactFoot h4.contacter {
+  color: #f2f2f2;
 }
 
 .theme-gear img {
@@ -894,7 +980,7 @@ html.dark-mode .sidebar-cta:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
   z-index: 1500;
   flex-direction: column;
-  align-items: stretch; 
+  align-items: stretch;
   gap: 2px;
 }
 
@@ -950,7 +1036,7 @@ html.dark-mode .divider {
   color: #888;
 }
 html.dark-mode .divider span {
-  background: #2c2c2c;          /* matches the card so the line "passes through" */
+  background: #2c2c2c;
 }
 html.dark-mode .divider::before,
 html.dark-mode .divider::after {
@@ -964,8 +1050,8 @@ html.dark-mode .tags-container {
   border: 1px solid #3a3a3a;
 }
 html.dark-mode .tag-button {
-  background: rgba(255, 255, 255, 0.05);   
-  border-color: #555;                       /* lighter border, visible against #2c2c2c */
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #555;
   color: #f2f2f2;
 }
 

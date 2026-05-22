@@ -177,9 +177,10 @@
             {% if post.body|length > 200 %}…{% endif %}
           </p>
 
-          <p class="public-profile-post-comments">
-            💬 {{ post.comments|length }} comments
-          </p>
+          <form action="{{ url_for('add_comment', post_id=post._id) }}" method="POST" class="quick-comment">
+            <input type="text" name="body" placeholder="Add a comment…" required>
+            <button type="submit">Send</button>
+          </form>
         </article>
       {% endfor %}
     {% else %}
