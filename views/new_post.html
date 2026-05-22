@@ -1,18 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>New post</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-</head>
-<body>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/favicon.ico') }}"
+    />
+  </head>
+  <body>
     <h2>New post</h2>
     <form method="POST">
-        {{ form.hidden_tag() }}
-        <p>{{ form.title.label }} {{ form.title() }}</p>
-        <p>{{ form.body.label }} {{ form.body(rows=6, cols=40) }}</p>
-        {{ form.submit() }}
+      {{ form.hidden_tag() }}
+      <p>{{ form.title.label }} {{ form.title() }}</p>
+      <p>{{ form.body.label }} {{ form.body(rows=6, cols=40) }}</p>
+      {{ form.submit() }}
     </form>
-</body>
+  </body>
 </html>

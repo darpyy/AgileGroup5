@@ -1,15 +1,12 @@
-/* ============================================================
-   Match dashboard page styling — body background + nav search
-   ============================================================ */
 
-/* Body gradient — same as dashboard */
+/* Body gradient */
 body {
   background: linear-gradient(180deg, #e9f0ff 0%, #f5f8ff 100%);
   font-family: "Source Code Pro", monospace;
   color: var(--dark-color);
 }
 
-/* Search bar in the nav — exact match to dashboard */
+/* ---------- Search bar in the nav ---------- */
 .nav-search {
   flex: 1;
   max-width: 400px;
@@ -40,7 +37,7 @@ body {
   background: #fff;
 }
 
-
+/* ---------- Page wrapper ---------- */
 .public-profile-page {
   width: min(1180px, calc(100% - 32px));
   margin: 32px auto;
@@ -50,8 +47,7 @@ body {
   align-items: start;
 }
 
-/* Profile card */
-
+/* ---------- Profile card ---------- */
 .public-profile-card {
   grid-column: 1 / 2;
   background: var(--card-bg, #ffffff);
@@ -85,12 +81,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #111827;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--deep-color) 100%);
   color: #ffffff;
   font-size: 44px;
-  font-weight: 800;
+  font-weight: 700;
   border: 3px solid #ffffff;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+  box-shadow: none;
+  text-transform: uppercase;
+  user-select: none;
 }
 
 .public-profile-details {
@@ -123,8 +121,8 @@ body {
   gap: 2rem;
   margin: 0 0 1.2rem 0;
   padding: 1rem 0;
-  border-top: 1px solid #f0f1f3;
-  border-bottom: 1px solid #f0f1f3;
+  border-top: 1px solid var(--divider-color, #f0f1f3);
+  border-bottom: 1px solid var(--divider-color, #f0f1f3);
   flex-wrap: wrap;
 }
 
@@ -151,7 +149,7 @@ body {
   margin-top: 0;
   font-size: 0.9rem;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--muted-text, #6b7280);
   text-transform: lowercase;
 }
 
@@ -160,8 +158,7 @@ body {
   color: var(--muted-text, #6b7280);
 }
 
-/* Sidebar */
-
+/* ---------- Sidebar ---------- */
 .public-profile-sidebar {
   grid-column: 2 / 3;
   grid-row: 1 / span 2;
@@ -202,9 +199,14 @@ body {
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
+
 .public-profile-forum-item a:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  background: #f7f9ff;
+  border-color: var(--accent-color);
+}
+
+.public-profile-forum-item a:hover .public-profile-forum-name {
+  color: var(--accent-color);
 }
 
 .public-profile-forum-name {
@@ -220,8 +222,7 @@ body {
   font-size: 0.85rem;
 }
 
-/* Posts */
-
+/* ---------- Posts ---------- */
 .public-profile-posts {
   grid-column: 1 / 2;
   background: transparent;
@@ -249,8 +250,9 @@ body {
 }
 
 .public-profile-post-card:hover {
+  border-color: var(--accent-color);
   transform: translateY(-2px);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
 .public-profile-post-card:first-of-type {
@@ -269,7 +271,7 @@ body {
 }
 
 .public-profile-post-forum {
-  color: #2563eb;
+  color: var(--accent-color, #2563eb);
   font-weight: 700;
   text-decoration: none;
 }
@@ -299,7 +301,7 @@ body {
 
 .public-profile-post-body {
   margin: 0 0 12px;
-  color: var(--text-color, #374151);
+  color: var(--body-text, #374151);
   line-height: 1.6;
 }
 
@@ -307,8 +309,8 @@ body {
   margin: 0;
   padding-top: 1.1rem;
   font-size: 0.85rem;
-  color: #6b7280;
-  border-top: 1px solid #f0f1f3;
+  color: var(--muted-text, #6b7280);
+  border-top: 1px solid var(--divider-color, #f0f1f3);
 }
 
 .public-profile-empty {
@@ -320,33 +322,126 @@ body {
   color: var(--muted-text, #6b7280);
 }
 
-/* Dark mode support */
-
-.dark-mode .public-profile-card,
-.dark-mode .public-profile-sidebar,
-.dark-mode .public-profile-posts {
-  --card-bg: #111827;
-  --text-color: #f9fafb;
-  --muted-text: #9ca3af;
-  --border-color: #273449;
-  --soft-bg: #182235;
+/* ---------- Inline comment form on each post card ---------- */
+.quick-comment {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
 }
 
-.dark-mode .public-profile-avatar-img,
-.dark-mode .public-profile-avatar-placeholder {
-  border-color: #1f2937;
+.quick-comment input {
+  flex: 1;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--input-border, #d8e0ee);
+  border-radius: 6px;
+  font: inherit;
+  background: var(--input-bg, #f7f9ff);
+  color: var(--text-color, var(--dark-color));
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.dark-mode .public-profile-post-body {
-  color: #d1d5db;
+.quick-comment input::placeholder {
+  color: var(--muted-text, #9ca3af);
 }
 
-.dark-mode .public-profile-post-forum {
-  color: #60a5fa;
+.quick-comment input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  background: var(--input-bg-focus, #fff);
+  box-shadow: 0 0 0 3px rgba(89, 148, 243, 0.18);
 }
 
-/* Responsive */
+.quick-comment button {
+  padding: 0.55rem 1.1rem;
+  background: var(--accent-color);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
 
+.quick-comment button:hover {
+  background: #4a85e6;
+}
+
+/* Drak mode */
+
+/* Body background — kill the light gradient */
+html.dark-mode body {
+  background: #141414 !important;
+  color: #f5f5f5;
+}
+
+/* Set custom-property values for everything inside the page wrapper */
+html.dark-mode .public-profile-page {
+  --card-bg: #242424;
+  --text-color: #f5f5f5;
+  --body-text: #d6d9df;
+  --muted-text: #9aa3b2;
+  --border-color: #3a3a3a;
+  --divider-color: #3a3a3a;
+  --soft-bg: #2b2b2b;
+  --input-bg: #2e2e2e;
+  --input-bg-focus: #1f1f1f;
+  --input-border: #4a4a4a;
+}
+
+/* Avatar ring matches the dark card */
+html.dark-mode .public-profile-avatar-img,
+html.dark-mode .public-profile-avatar-placeholder {
+  border-color: #1a1a1a;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+
+html.dark-mode .public-profile-avatar-placeholder {
+  background: #1a1a1a;
+}
+
+/* Cards in dark mode get a slightly deeper shadow */
+html.dark-mode .public-profile-card,
+html.dark-mode .public-profile-sidebar,
+html.dark-mode .public-profile-post-card {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+html.dark-mode .public-profile-post-card:hover {
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+  border-color: var(--accent-color);
+}
+
+html.dark-mode .public-profile-forum-item a:hover {
+  background: #2e2e2e;
+  border-color: var(--accent-color);
+}
+
+html.dark-mode .public-profile-forum-item a:hover .public-profile-forum-name {
+  color: var(--accent-color);
+}
+
+/* Forum link color override in dark mode */
+html.dark-mode .public-profile-post-forum {
+  color: #75aaff;
+}
+
+/* Nav search input in dark mode */
+html.dark-mode .nav-search input {
+  background: #2e2e2e;
+  border-color: #4a4a4a;
+  color: #f5f5f5;
+}
+
+html.dark-mode .nav-search input::placeholder {
+  color: #9aa3b2;
+}
+
+html.dark-mode .nav-search input:focus {
+  background: #1f1f1f;
+  border-color: var(--accent-color);
+}
+
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .public-profile-page {
     grid-template-columns: 1fr;
@@ -394,53 +489,8 @@ body {
   }
 }
 
-/* Inline comment form on each post card — matches dashboard */
-.quick-comment {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.85rem;
-}
-
-.quick-comment input {
-  flex: 1;
-  padding: 0.55rem 0.85rem;
-  border: 1px solid #d8e0ee;
-  border-radius: 6px;
-  font: inherit;
-  background: #f7f9ff;
-  color: var(--dark-color);
-  transition: border-color 0.15s ease, background 0.15s ease;
-}
-
-.quick-comment input:focus {
-  outline: none;
-  border-color: var(--accent-color);
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(89, 148, 243, 0.18);
-}
-
-.quick-comment button {
-  padding: 0.55rem 1.1rem;
-  background: var(--accent-color);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.quick-comment button:hover {
-  background: #4a85e6;
-}
-
-.dark-mode .quick-comment input {
-  background: #1a1a1a;
-  border-color: #444;
-  color: #f2f2f2;
-}
-
-.dark-mode .quick-comment input:focus {
-  background: #2c2c2c;
-  border-color: var(--accent-color);
+@media (max-width: 768px) {
+  .nav-search {
+    display: none;
+  }
 }

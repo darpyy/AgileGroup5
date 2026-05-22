@@ -1,22 +1,41 @@
 <!doctype html>
 <html lang="en">
+<<<<<<< HEAD
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/static/css/global.css" />
   <link rel="stylesheet" href="/static/css/search.css" />
   <title>CommonThread | Search</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 </head>
 <body>
   <nav>
     <div class="logo">
       <a href="{{ url_for('index') }}">Common<span>Thread</span></a>
     </div>
+
+    <form class="nav-search" action="{{ url_for('search') }}" method="GET" role="search">
+      <input
+        type="text"
+        name="q"
+        placeholder="Search users…"
+        value="{{ query or '' }}"
+        autocomplete="off"
+      >
+    </form>
+
     <ul class="nav-links">
-      <li><a href="{{ url_for('dashboard') }}">Home</a></li>
-      <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
-      <li><a href="{{ url_for('about') }}">About Us</a></li>
+      {% if session.get('user_name') %}
+        <li><a href="{{ url_for('dashboard') }}" class="bigItem">Home</a></li>
+        <li><a href="{{ url_for('contact') }}" class="bigItem">Contact</a></li>
+        <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
+        <li><a href="{{ url_for('logout') }}" class="bigItem">Logout</a></li>
+      {% else %}
+        <li><a href="{{ url_for('index') }}" class="bigItem">Home</a></li>
+        <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+        <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+      {% endif %}
       <li class="theme-menu-wrap">
         <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
                 aria-haspopup="true" aria-expanded="false">
@@ -31,41 +50,177 @@
     </ul>
   </nav>
 
-  <main class="search-wrap">
-    <h1 class="search-heading">
-      {% if query %}
-        Results for "{{ query }}"
-      {% else %}
-        Search
+  <main class="search-page">
+    <header class="search-header">
+      <h1 class="search-heading">
+        {% if query %}
+          Results for <span class="search-query">"{{ query }}"</span>
+        {% else %}
+          Search
+        {% endif %}
+      </h1>
+      {% if query and results %}
+        <p class="search-count">{{ results|length }} {{ 'user' if results|length == 1 else 'users' }} found</p>
       {% endif %}
-    </h1>
+    </header>
 
     {% if query and not results %}
-      <p class="search-empty">No users match "{{ query }}"</p>
+      <div class="search-empty">
+        <div class="search-empty-icon">🔍</div>
+        <p>No users match <strong>"{{ query }}"</strong></p>
+        <p class="search-empty-hint">Try a different name or check the spelling.</p>
+      </div>
     {% endif %}
 
+    {% if results %}
     <ul class="search-list">
-     {% for user in results %}
+      {% for user in results %}
         <li class="search-item">
-            <a href="{{ url_for('user_profile', username=user['username']) }}" class="search-link">
-                {% if user['profile_pic'] %}
-                    <img class="search-avatar"
-                    src="{{ url_for('static', filename='uploads/avatars/' + user['profile_pic']) }}"
-                    alt="">
-                {% else %}
-                    <div class="search-avatar search-avatar-letter">
-                    {{ user['username'][0]|upper }}
-                    </div>
-                {% endif %}
-                <div class="search-info">
-                    <span class="search-username">{{ user['username'] }}</span>
-                    <span class="search-handle">@{{ user['username'] }}</span>
-                </div>
-            </a>
+          <a href="{{ url_for('user_profile', username=user['username']) }}" class="search-link">
+            {% if user['profile_pic'] %}
+              <img class="search-avatar"
+                   src="{{ url_for('static', filename='uploads/avatars/' + user['profile_pic']) }}"
+                   alt="">
+            {% else %}
+              <div class="search-avatar search-avatar-letter">
+                {{ user['username'][0]|upper }}
+              </div>
+            {% endif %}
+            <div class="search-info">
+              <span class="search-username">{{ user['username'] }}</span>
+              <span class="search-handle">@{{ user['username'] }}</span>
+            </div>
+            <span class="search-arrow" aria-hidden="true">→</span>
+          </a>
         </li>
-    {% endfor %}
+      {% endfor %}
     </ul>
+    {% endif %}
   </main>
-<script src="/static/js/darkmode.js"></script>
+
+  <footer class="footerCopy">
+    <section class="navFooter">
+      <article class="footArticle">
+        <h3>About Us</h3>
+        <p>We are interested in bringing people closer together in your Community. We hope to help build meaningful friendships & keeping people active in the Greater Vancouver area!</p>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('about') }}">About Us</a></li>
+        </ul>
+      </article>
+      <article class="footArticle">
+        <h3>Contact Info</h3>
+        <section class="contactFoot">
+          <h4 class="contacter">Call</h4>
+          <p class="contacter">+1 123-456-6789</p>
+        </section>
+        <section class="contactFoot">
+          <h4 class="contacter">Email us</h4>
+          <p class="contacter">contact@CommonThread.com</p>
+        </section>
+        <section class="contactFoot">
+          <h4 class="contacter">Find us</h4>
+          <p class="contacter">Canada, Vancouver, Main 67A</p>
+        </section>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        </ul>
+      </article>
+      <article class="footArticle">
+        <button onclick="scrollToTop()" class="backToTop">Back to Top</button>
+      </article>
+    </section>
+    <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
+  </footer>
+
+  <script src="/static/js/darkmode.js"></script>
+  <script src="/static/js/main.js"></script>
 </body>
+=======
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/global.css" />
+    <link rel="stylesheet" href="/static/css/search.css" />
+    <title>CommonThread | Search</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/favicon.ico') }}"
+    />
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <a href="{{ url_for('index') }}">Common<span>Thread</span></a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        <li><a href="{{ url_for('about') }}">About Us</a></li>
+        <li class="theme-menu-wrap">
+          <button
+            id="theme-gear"
+            class="theme-gear"
+            aria-label="Theme settings"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img src="/static/img/gear.png" alt="" />
+          </button>
+          <ul id="theme-menu" class="theme-menu" hidden>
+            <li>
+              <button class="theme-option" data-theme="light">
+                Light mode
+              </button>
+            </li>
+            <li>
+              <button class="theme-option" data-theme="dark">Dark mode</button>
+            </li>
+            <li>
+              <button class="theme-option" data-theme="system">System</button>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="search-wrap">
+      <h1 class="search-heading">
+        {% if query %} Results for "{{ query }}" {% else %} Search {% endif %}
+      </h1>
+
+      {% if query and not results %}
+      <p class="search-empty">No users match "{{ query }}"</p>
+      {% endif %}
+
+      <ul class="search-list">
+        {% for user in results %}
+        <li class="search-item">
+          <a
+            href="{{ url_for('user_profile', username=user['username']) }}"
+            class="search-link"
+          >
+            {% if user['profile_pic'] %}
+            <img
+              class="search-avatar"
+              src="{{ url_for('static', filename='uploads/avatars/' + user['profile_pic']) }}"
+              alt=""
+            />
+            {% else %}
+            <div class="search-avatar search-avatar-letter">
+              {{ user['username'][0]|upper }}
+            </div>
+            {% endif %}
+            <div class="search-info">
+              <span class="search-username">{{ user['username'] }}</span>
+              <span class="search-handle">@{{ user['username'] }}</span>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </main>
+    <script src="/static/js/darkmode.js"></script>
+  </body>
+>>>>>>> marcoa
 </html>

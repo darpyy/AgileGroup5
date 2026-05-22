@@ -30,7 +30,7 @@ body {
 /* ---- LEFT: profile card ---- */
 .profile-card {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 1.75rem;
   padding: 2.5rem;
 }
@@ -47,8 +47,8 @@ body {
 /* letter avatar (no profile pic) */
 .profile-avatar {
   flex: 0 0 auto;
-  width: 90px;
-  height: 90px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-color) 0%, var(--deep-color) 100%);
   color: #fff;
@@ -66,8 +66,8 @@ body {
 /* image avatar */
 .profile-avatar-img {
   flex: 0 0 auto;
-  width: 90px;
-  height: 90px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: none;
@@ -158,7 +158,8 @@ body {
 
 /* ---- Avatar upload — single-button style ---- */
 .avatar-form {
-  margin: 0 0 1rem 0;
+  margin-top: 0.90rem;
+  margin-bottom: 0;
 }
 
 /* hide the default file input but keep it functional */
@@ -532,5 +533,31 @@ body {
   .nav-search input {
     font-size: 0.9rem;
     padding: 0.65rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Hide search from nav, show mobile search bar below it */
+  .search-wrap {
+    display: none;
+  }
+
+  .mobile-search {
+    display: block;
+    padding: 0.75rem 1rem;
+    background: var(--dark-color);
+    border-bottom: 1px solid var(--secondary-color);
+  }
+
+  .mobile-search input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.65rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #d8e0ee;
+    background: #f7f9ff;
+    color: var(--dark-color);
+    font-size: 0.9rem;
+    font-family: inherit;
   }
 }
