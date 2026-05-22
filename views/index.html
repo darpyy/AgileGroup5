@@ -29,21 +29,24 @@
       </div>
 
       <button class="nav-toggle" aria-label="toggle navigation">
-        <span class="hamburger">☰</span>
+        <span class="hamburger"></span>
       </button>
-<ul>
-            {% if session.get('user_id') != None %}
-                <li><a href="{{ url_for('dashboard') }}" class="active">Home</a></li>
-                <li><a href="{{ url_for('contact') }}" class="bigItem">Contact</a></li>
-                <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
-                <li><a href="{{ url_for('logout') }}" class="bigItem">Logout</a></li>
-            {% else %}
-                <li><a href="{{ url_for('index') }}" class="active">Home</a></li>
-                <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
-                <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
-                <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
-            {% endif %}
-</ul>
+      <ul class="nav-links">
+        {% if session.get('user_name') %}
+        <!-- Logged in: show these -->
+        <li><a href="{{ url_for('dashboard') }}" class="bigItem">Home</a></li>
+        <li><a href="{{ url_for('contact') }}" class="bigItem">Contact</a></li>
+        <li><a href="{{ url_for('about') }}" class="bigItem">About Us</a></li>
+        <li><a href="{{ url_for('logout') }}" class="bigItem">Logout</a></li>
+
+        {% else %}
+        <!-- Logged out: show these -->
+        <li><a href="{{ url_for('index') }}" class="bigItem">Home</a></li>
+        <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+
+        <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+        {% endif %}
+
         <li class="theme-menu-wrap">
           <button
             id="theme-gear"
@@ -54,7 +57,6 @@
           >
             <img src="/static/img/gear.png" alt="" />
           </button>
-
           <ul id="theme-menu" class="theme-menu" hidden>
             <li>
               <button class="theme-option" data-theme="light">
