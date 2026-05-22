@@ -9,132 +9,161 @@
     <link rel="stylesheet" href="/static/css/about.css" />
 
     <title>CommonThread | About Us</title>
-      <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-</head>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/favicon.ico') }}"
+    />
+  </head>
   <body>
-        <nav>  
-            <div class="logo"> 
-                <a href="{{ url_for('index') }}">
-                    Common<span>Thread</span>
-                </a>
-            </div>
-        <ul class="nav-links">
-            {% if session.get('user_name') %}
-                <!-- Logged in: show these -->
-                <li><a href="{{ url_for('dashboard') }}" class = "bigItem">Home</a></li>
-                <li><a href="{{ url_for('contact') }}" class = "bigItem">Contact</a></li>
-                <li><a href="{{ url_for('about') }}" class = "active">About Us</a></li>
-                <li><a href="{{ url_for('logout') }}" class = "bigItem">Logout</a></li>
+    <nav>
+      <div class="logo">
+        <a href="{{ url_for('index') }}"> Common<span>Thread</span> </a>
+      </div>
 
-            {% else %}
-                <!-- Logged out: show these -->
-                <li><a href ="{{ url_for('index') }}" class="bigItem">Home</a></li>
-                <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+      <button class="nav-toggle" aria-label="toggle navigation">
+        <span class="hamburger"></span>
+      </button>
+      <ul class="nav-links">
+        {% if session.get('user_name') %}
+        <!-- Logged in: show these -->
+        <li><a href="{{ url_for('dashboard') }}" class="bigItem">Home</a></li>
+        <li><a href="{{ url_for('contact') }}" class="bigItem">Contact</a></li>
+        <li><a href="{{ url_for('about') }}" class="active">About Us</a></li>
+        <li><a href="{{ url_for('logout') }}" class="bigItem">Logout</a></li>
 
-                <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
-            {% endif %}
-            
-            <li class="theme-menu-wrap">
-                <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
-                        aria-haspopup="true" aria-expanded="false">
-                <img src="/static/img/gear.png" alt="">
-                </button>
-                <ul id="theme-menu" class="theme-menu" hidden>
-                <li><button class="theme-option" data-theme="light">Light mode</button></li>
-                <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
-                <li><button class="theme-option" data-theme="system">System</button></li>
-                </ul>
+        {% else %}
+        <!-- Logged out: show these -->
+        <li><a href="{{ url_for('index') }}" class="bigItem">Home</a></li>
+        <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+
+        <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+        {% endif %}
+
+        <li class="theme-menu-wrap">
+          <button
+            id="theme-gear"
+            class="theme-gear"
+            aria-label="Theme settings"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img src="/static/img/gear.png" alt="" />
+          </button>
+          <ul id="theme-menu" class="theme-menu" hidden>
+            <li>
+              <button class="theme-option" data-theme="light">
+                Light mode
+              </button>
             </li>
-        </ul>
-        
-        </nav>
-    <h1>About Us</h1>
-
+            <li>
+              <button class="theme-option" data-theme="dark">Dark mode</button>
+            </li>
+            <li>
+              <button class="theme-option" data-theme="system">System</button>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <h1>OUR PURPOSE</h1>
 
     <article class="textAbout">
-        <p>We are driving! Honk Honk!</p>
+      <p>
+        We wanted to bring people closer together and this was our idea to
+        tackle this problem. As a society we are so disconnected with the people
+        in our city. We believe finding a common thread that you can share with
+        another person is a great way to enjoy this beautiful Province we live
+        in!
+      </p>
     </article>
 
     <div>
-    <article class="articleAbout">
-      
-      <section  class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/marcoAgile.jpg') }}"
-        alt="Profile picture"
-      /> 
-      <p>Marco Here
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maxime molestias sunt harum voluptate voluptatibus id suscipit ea incidunt maiores veniam repellendus, aspernatur, itaque adipisci sint ipsam consectetur, nostrum quia totam!
-      </p>
-      </section> 
-       <section  class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/samAgile.jpg') }}"
-        alt="Profile picture"
-      /> 
-      <p>Sam Here,
-        Sam try, cute try 
-        Go 
-      </p>
-      </section> 
-       <section  class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/alexAgile.jpg') }}"
-        alt="Profile picture"
-      /> 
-      <p>Alex Here
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maxime molestias sunt harum voluptate voluptatibus id suscipit ea incidunt maiores veniam repellendus, aspernatur, itaque adipisci sint ipsam consectetur, nostrum quia totam!
-      </p>
-      </section> 
+      <article class="articleAbout">
+        <section class="containerAbout">
+          <img
+            class="aboutPic"
+            src="{{ url_for('static', filename='img/aboutUs/marcoAgile.jpg') }}"
+            alt="Profile picture"
+          />
+          <p>
+            Marco Here Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+          </p>
+        </section>
+        <section class="containerAbout">
+          <img
+            class="aboutPic"
+            src="{{ url_for('static', filename='img/aboutUs/samAgile.jpg') }}"
+            alt="Profile picture"
+          />
+          <p>Sam Here, Sam try, cute try Go</p>
+        </section>
+        <section class="containerAbout">
+          <img
+            class="aboutPic"
+            src="{{ url_for('static', filename='img/aboutUs/alexAgile.jpg') }}"
+            alt="Profile picture"
+          />
+          <p>
+            Alex Here Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+          </p>
+        </section>
       </article>
     </div>
     <div>
-        <article class="articleAbout">
-      <section class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/meowl.png') }}"
-        alt="Profile picture"
-      /> 
-      <p>Katrina Here
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maxime molestias sunt harum voluptate voluptatibus id suscipit ea incidunt maiores veniam repellendus, aspernatur, itaque adipisci sint ipsam consectetur, nostrum quia totam!
-      </p>
-      </section> 
-      <section  class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/meowl.png') }}"
-        alt="Profile picture"
-      /> 
-      <p>Kelvin Here
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Maxime molestias sunt harum voluptate voluptatibus id suscipit ea incidunt maiores veniam repellendus, aspernatur, itaque adipisci sint ipsam consectetur, nostrum quia totam!
-      </p>
-      </section> 
-      <section  class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/bao.jpg') }}"
-        alt="Profile picture"
-      /> 
-      <p>Bao Here,
-        67 Girlfriends
-        2M followers on Instagram
-        Called uncle Bao but Bao is just fine.
-        Pronouns She/her, SamBao tried
-      </p>
-      </section> 
-      <section  class="containerAbout"> 
-      <img class="aboutPic"
-        src="{{ url_for('static', filename='img/aboutUs/dylan67Agile.jpg') }}"
-        alt="Profile picture"
-      /> 
-      <pre>
-        Dylan Here
+      <article class="articleAbout">
+        <section class="containerAbout">
+          <img
+            class="aboutPic"
+            src="{{ url_for('static', filename='img/aboutUs/meowl.png') }}"
+            alt="Profile picture"
+          />
+          <p>
+            Katrina Here Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit.
+          </p>
+        </section>
+        <section class="containerAbout">
+          <img
+            class="aboutPic"
+            src="{{ url_for('static', filename='img/aboutUs/meowl.png') }}"
+            alt="Profile picture"
+          />
+          <p>
+            Kelvin Here Lorem ipsum dolor sit, amet consectetur adipisicing
+            elit.
+          </p>
+        </section>
+        <section class="containerAbout">
+          <img
+            class="aboutPic"
+            src="{{ url_for('static', filename='img/aboutUs/bao.jpg') }}"
+            alt="Profile picture"
+          />
+          <p>
+            Bao Here, 67 Girlfriends 2M followers on Instagram Called uncle Bao
+            but Bao is just fine. Pronouns She/her, SamBao tried
+          </p>
+        </section>
+        <section class="containerAbout">
+          <img
+            class="aboutPic"
+            src="{{ url_for('static', filename='img/aboutUs/dylan67Agile.jpg') }}"
+            alt="Profile picture"
+          />
+          <pre>
+        Dylan,
         Huzzless
         NO GF!
         Sigma? EW 
         Mewing 
         67 
-      </pre>
-      </section> 
-    </article>
+        Job: construction 
+        Owner: Chris Harris
+      </pre
+          >
+        </section>
+      </article>
     </div>
   </body>
 
@@ -186,4 +215,5 @@
   </footer>
   <script src="/static/js/main.js"></script>
   <script src="/static/js/darkmode.js"></script>
+  <script src="/static/js/banner.js"></script>
 </html>

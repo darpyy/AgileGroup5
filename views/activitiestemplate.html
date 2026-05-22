@@ -16,13 +16,22 @@
     />
 
     <title>CommonThread</title>
-      <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-</head>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/favicon.ico') }}"
+    />
+  </head>
   <body>
     <nav>
       <div class="logo">
         <a href="{{ url_for('index') }}"> Common<span>Thread</span> </a>
       </div>
+
+      <button class="nav-toggle" aria-label="toggle navigation">
+        <span class="hamburger">☰</span>
+      </button>
+
       <ul class="nav-links">
         <li><a href="{{ url_for('dashboard') }}">Home</a></li>
         <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
@@ -286,4 +295,5 @@
   </footer>
   <script src="/static/js/darkmode.js"></script>
   <script src="/static/js/main.js"></script>
+  <script src="/static/js/banner.js"></script>
 </html>

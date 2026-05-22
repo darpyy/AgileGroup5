@@ -1,136 +1,151 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="/static/css/global.css">
-    <link rel="stylesheet" href="/static/css/tags.css">
-
-
+    <link rel="stylesheet" href="/static/css/global.css" />
+    <link rel="stylesheet" href="/static/css/tags.css" />
 
     <title>CommonThread | Get Started</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-</head>
-<body>
-    <nav>  
-        <div class="logo"> 
-            <a href="{{ url_for('index') }}">
-                Common<span>Thread</span>
-            </a>
-        </div>
-        <ul class="nav-links">
-            <li><a href ="{{ url_for('dashboard') }}">Home</a></li>
-            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
-            <li><a href="{{ url_for('about') }}">About Us</a></li>
-            <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
-            <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
-            <li class="theme-menu-wrap">
-              <button id="theme-gear" class="theme-gear" aria-label="Theme settings"
-                      aria-haspopup="true" aria-expanded="false">
-                <img src="/static/img/gear.png" alt="">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='img/favicon.ico') }}"
+    />
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <a href="{{ url_for('index') }}"> Common<span>Thread</span> </a>
+      </div>
+
+      <button class="nav-toggle" aria-label="toggle navigation">
+        <span class="hamburger">☰</span>
+      </button>
+
+      <ul class="nav-links">
+        <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        <li><a href="{{ url_for('about') }}">About Us</a></li>
+        <li><a href="{{ url_for('signup') }}" class="bigItem">Sign Up</a></li>
+        <li><a href="{{ url_for('login') }}" class="bigItem">Login</a></li>
+        <li class="theme-menu-wrap">
+          <button
+            id="theme-gear"
+            class="theme-gear"
+            aria-label="Theme settings"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img src="/static/img/gear.png" alt="" />
+          </button>
+          <ul id="theme-menu" class="theme-menu" hidden>
+            <li>
+              <button class="theme-option" data-theme="light">
+                Light mode
               </button>
-              <ul id="theme-menu" class="theme-menu" hidden>
-                <li><button class="theme-option" data-theme="light">Light mode</button></li>
-                <li><button class="theme-option" data-theme="dark">Dark mode</button></li>
-                <li><button class="theme-option" data-theme="system">System</button></li>
-              </ul>
             </li>
-        </ul>
+            <li>
+              <button class="theme-option" data-theme="dark">Dark mode</button>
+            </li>
+            <li>
+              <button class="theme-option" data-theme="system">System</button>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </nav>
-    
+
     <h1>Welcome {{ session['user_name'] }}!</h1>
     <div class="tags-container">
-  <h1>Pick your city and up to 3 tags</h1>
+      <h1>Pick your city and up to 3 tags</h1>
 
-  <form method="POST" action="{{ url_for('tags') }}">
+      <form method="POST" action="{{ url_for('tags') }}">
+        <label for="city">City</label>
+        <select id="city" name="city" required>
+          <option value="" disabled selected>Choose your city</option>
+          {% for city in locations %}
+          <option value="{{ city.locid }}">{{ city.city }}</option>
+          {% endfor %}
+        </select>
 
-    <label for="city">City</label>
-    <select id="city" name="city" required>
-      <option value="" disabled selected>Choose your city</option>
-      {% for city in locations %}
-        <option value="{{ city.locid }}">{{ city.city }}</option>
-      {% endfor %}
-    </select>
+        <h3>Tags (pick up to 3)</h3>
+        <div class="tags-grid">
+          {% for tag in tags %}
+          <label class="tag-button">
+            <input type="checkbox" name="tags" value="{{ tag.tagid }}" />
+            {{ tag.tagname }}
+          </label>
+          {% endfor %}
+        </div>
 
-    <h3>Tags (pick up to 3)</h3>
-    <div class="tags-grid">
-        {% for tag in tags %}
-            <label class="tag-button">
-                <input type="checkbox" name="tags" value="{{ tag.tagid }}"> 
-                {{ tag.tagname }}
-            </label>
-        {% endfor %}
+        <button type="submit" class="tag-button-submit">Continue</button>
+      </form>
     </div>
 
-    <button type="submit" class="tag-button-submit">Continue</button>
-  </form>
-</div>
+    <script>
+      const tagBoxes = document.querySelectorAll('input[name="tags"]');
+      tagBoxes.forEach((cb) => {
+        cb.addEventListener("change", () => {
+          const picked = document.querySelectorAll(
+            'input[name="tags"]:checked',
+          );
+          if (picked.length > 3) {
+            cb.checked = false;
+            alert("You can only pick 3 tags.");
+          }
+        });
+      });
+    </script>
+  </body>
 
-<script>
-  const tagBoxes = document.querySelectorAll('input[name="tags"]');
-  tagBoxes.forEach(cb => {
-    cb.addEventListener('change', () => {
-      const picked = document.querySelectorAll('input[name="tags"]:checked');
-      if (picked.length > 3) {
-        cb.checked = false;
-        alert('You can only pick 3 tags.');
-      }
-    });
-  });
-</script>
-</body>
+  <!-- Footer -->
+  <footer class="footerCopy">
+    <section class="navFooter">
+      <article class="footArticle">
+        <h3>About Us</h3>
+        <p>
+          We are interested in bringing people closer together in your
+          Community. We hope to help build meaningful friendships & keeping
+          people active in the Greater Vancouver area!
+        </p>
 
-    <!-- Footer -->
-    <footer class="footerCopy">
-
-        <section class="navFooter">
-            <article class="footArticle">
-                <h3>About Us</h3>
-                <p> We are interested in bringing people closer together in your Community. We hope to help build meaningful friendships & keeping people active in the Greater Vancouver area!</p>
-                
-                <ul class="footer-links">
-                    <li> <a href="{{ url_for('about') }}">
-                    About Us
-                    </a>
-                    </li>
-                </ul>
-            </article>
-            <article class="footArticle">
-                <h3>Contact Info</h3>
-                <section  class="contactFoot">
-                    <h4 class="contacter">Call</h4>
-                    <p class="contacter">+1 123-456-6789</p>
-                </section>
-                <section  class="contactFoot">
-                    <h4 class="contacter">Email us</h4>
-                    <p class="contacter">contact@CommonThread.com</p>
-                </section>
-                <section  class="contactFoot">
-                    <h4 class="contacter">Find us</h4>
-                    <p class="contacter">Canada, Vancouver, Main 67A</p>
-                </section>
-                <section>
-                 <ul class="footer-links">
-                    <li> 
-                        <a href="{{ url_for('contact') }}">
-                            Contact Us
-                        </a>
-                    </li>
-                </ul>
-                </section>
-            </article>
-            <article class="footArticle">
-                <button onclick="scrollToTop()" class="backToTop">
-                    Back to Top
-                </button>
-            </article>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('about') }}"> About Us </a></li>
+        </ul>
+      </article>
+      <article class="footArticle">
+        <h3>Contact Info</h3>
+        <section class="contactFoot">
+          <h4 class="contacter">Call</h4>
+          <p class="contacter">+1 123-456-6789</p>
         </section>
-        <p></p>
-        <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
-    </footer>
-<script src="/static/js/darkmode.js"></script>    
-<script src="/static/js/main.js"></script>
+        <section class="contactFoot">
+          <h4 class="contacter">Email us</h4>
+          <p class="contacter">contact@CommonThread.com</p>
+        </section>
+        <section class="contactFoot">
+          <h4 class="contacter">Find us</h4>
+          <p class="contacter">Canada, Vancouver, Main 67A</p>
+        </section>
+        <section>
+          <ul class="footer-links">
+            <li>
+              <a href="{{ url_for('contact') }}"> Contact Us </a>
+            </li>
+          </ul>
+        </section>
+      </article>
+      <article class="footArticle">
+        <button onclick="scrollToTop()" class="backToTop">Back to Top</button>
+      </article>
+    </section>
+    <p></p>
+    <p>Copyright &copy; 2026 CommonThread. All rights reserved.</p>
+  </footer>
+  <script src="/static/js/darkmode.js"></script>
+  <script src="/static/js/main.js"></script>
+  <script src="/static/js/banner.js"></script>
 </html>

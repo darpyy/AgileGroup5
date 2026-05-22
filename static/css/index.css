@@ -100,9 +100,8 @@
 }
 
 
-@media(max-width: 30rem){ 
-
-
-
-  
+@media (max-width: 768px) {
+  .slideshow img {
+    width: 100%;
+  }
 }

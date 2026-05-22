@@ -63,7 +63,9 @@ body {
   background: #f7f9ff;
   color: var(--dark-color);
   font-size: 15px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .form-group input:focus {
@@ -114,7 +116,9 @@ body {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    transform 0.1s;
 }
 
 .login-button:hover {
@@ -143,10 +147,10 @@ body {
   text-decoration: underline;
 }
 
-
-@media(max-width: 30rem){ 
-
-
-
-  
+@media (max-width: 768px) {
+  .login-container {
+    width: 80%;
+    margin: 26px;
+    padding: 24px 16px;
+  }
 }
